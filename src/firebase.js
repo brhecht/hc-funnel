@@ -35,20 +35,16 @@ export async function updateLead(docId, data) {
 }
 
 /**
- * Subscribe an email to Kit (ConvertKit) via V3 form endpoint.
- * Passes quiz metadata as custom fields so Kit automations can use them.
+ * Subscribe an email to Kit (ConvertKit) via server-side proxy.
+ * Routes through /api/subscribe so ad blockers can't intercept.
+ * API key stays server-side — never exposed to the browser.
  */
 export async function subscribeToKit(email, metadata = {}) {
-  const apiKey = import.meta.env.VITE_KIT_API_KEY
-  const formId = import.meta.env.VITE_KIT_FORM_ID
-  if (!apiKey || !formId) return
-
   try {
-    await fetch(`https://api.convertkit.com/v3/forms/${formId}/subscribe`, {
+    await fetch("/api/subscribe", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        api_key: apiKey,
         email,
         fields: {
           tier: metadata.tier || "",
