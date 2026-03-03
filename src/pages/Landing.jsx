@@ -1,27 +1,29 @@
-import { Link } from 'react-router-dom'
-import { useFunnel } from '../context/FunnelContext'
+import { Link } from "react-router-dom"
+import { useFunnel } from "../context/FunnelContext"
 
 export default function Landing() {
   const { config } = useFunnel()
   const { landing, theme } = config
 
   return (
-    <div className="flex flex-col items-center pt-16 md:pt-28 space-y-16">
+    <div className="flex flex-col items-center pt-12 md:pt-24 space-y-16">
       {/* Hero */}
       <div className="text-center max-w-2xl space-y-6">
-        <h1 className="text-4xl md:text-6xl font-bold tracking-tight leading-tight">
+        <h1
+          className="text-4xl md:text-6xl font-extrabold tracking-tight leading-tight"
+          style={{ fontFamily: theme.headingFont, letterSpacing: "-2px" }}
+        >
           {landing.headline}
         </h1>
-        <p className="text-lg md:text-xl leading-relaxed" style={{ color: config.theme.muted }}>
+        <p className="text-lg md:text-xl leading-relaxed" style={{ color: theme.muted }}>
           {landing.subheadline}
         </p>
         <div className="pt-4">
           <Link
             to={landing.ctaLink}
-            className="inline-flex items-center px-8 py-4 text-lg font-semibold rounded-xl transition-all hover:scale-[1.02] shadow-lg"
+            className="inline-flex items-center px-8 py-4 text-lg font-semibold rounded-xl transition-all hover:scale-[1.02] shadow-lg text-white"
             style={{
-              background: `linear-gradient(135deg, ${theme.accent}, ${theme.accent2})`,
-              color: theme.bg,
+              background: theme.accent,
               boxShadow: `0 14px 40px ${theme.accent}33`,
             }}
           >
@@ -32,7 +34,7 @@ export default function Landing() {
           </Link>
         </div>
         {landing.socialProof && (
-          <p className="text-sm pt-2" style={{ color: config.theme.muted }}>
+          <p className="text-sm pt-2" style={{ color: theme.faint }}>
             {landing.socialProof}
           </p>
         )}
@@ -40,18 +42,23 @@ export default function Landing() {
 
       {/* Feature cards */}
       {landing.features && (
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full max-w-4xl">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-5 w-full max-w-3xl">
           {landing.features.map((f, i) => (
             <div
               key={i}
-              className="p-6 rounded-xl border transition-colors hover:border-white/20"
+              className="p-6 rounded-2xl transition-all hover:shadow-md"
               style={{
-                background: `${theme.bg}cc`,
-                borderColor: 'rgba(255,255,255,0.08)',
+                background: theme.card,
+                border: `1px solid ${theme.border}`,
               }}
             >
-              <h3 className="text-lg font-semibold mb-2">{f.title}</h3>
-              <p className="text-sm leading-relaxed" style={{ color: config.theme.muted }}>
+              <h3
+                className="text-lg font-bold mb-2"
+                style={{ fontFamily: theme.headingFont, letterSpacing: "-0.3px" }}
+              >
+                {f.title}
+              </h3>
+              <p className="text-sm leading-relaxed" style={{ color: theme.muted }}>
                 {f.description}
               </p>
             </div>

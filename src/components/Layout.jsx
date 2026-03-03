@@ -1,37 +1,43 @@
-import FUNNEL from '../config/funnel'
+import FUNNEL from "../config/funnel"
 
 export default function Layout({ children }) {
   const { brand, theme } = FUNNEL
 
   return (
     <div
-      className="min-h-screen font-sans"
+      className="min-h-screen"
       style={{
-        background: `
-          radial-gradient(1200px 700px at 20% -10%, ${theme.accent}25, transparent 55%),
-          radial-gradient(900px 600px at 85% 0%, ${theme.accent2}20, transparent 55%),
-          ${theme.bg}
-        `,
+        background: theme.bg,
         color: theme.text,
+        fontFamily: theme.bodyFont,
       }}
     >
       {/* Nav */}
-      <header className="max-w-5xl mx-auto px-5 py-6 flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <div
-            className="w-8 h-8 rounded-lg"
-            style={{
-              background: `linear-gradient(135deg, ${theme.accent}, ${theme.accent2})`,
-            }}
-          />
-          <span className="font-bold text-lg tracking-tight">{brand.name}</span>
+      <header className="max-w-3xl mx-auto px-6 py-8 flex items-center gap-3">
+        <div
+          className="w-10 h-10 rounded-xl flex items-center justify-center text-white font-bold text-sm"
+          style={{ background: theme.accent, fontFamily: theme.headingFont }}
+        >
+          HC
+        </div>
+        <div>
+          <div className="text-sm font-bold" style={{ fontFamily: theme.headingFont, letterSpacing: "-0.3px" }}>
+            {brand.name}
+          </div>
         </div>
       </header>
 
       {/* Content */}
-      <main className="max-w-5xl mx-auto px-5 pb-20">
+      <main className="max-w-3xl mx-auto px-6 pb-24">
         {children}
       </main>
+
+      {/* Footer */}
+      <footer className="text-center pb-10">
+        <span className="text-xs font-medium uppercase tracking-widest" style={{ color: theme.faint }}>
+          {brand.name}
+        </span>
+      </footer>
     </div>
   )
 }
