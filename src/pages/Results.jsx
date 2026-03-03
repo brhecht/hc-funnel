@@ -1,7 +1,7 @@
 import { useState } from "react"
 import { Link } from "react-router-dom"
 import { useFunnel } from "../context/FunnelContext"
-import { saveLead, updateLead } from "../firebase"
+import { saveLead, updateLead, subscribeToKit } from "../firebase"
 
 function EmailCapture({ theme, config, onCaptured }) {
   const [email, setEmail] = useState("")
@@ -229,6 +229,13 @@ export default function Results() {
       })
       setLeadDocId(docId)
       if (joinWaitlist) setWaitlistJoined(true)
+
+      // Subscribe to Kit in parallel (non-blocking)
+      subscribeToKit(email, {
+        tier: tier.name,
+        frictionArea: frictionKey,
+        waitlist: joinWaitlist,
+      })
     } catch (err) {
       console.error("Failed to save lead:", err)
     }

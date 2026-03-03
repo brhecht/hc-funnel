@@ -33,3 +33,31 @@ export async function updateLead(docId, data) {
     updatedAt: new Date().toISOString(),
   })
 }
+
+/**
+ * Subscribe an email to Kit (ConvertKit) via V3 form endpoint.
+ * Passes quiz metadata as custom fields so Kit automations can use them.
+ */
+export async function subscribeToKit(email, metadata = {}) {
+  const apiKey = import.meta.env.VITE_KIT_API_KEY
+  const formId = import.meta.env.VITE_KIT_FORM_ID
+  if (!apiKey || !formId) return
+
+  try {
+    await fetch(`https://api.convertkit.com/v3/forms/${formId}/subscribe`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        api_key: apiKey,
+        email,
+        fields: {
+          tier: metadata.tier || "",
+          friction_area: metadata.frictionArea || "",
+          waitlist: metadata.waitlist ? "yes" : "no",
+        },
+      }),
+    })
+  } catch (err) {
+    console.error("Kit subscribe failed:", err)
+  }
+}
