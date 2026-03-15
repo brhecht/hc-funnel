@@ -1,324 +1,454 @@
 /**
- * FUNNEL CONFIG
+ * FUNNEL CONFIG — Humble Conviction Quiz Funnel
  *
- * Everything content-specific lives here. To create a new funnel for
- * a different product/course, duplicate this file and swap the values.
- * The components read from this config — no hardcoded copy in JSX.
+ * Everything content-specific lives here. Components read from this
+ * config — no hardcoded copy in JSX.
  *
- * SCORING DIMENSIONS (internal — never shown to user):
- *   readiness  — overall investor-readiness signal
- *   packaging  — clarity of communication / pitch articulation
- *   strategy   — strength of idea, market, plan
- *   vcLiteracy — understanding of how fundraising actually works
+ * SCORING DIMENSIONS (shown to user as X/5):
+ *   clarity           — Can you explain what you do so an investor gets it?
+ *   investorFluency   — Do you understand how investors think and operate?
+ *   selfAwareness     — Can you accurately assess your own blind spots?
+ *   persuasionInstincts — Do you create pull, not push?
  *
- * READINESS TIERS (shown to user):
- *   Based on total readiness score across all questions
+ * SCORING MAP:
+ *   Clarity: Q1 + Q5
+ *   Investor Fluency: Q3 + Q6
+ *   Self-Awareness: Q4 + Q7
+ *   Persuasion Instincts: Q2 + Q8
  *
- * FRICTION AREA (shown to user in plain language):
- *   Whichever dimension scores lowest = primary friction diagnosis
+ * PER-QUESTION: Best = 2 pts, Next-best = 1 pt, Weak = 0 pts
+ * RAW RANGE per dimension: 0–4 (two questions each)
+ * DISPLAY MAPPING: Raw 0-1 → 2/5, Raw 2-3 → 3/5, Raw 4 → 4/5. No 5/5.
+ * Self-Awareness exception: floors at 3/5 (only Mid and High).
+ *
+ * TIER ASSIGNMENT: Uses raw total score (0–16), not display scores.
+ *   Lost in the Noise: 0–3
+ *   The Pieces Are There: 4–9
+ *   So Close It Hurts: 10+
  */
 
 const FUNNEL = {
   // ─── Brand ───────────────────────────────────────────────
   brand: {
     name: "Humble Conviction",
-    tagline: "Pitch Better, Get Funded Faster",
+    tagline: "Investor-Tested Insights",
     logo: null,
   },
 
-  // ─── Theme (warm light — bhub / Ali Abdaal inspired) ─────
+  // ─── Theme (navy + orange, research-backed for trust + conversion) ──
   theme: {
-    bg: "#FAF6F1",
+    bg: "#F8F9FC",
     accent: "#E8845A",
-    accent2: "#B5A4FF",
-    warn: "#F2C84E",
-    text: "#2D2A26",
-    muted: "#8A8078",
-    faint: "#C9C0B6",
+    text: "#1A2332",
+    muted: "#5A6578",
+    faint: "#9CA3AF",
     card: "#FFFFFF",
-    border: "rgba(45, 42, 38, 0.08)",
-    headingFont: "'Playfair Display', serif",
-    bodyFont: "'DM Sans', sans-serif",
+    border: "rgba(26, 35, 50, 0.08)",
+    selectedBg: "#FFF3ED",
+    selectedBorder: "#E8845A",
+    // Tier colors
+    tierLow: "#D97706",    // amber
+    tierMid: "#0D9488",    // teal
+    tierHigh: "#059669",   // deep green
+    // Score dot colors
+    dotFilled: "#1A2332",
+    dotEmpty: "#E5E7EB",
+    // Typography — Inter only, loaded via Google Fonts
+    headingFont: "'Inter', sans-serif",
+    bodyFont: "'Inter', sans-serif",
   },
 
   // ─── Landing Page ────────────────────────────────────────
   landing: {
-    headline: "Is Your Startup Ready to Raise?",
+    headline: "Find Out What Investors See\n— Before They Tell You",
     subheadline:
-      "Take the 3-minute Founder Assessment and find out where you stand — before investors do.",
-    ctaText: "Start the Assessment",
+      "This 2-minute assessment will show you exactly what investors see — the patterns they notice but will never tell you. Based on 2,500+ pitches coached by a 4x exited founder and venture investor.",
+    ctaText: "Get My Results",
     ctaLink: "/quiz",
     socialProof: null,
     features: [
       {
-        title: "Know Before You Go",
+        title: "Investor-Tested Insights",
         description:
-          "Understand your pitch strengths and blind spots before walking into the room.",
+          "See what investors actually notice in the first 30 seconds — the signals they read but never share.",
       },
       {
-        title: "Personalized Playbook",
+        title: "4-Dimension Scorecard",
         description:
-          "Get a custom action plan based on your founder archetype.",
+          "Get scored on Clarity, Investor Fluency, Self-Awareness, and Persuasion Instincts — the four things that matter most.",
       },
       {
-        title: "Built by Operators",
+        title: "Built From 2,500+ Pitches",
         description:
-          "Designed by founders who've raised from top-tier VCs.",
+          "Designed by a founder who's been on both sides of the table — raising capital and investing it.",
       },
     ],
   },
 
-  // ─── Phase 1: Instant Quiz (8 questions, all multiple choice) ───
+  // ─── Quiz: 8 scenario-based questions ───────────────────
   quiz: {
-    title: "Founder Assessment",
-    subtitle: "Answer honestly — this is for you, not for show.",
+    title: "Investor-Tested Insights",
+    subtitle: "8 real scenarios. See what investors see.",
     questions: [
+      // ── Q1: Clarity (Easy entry) ──
       {
-        id: "stage",
-        text: "What stage are you at?",
-        section: "Where You Are Today",
+        id: "q1_clarity",
+        dimension: "clarity",
+        text: "You're at a startup event and an investor asks \"So what does your company do?\" You have about 30 seconds.",
         options: [
-          { label: "Idea", value: "idea", points: { readiness: 1, strategy: 1, vcLiteracy: 0, packaging: 0 } },
-          { label: "MVP", value: "mvp", points: { readiness: 2, strategy: 2, vcLiteracy: 0, packaging: 0 } },
-          { label: "Pre-revenue", value: "pre-rev", points: { readiness: 2, strategy: 2, vcLiteracy: 1, packaging: 0 } },
-          { label: "Early revenue", value: "early-rev", points: { readiness: 3, strategy: 3, vcLiteracy: 1, packaging: 0 } },
-          { label: "Growing revenue", value: "growing", points: { readiness: 4, strategy: 4, vcLiteracy: 2, packaging: 0 } },
+          {
+            id: "a",
+            label: "Start with the problem — how painful it is, how nobody's solving it well",
+            points: 1,
+          },
+          {
+            id: "b",
+            label: "Lead with what it is, who it's for, and why it matters — in that order",
+            points: 2,
+          },
+          {
+            id: "c",
+            label: "Start with your background and what inspired you to build this",
+            points: 0,
+          },
+          {
+            id: "d",
+            label: "Lead with your traction — users, revenue, growth — to establish credibility fast",
+            points: 0,
+          },
         ],
       },
+      // ── Q2: Persuasion Instincts (Easy entry) ──
       {
-        id: "traction",
-        text: "How much traction do you have today?",
-        section: "Where You Are Today",
+        id: "q2_persuasion",
+        dimension: "persuasionInstincts",
+        text: "You're sitting down in a conference room with two investors for a first meeting. Your deck is on your laptop. How do you start?",
         options: [
-          { label: "None", value: "none", points: { readiness: 1, strategy: 1, vcLiteracy: 0, packaging: 0 } },
-          { label: "Some early users", value: "early-users", points: { readiness: 2, strategy: 2, vcLiteracy: 0, packaging: 0 } },
-          { label: "Paying customers", value: "paying", points: { readiness: 3, strategy: 3, vcLiteracy: 1, packaging: 0 } },
-          { label: "Consistent revenue", value: "consistent", points: { readiness: 4, strategy: 3, vcLiteracy: 1, packaging: 0 } },
-          { label: "Significant growth", value: "growth", points: { readiness: 4, strategy: 4, vcLiteracy: 2, packaging: 0 } },
+          {
+            id: "a",
+            label: "Pull up the deck and start walking them through it from slide 1 — you've rehearsed this and the flow is tight",
+            points: 0,
+          },
+          {
+            id: "b",
+            label: "Start the conversation without opening the deck — only pull it up if they ask or to illustrate a specific point",
+            points: 2,
+          },
+          {
+            id: "c",
+            label: "Ask if they'd like to see the deck or if they'd prefer to just talk — let them set the format",
+            points: 1,
+          },
+          {
+            id: "d",
+            label: "Send the deck to their email right before the meeting so they can follow along on their own screens",
+            points: 0,
+          },
         ],
       },
+      // ── Q3: Investor Fluency (Uncomfortable middle) ──
       {
-        id: "team",
-        text: "What does your founding team look like?",
-        section: "Where You Are Today",
+        id: "q3_fluency",
+        dimension: "investorFluency",
+        text: "You just finished your pitch. The lead investor says \"This is really interesting\" and then asks about your fundraising timeline. What's your read on where you stand?",
         options: [
-          { label: "Solo technical founder", value: "solo-tech", points: { readiness: 2, strategy: 1, vcLiteracy: 0, packaging: 1 } },
-          { label: "Solo business founder", value: "solo-biz", points: { readiness: 2, strategy: 2, vcLiteracy: 1, packaging: 1 } },
-          { label: "Business founder with a technical cofounder", value: "biz-tech", points: { readiness: 3, strategy: 3, vcLiteracy: 1, packaging: 2 } },
-          { label: "Technical founder with a business cofounder", value: "tech-biz", points: { readiness: 3, strategy: 3, vcLiteracy: 1, packaging: 2 } },
-          { label: "Non-technical team building a technical product", value: "non-tech", points: { readiness: 1, strategy: 1, vcLiteracy: 0, packaging: 1 } },
+          {
+            id: "a",
+            label: "Strong signal — they're interested enough to talk next steps",
+            points: 0,
+          },
+          {
+            id: "b",
+            label: "They're passing politely — \"interesting\" is investor code for \"no thanks\"",
+            points: 0,
+          },
+          {
+            id: "c",
+            label: "They're figuring out whether they need to act now or can wait and watch",
+            points: 2,
+          },
+          {
+            id: "d",
+            label: "Promising — they didn't say no, and asking about timeline means they're thinking about how this could work",
+            points: 1,
+          },
         ],
       },
+      // ── Q4: Self-Awareness (Uncomfortable) ──
       {
-        id: "pitched",
-        text: "Have you pitched investors yet?",
-        section: "Your Experience With Investors",
+        id: "q4_awareness",
+        dimension: "selfAwareness",
+        text: "You've taken 8 investor meetings this month. In 6 of them, the investor asked some version of \"Wait — can you back up and explain what you actually do?\" What's your takeaway?",
         options: [
-          { label: "No", value: "no", points: { readiness: 1, strategy: 0, vcLiteracy: 1, packaging: 0 } },
-          { label: "Yes — but no one said yes", value: "no-yes", points: { readiness: 2, strategy: 0, vcLiteracy: 2, packaging: 1 } },
-          { label: "Yes — mixed reactions", value: "mixed", points: { readiness: 2, strategy: 0, vcLiteracy: 3, packaging: 2 } },
-          { label: "Yes — positive but no close", value: "positive", points: { readiness: 3, strategy: 0, vcLiteracy: 3, packaging: 3 } },
-          { label: "Yes — received funding", value: "funded", points: { readiness: 4, strategy: 0, vcLiteracy: 4, packaging: 4 } },
+          {
+            id: "a",
+            label: "Your company is genuinely hard to explain in a short pitch — some ideas just need more time to land",
+            points: 0,
+          },
+          {
+            id: "b",
+            label: "Your pitch has a clarity problem — if 6 out of 8 are confused, it's not them, it's you",
+            points: 2,
+          },
+          {
+            id: "c",
+            label: "You need to add more detail and context so there are fewer gaps in their understanding",
+            points: 0,
+          },
+          {
+            id: "d",
+            label: "You need a better deck — the visuals aren't supporting the story well enough, so investors are getting lost",
+            points: 1,
+          },
         ],
       },
+      // ── Q5: Clarity (Uncomfortable) ──
       {
-        id: "feedback",
-        text: "What feedback do you get most often from investors?",
-        section: "Your Experience With Investors",
-        multiSelect: 2,
+        id: "q5_clarity",
+        dimension: "clarity",
+        text: "Mid-pitch, an investor interrupts: \"Sorry — but how do you actually make money?\" You're on slide 4 of 10. What's happening?",
         options: [
-          { label: "\"I don't understand what you do\"", value: "unclear", points: { readiness: 0, strategy: 0, vcLiteracy: 0, packaging: -3 } },
-          { label: "\"This doesn't feel big enough\"", value: "small", points: { readiness: 0, strategy: -3, vcLiteracy: 0, packaging: 0 } },
-          { label: "\"Not enough traction\"", value: "traction", points: { readiness: -1, strategy: -1, vcLiteracy: -1, packaging: 0 } },
-          { label: "\"I don't think you're the right team\"", value: "team", points: { readiness: -2, strategy: 0, vcLiteracy: 0, packaging: -1 } },
-          { label: "\"I'm not convinced the plan makes sense\"", value: "plan", points: { readiness: 0, strategy: -3, vcLiteracy: 0, packaging: -1 } },
-          { label: "\"It's too early for us\"", value: "early", points: { readiness: 0, strategy: 0, vcLiteracy: -2, packaging: 0 } },
-          { label: "\"Come back when you have more data\"", value: "data", points: { readiness: -1, strategy: -1, vcLiteracy: -1, packaging: 0 } },
-          { label: "Haven't gotten meaningful feedback", value: "none", points: { readiness: 0, strategy: 0, vcLiteracy: -1, packaging: 0 } },
+          {
+            id: "a",
+            label: "Good sign — they're engaged enough to ask about the business model early",
+            points: 0,
+          },
+          {
+            id: "b",
+            label: "You buried the business model too deep — they've been waiting and lost patience",
+            points: 2,
+          },
+          {
+            id: "c",
+            label: "They're testing whether this is a real business or just a cool idea",
+            points: 1,
+          },
+          {
+            id: "d",
+            label: "Some investors just like to interrupt to assert dominance — don't read into it",
+            points: 0,
+          },
         ],
       },
+      // ── Q6: Investor Fluency (Mirror) ──
       {
-        id: "clarity",
-        text: "How clearly can you explain your startup in 30 seconds?",
-        section: "Your Self-Assessment",
+        id: "q6_fluency",
+        dimension: "investorFluency",
+        text: "An investor you pitched two weeks ago emails: \"Thanks for coming in. We're going to pass for now, but please keep us updated on your progress.\" What do you do?",
         options: [
-          { label: "Extremely clear", value: "extreme", points: { readiness: 1, strategy: 0, vcLiteracy: 0, packaging: 4 } },
-          { label: "Pretty clear", value: "pretty", points: { readiness: 1, strategy: 0, vcLiteracy: 0, packaging: 3 } },
-          { label: "Hit-or-miss", value: "hitmiss", points: { readiness: 0, strategy: 0, vcLiteracy: 0, packaging: 2 } },
-          { label: "It's hard", value: "hard", points: { readiness: 0, strategy: 0, vcLiteracy: 0, packaging: 1 } },
-          { label: "Nearly impossible", value: "impossible", points: { readiness: 0, strategy: 0, vcLiteracy: 0, packaging: 0 } },
+          {
+            id: "a",
+            label: "Move on — a pass is a pass, don't waste energy on dead leads",
+            points: 0,
+          },
+          {
+            id: "b",
+            label: "Reply asking what specifically made them pass — you want honest feedback",
+            points: 0,
+          },
+          {
+            id: "c",
+            label: "Send a gracious two-line reply and add them to your quarterly investor update list",
+            points: 2,
+          },
+          {
+            id: "d",
+            label: "Reply with new data points or milestones that might address their concerns",
+            points: 1,
+          },
         ],
       },
+      // ── Q7: Self-Awareness (Mirror) ──
       {
-        id: "vcunderstanding",
-        text: "Do you feel you understand how investors make decisions?",
-        section: "Your Experience With Investors",
+        id: "q7_awareness",
+        dimension: "selfAwareness",
+        text: "A trusted advisor watches your practice pitch and says: \"I think you're trying to say too much. It's getting overwhelming.\" Your honest gut reaction is:",
         options: [
-          { label: "Yes, very well", value: "very", points: { readiness: 1, strategy: 0, vcLiteracy: 4, packaging: 0 } },
-          { label: "Somewhat", value: "somewhat", points: { readiness: 1, strategy: 0, vcLiteracy: 3, packaging: 0 } },
-          { label: "Not really", value: "notreally", points: { readiness: 0, strategy: 0, vcLiteracy: 1, packaging: 0 } },
-          { label: "Not at all", value: "notatall", points: { readiness: 0, strategy: 0, vcLiteracy: 0, packaging: 0 } },
+          {
+            id: "a",
+            label: "They may have a point about pacing, but the substance is solid — you just need to work on how you deliver it",
+            points: 1,
+          },
+          {
+            id: "b",
+            label: "They're probably right — you've been struggling to cut things and this confirms you need to simplify",
+            points: 2,
+          },
+          {
+            id: "c",
+            label: "You'll trim a bit, but you know which parts are non-negotiable — the core stays",
+            points: 0,
+          },
+          {
+            id: "d",
+            label: "You appreciate it, but they're not an investor — they might not know what actually matters in a pitch",
+            points: 0,
+          },
         ],
       },
+      // ── Q8: Persuasion Instincts (Aspirational close) ──
       {
-        id: "weakest",
-        text: "Which area do you feel least confident in?",
-        section: "Your Self-Assessment",
+        id: "q8_persuasion",
+        dimension: "persuasionInstincts",
+        text: "An investor at a coffee meeting says \"Tell me about what you're working on.\" What do you do?",
         options: [
-          { label: "The idea", value: "idea", points: { readiness: 0, strategy: -2, vcLiteracy: 0, packaging: 0 } },
-          { label: "The plan", value: "plan", points: { readiness: 0, strategy: -2, vcLiteracy: -1, packaging: 0 } },
-          { label: "The pitch", value: "pitch", points: { readiness: 0, strategy: 0, vcLiteracy: 0, packaging: -2 } },
-          { label: "The business progress", value: "progress", points: { readiness: -2, strategy: -1, vcLiteracy: 0, packaging: 0 } },
-          { label: "My ability to lead it", value: "leadership", points: { readiness: -2, strategy: 0, vcLiteracy: 0, packaging: -1 } },
+          {
+            id: "a",
+            label: "Walk them through the full picture — the problem, your solution, the market, and where you're at — so they have complete context",
+            points: 0,
+          },
+          {
+            id: "b",
+            label: "Give a tight 30-second version and stop — let them decide what to ask about next",
+            points: 2,
+          },
+          {
+            id: "c",
+            label: "Start by asking what they typically invest in, so you can tailor your answer to what matters to them",
+            points: 1,
+          },
+          {
+            id: "d",
+            label: "Give the high-level concept but caveat that you're still early and figuring some things out",
+            points: 0,
+          },
         ],
       },
     ],
   },
 
-  // ─── Phase 2: Deep Dive (after email capture) ────────────
-  deepDive: {
-    title: "Want a deeper, personalized diagnostic?",
-    subtitle: "Answer a few more questions and we'll send you a custom analysis written by our coaching AI — based on your specific situation.",
-    questions: [
-      {
-        id: "dd_description",
-        text: "What does your startup do?",
-        type: "text",
-        placeholder: "One or two sentences is perfect.",
-      },
-      {
-        id: "dd_customer",
-        text: "Who is your customer?",
-        type: "text",
-        placeholder: "Be as specific as you can.",
-      },
-      {
-        id: "dd_blocker",
-        text: "What do YOU think is holding your fundraise back?",
-        type: "text",
-        placeholder: "Be honest — this is just for you.",
-      },
-      {
-        id: "dd_qualification",
-        text: "What one thing in your experience qualifies you to run this company?",
-        type: "text",
-        placeholder: "Professional or personal — either works.",
-      },
-      {
-        id: "dd_urgency",
-        text: "How urgently do you need to raise capital?",
-        type: "select",
-        options: [
-          { label: "Immediately (3 months)", value: "immediate" },
-          { label: "Soon (6 months)", value: "soon" },
-          { label: "Eventually", value: "eventually" },
-          { label: "Not urgent", value: "not-urgent" },
-        ],
-      },
-    ],
-  },
-
-  // ─── Readiness Tiers (shown to user) ─────────────────────
-  readinessTiers: [
+  // ─── Tier Definitions ───────────────────────────────────
+  tiers: [
     {
-      id: "investor-ready",
-      name: "Investor Ready",
-      minScore: 22,
-      description: "You're in strong shape. The fundamentals are there — now it's about precision, timing, and the right conversations.",
-      color: "#36d399",
+      id: "so-close",
+      name: "So Close It Hurts",
+      minRaw: 10,
+      themeColor: "tierHigh",
+      description:
+        "You're doing a lot right, which makes this all the more frustrating: the gaps that remain are costing you disproportionately. At this level, investors aren't confused by you — they're almost there. The difference between \"interesting, keep us posted\" and a term sheet is smaller than you think.",
     },
     {
-      id: "almost-there",
-      name: "Almost There",
-      minScore: 14,
-      description: "You've built real momentum, but there are specific gaps that investors will notice. Fixing them is the difference between a 'maybe' and a 'yes.'",
-      color: "#7c5cff",
+      id: "pieces-there",
+      name: "The Pieces Are There",
+      minRaw: 4,
+      themeColor: "tierMid",
+      description:
+        "You have real strengths — but also some important blind spots. You've got confidence and conviction in what you're building. The problem is, nobody in your world is going to tell you where the gaps are. Investors pass politely, friends cheerlead, and mentors hedge. So the gaps persist — not because you can't fix them, but because they're really hard to pinpoint on your own.",
     },
     {
-      id: "foundation-building",
-      name: "Foundation Building",
-      minScore: 7,
-      description: "You're earlier than most founders realize when they start fundraising. That's not a problem — but pitching before you're ready can burn bridges you'll need later.",
-      color: "#fbbf24",
-    },
-    {
-      id: "early-stage",
-      name: "Early Stage",
-      minScore: 0,
-      description: "You're at the beginning. The good news: founders who build clarity and conviction before they pitch are the ones who close. Start here.",
-      color: "#ef4444",
+      id: "lost-noise",
+      name: "Lost in the Noise",
+      minRaw: 0,
+      themeColor: "tierLow",
+      description:
+        "Right now, investors are hearing your pitch — but they're not hearing what you're trying to say. Your message is getting lost in the same sea of pitches that all sound the same. The good news: this isn't about your idea. It's about how you're presenting it. And that's fixable.",
     },
   ],
 
-  // ─── Friction Diagnoses (mapped from lowest-scoring dimension) ─
-  frictionDiagnoses: {
-    packaging: {
-      label: "How You Tell the Story",
-      summary: "Investors aren't seeing what you see — the way you're communicating the business isn't landing. The idea might be strong, but the packaging is creating friction.",
-      nextSteps: [
-        "Rewrite your 30-second pitch from the investor's perspective — what do they need to understand first?",
-        "Test your pitch on 3 people outside your industry. If they can't repeat it back, it's not clear enough.",
-        "Strip the jargon. Investors fund clarity, not complexity.",
-      ],
+  // ─── Dimension Display Copy ─────────────────────────────
+  dimensions: {
+    clarity: {
+      label: "Clarity",
+      levels: {
+        2: {
+          explanation:
+            "Investors are working too hard to understand what you do. By the time they piece it together, you've lost the room — and they won't tell you why.",
+          crackedDoor:
+            "Founders who fix this one thing typically see the entire dynamic of their investor meetings shift — often within the next few meetings.",
+        },
+        3: {
+          explanation:
+            "You have the building blocks, but your pitch is making investors do assembly work.",
+          crackedDoor:
+            "The gap between \"they get it eventually\" and \"they get it instantly\" is usually some manageable structural changes, not a complete rewrite.",
+        },
+        4: {
+          explanation:
+            "Your core message lands. Investors understand what you do and why it matters — this is a real strength, and the dimension that matters most.",
+          crackedDoor:
+            "Sharpening this strength can put the finishing touches on how you come across in every investor interaction.",
+        },
+      },
     },
-    strategy: {
-      label: "The Business Hypothesis",
-      summary: "Investors are questioning the fundamentals — the market, the plan, or whether this is big enough. This isn't about your pitch skills; it's about the underlying business logic.",
-      nextSteps: [
-        "Pressure-test your market size claim. Can you defend it with bottoms-up math, not just a TAM slide?",
-        "Clarify your wedge: what's the specific, narrow entry point that proves the bigger vision?",
-        "Talk to 10 more customers this week. The answers to investor objections live in customer conversations.",
-      ],
+    investorFluency: {
+      label: "Investor Fluency",
+      levels: {
+        2: {
+          explanation:
+            "You're reading investor signals based on what they say — but what investors say and what they mean are often two different things.",
+          crackedDoor:
+            "Once you learn to read these signals accurately, fundraising starts feeling like a completely different process.",
+        },
+        3: {
+          explanation:
+            "You understand the basics of how investors operate, but the nuance is missing.",
+          crackedDoor:
+            "The pattern recognition that separates fluent founders from everyone else is learnable — it's just rarely taught.",
+        },
+        4: {
+          explanation:
+            "You read the room well and understand the long game. There's still an edge to sharpen here — but this is a genuine strength.",
+          crackedDoor:
+            "Founders at this level who master the post-meeting game tend to see their close rates shift meaningfully.",
+        },
+      },
     },
-    vcLiteracy: {
-      label: "Understanding the Fundraising Game",
-      summary: "You may be pitching the wrong investors, at the wrong stage, or misreading what they're actually looking for. The fundraising process has its own logic — and right now there's a gap.",
-      nextSteps: [
-        "Map your current stage to what investors at that stage actually expect (traction, team, market proof).",
-        "Study 5 companies similar to yours that raised successfully. What did they have when they raised?",
-        "Stop pitching for a month. Use that time to build the proof points investors are asking for.",
-      ],
+    selfAwareness: {
+      label: "Self-Awareness",
+      levels: {
+        // No level 2 — Self-Awareness floors at 3/5
+        3: {
+          explanation:
+            "You're open to feedback — but there's a pattern: you hear it, then translate it into something less uncomfortable before acting on it.",
+          crackedDoor:
+            "Founders who close this gap tend to find that every other part of their fundraise improves — because they finally know what to work on.",
+        },
+        4: {
+          explanation:
+            "You can hear hard truths without deflecting. You know the difference between what you want to hear and what you need to hear.",
+          crackedDoor:
+            "This is the edge that compounds over time. Every investor meeting becomes a data point you can actually use.",
+        },
+      },
     },
-    readiness: {
-      label: "Overall Founder Readiness",
-      summary: "The signal investors are picking up is that the overall package isn't ready yet. This could be traction, team, clarity, or a combination — but the honest read is that more building is needed before fundraising becomes productive.",
-      nextSteps: [
-        "Focus on the one metric that would change an investor's mind. Build toward that for 90 days.",
-        "Find one advisor who's raised before and get honest feedback on where you actually stand.",
-        "Consider whether now is the right time to raise, or whether 3 more months of building would change the conversation entirely.",
-      ],
+    persuasionInstincts: {
+      label: "Persuasion Instincts",
+      levels: {
+        2: {
+          explanation:
+            "Your instinct is to explain more, cover more, prove more. But right now, you're pushing information at investors instead of making them want to pull it from you.",
+          crackedDoor:
+            "The shift from push to pull is one of the most dramatic transformations in pitch coaching — founders who make it often can't believe they ever pitched the old way.",
+        },
+        3: {
+          explanation:
+            "You have good instincts — you know the deck isn't the pitch. But in pressure moments, you may revert to over-explaining.",
+          crackedDoor:
+            "Knowing the right move and making it every time are two different skills. The second one is where the real difference gets made.",
+        },
+        4: {
+          explanation:
+            "You have strong instincts for how to engage investors. You control the room without dominating it — and you know when to stop. This is the hardest skill to develop.",
+          crackedDoor:
+            "Most founders spend years trying to develop this. The next step is making sure the rest of your pitch lives up to it.",
+        },
+      },
     },
   },
 
-  // ─── Waitlist CTA (personalized per friction area) ────────
+  // ─── Email Gate CTA ─────────────────────────────────────
+  emailGate: {
+    headline:
+      "Your scores tell you what investors see. Your full results and recommendations will show you exactly what to do about it — specific to each dimension, starting with the one that matters most.",
+    buttonText: "Send My Recommendations",
+    waitlistLabel: "Also notify me when the course launches",
+    disclaimer:
+      "By submitting, you agree to receive your personalized recommendations and occasional insights from Humble Conviction. Unsubscribe anytime.",
+  },
+
+  // ─── Waitlist / Course ──────────────────────────────────
   waitlist: {
     courseName: "Pitch Better, Get Funded Faster",
-    freeGift: "a personalized pitch readiness diagnostic",
-    buttonText: "Join the Waitlist",
-    // Personalized hooks per friction area — shown after quiz results
-    hooks: {
-      packaging: {
-        headline: "This is exactly what we built the course to fix.",
-        body: "The first module is all about clarity — how to make investors understand what you do in 30 seconds, and why it matters. No jargon. No fluff. Just the frameworks that work.",
-      },
-      strategy: {
-        headline: "We help founders pressure-test the story before investors do.",
-        body: "The course walks you through market sizing, wedge strategy, and building a business case that holds up under scrutiny. So when an investor pushes back, you have the answer.",
-      },
-      vcLiteracy: {
-        headline: "Most founders learn fundraising by failing at it. You don't have to.",
-        body: "We break down exactly how investors evaluate deals — what they look for at each stage, how decisions actually get made, and how to position yourself so the process works in your favor.",
-      },
-      readiness: {
-        headline: "The founders who prepare before they pitch are the ones who close.",
-        body: "The course is a structured path from where you are now to investor-ready — covering your story, your strategy, your pitch, and the fundraising process itself. Built for founders who want to do it right.",
-      },
-    },
-  },
-
-  // ─── Webhook for Phase 2 AI Diagnostic ───────────────────
-  webhook: {
-    url: null, // Make.com / Zapier webhook URL — wired later
   },
 }
 

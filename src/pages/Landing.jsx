@@ -6,16 +6,16 @@ export default function Landing() {
   const { landing, theme } = config
 
   return (
-    <div className="flex flex-col items-center pt-12 md:pt-24 space-y-16">
+    <div className="flex flex-col items-center pt-8 md:pt-20 space-y-14">
       {/* Hero */}
       <div className="text-center max-w-2xl space-y-6">
         <h1
-          className="text-4xl md:text-6xl font-extrabold tracking-tight leading-tight"
-          style={{ fontFamily: theme.headingFont, letterSpacing: "-2px" }}
+          className="text-3xl md:text-5xl font-extrabold tracking-tight leading-tight whitespace-pre-line"
+          style={{ fontFamily: theme.headingFont, letterSpacing: "-1.5px", color: theme.text }}
         >
           {landing.headline}
         </h1>
-        <p className="text-lg md:text-xl leading-relaxed" style={{ color: theme.muted }}>
+        <p className="text-base md:text-lg leading-relaxed max-w-xl mx-auto" style={{ color: theme.muted }}>
           {landing.subheadline}
         </p>
         <div className="pt-4">
@@ -53,8 +53,8 @@ export default function Landing() {
               }}
             >
               <h3
-                className="text-lg font-bold mb-2"
-                style={{ fontFamily: theme.headingFont, letterSpacing: "-0.3px" }}
+                className="text-base font-bold mb-2"
+                style={{ fontFamily: theme.headingFont, letterSpacing: "-0.3px", color: theme.text }}
               >
                 {f.title}
               </h3>
