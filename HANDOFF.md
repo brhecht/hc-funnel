@@ -1,5 +1,5 @@
 # HANDOFF — HC Funnel
-*Last updated: March 15, 2026 ~evening ET*
+*Last updated: March 16, 2026 ~evening ET*
 
 ## Project Overview
 Quiz-based lead magnet funnel for Humble Conviction's upcoming pitching/fundraising course ("Eddy"). 8 scenario-based questions score founders across 4 dimensions, deliver a tier result with scorecard, and gate full recommendations behind email capture. Config-driven architecture — all content lives in `src/config/funnel.js`. Part of B-Suite, positioned as a sub-tool under B Marketing.
@@ -31,6 +31,12 @@ hc-funnel/
 │       ├── Landing.jsx      — "Investor-Tested Insights" hero + feature cards → /quiz CTA
 │       ├── Quiz.jsx         — 8 scenario cards, A/B/C/D badges, progress bar, no back button
 │       └── Results.jsx      — Calculating pause → tier badge → scorecard → email gate
+├── ads/
+│   ├── CREATIVE-BRIEF.md    — Nico's execution doc: text overlays, ad copy, psychology framework
+│   ├── NANO-BANANA-PROMPTS.md — Image generation prompts for reference images
+│   └── phase1-references/   — 4 locked Nano Banana reference images + 1 alt
+├── research/
+│   └── waitlist-email-drip-strategy.md — Research memo on pre-product email sequence
 ├── HC-PHASE1-DISCOVERY.md   — Strategy/content bible (819 lines, all decisions + copy)
 ├── index.html               — Inter font loaded via Google Fonts
 └── package.json
@@ -48,14 +54,18 @@ hc-funnel/
 - Firestore lead capture + Kit subscription working
 - New design system: navy/orange palette (#F8F9FC bg, #1A2332 text, #E8845A accent), Inter font throughout
 
-## Recent Changes (March 15, 2026)
-- **Complete rewrite of all quiz content** — from placeholder self-assessment questions to 8 locked scenario-based questions with per-option scoring
-- **New scoring engine** — raw scores per dimension (0-4), display mapping (raw→2/5, 3/5, or 4/5), raw total (0-16) for tier assignment. Validated via Monte Carlo simulation (10K runs, 3 persona types)
-- **New design system** — replaced warm cream/coral/Playfair Display with cool-white/navy/orange/Inter. Research-backed for B2B trust + mobile conversion.
-- **Results page rebuilt** — calculating pause, tier badge (colored pill), scorecard with dot visualization, email gate CTA card in coral
-- **Quiz UX rebuilt** — scenario cards with A/B/C/D letter badges, thin progress bar, no back button, no multi-select, no section labels
-- **Landing page updated** — "Investor-Tested Insights" positioning, new copy and feature cards
-- **Removed:** back button, multi-select support, section labels, deep dive questions, friction diagnoses, old 4-tier system, old waitlist hooks
+## Recent Changes (March 16, 2026)
+- **Ad creatives package created** — 4 Instagram feed ad concepts with reference images (generated via Nano Banana), text overlay options, ad copy, and social-media-specific persuasion psychology framework. Concepts: (1) "The Polite Pass" (pain/rejection), (2) "The Room You Can't Read" (Dunning-Kruger), (3) "The Shift" (aspiration/power flip), (4) "Built From the Other Side" (authority/credibility). All reference images locked after iterative refinement. Brief emailed to Nico with instructions to build final ads in AdCreative.ai.
+- **ICP defined for ad creative:** White male tech founders, 24-34. Every text overlay and first line of ad copy contains "founder," "investor," or "pitch" for identity signaling.
+- **Waitlist email drip strategy researched** — 5-email sequence over 4 weeks for pre-product nurture. Research memo saved to `research/waitlist-email-drip-strategy.md`. Key finding: waitlist age kills conversion (0% at 6+ months), so nurture is mandatory. Email 4 includes demand validation CTA ("Want early access?") as the signal for whether to build the course.
+- **New directories:** `ads/` (creative brief, image prompts, reference images) and `research/` (research memos)
+- **Legacy handoff files migrated** — b-marketing's date-stamped handoff files consolidated to single HANDOFF.md
+
+### Previous Session (March 15, 2026)
+- Complete rewrite of all quiz content — 8 locked scenario-based questions with per-option scoring
+- New scoring engine validated via Monte Carlo simulation (10K runs, 3 persona types)
+- New design system: cool-white/navy/orange/Inter
+- Results page, quiz UX, landing page all rebuilt
 
 ## Known Bugs / Issues
 None reported. Brian noted he has design/wording tweaks to make — expected polish pass.
@@ -88,9 +98,11 @@ None reported. Brian noted he has design/wording tweaks to make — expected pol
 - **Kit integration:** Via `/api/subscribe` Vercel serverless proxy. Kit API key is server-side env var.
 - **Firebase env vars:** `VITE_FIREBASE_*` in `.env` locally and Vercel dashboard
 - **Strategy/content doc:** `HC-PHASE1-DISCOVERY.md` in project root — contains all architecture decisions, all quiz questions with scoring and aha reveals, all results copy, Monte Carlo methodology, research references
-- **Ad campaign assets:** `ads/` directory — `CREATIVE-BRIEF.md` (Nico's execution doc with text overlays, ad copy, persuasion framework), `NANO-BANANA-PROMPTS.md` (image generation prompts), `phase1-references/` (locked Nano Banana reference images)
+- **Ad campaign assets:** `ads/` directory — `CREATIVE-BRIEF.md` (Nico's execution doc with text overlays, ad copy, persuasion framework), `NANO-BANANA-PROMPTS.md` (image generation prompts), `phase1-references/` (5 locked Nano Banana reference images including 1 alt)
+- **Research memos:** `research/` directory — `waitlist-email-drip-strategy.md` (pre-product email sequence strategy, March 16)
 
 ## Open Questions / Decisions Pending
-- Brian's design/wording tweaks (will review live site next session)
-- Email content: results email + drip sequence (deferred to focus on getting quiz live first)
-- When to start Meta ad campaign (depends on email content being ready)
+- Brian's design/wording tweaks on the live quiz site
+- Email copy: the 5-email drip sequence is strategized (see research memo) but actual copy not yet written. Email 1 (results email) is the most urgent — it's the payoff for the email gate.
+- When to start Meta ad campaign — depends on: (1) Nico building final ads in AdCreative.ai from the reference images, (2) email content being ready so captured leads get nurtured immediately
+- Demand validation: Email 4's "Want early access?" CTA will be the signal for whether to build Eddy as a course. If <5% click, rethink the product.
