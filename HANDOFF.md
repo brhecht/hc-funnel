@@ -65,7 +65,7 @@ None reported. Brian noted he has design/wording tweaks to make — expected pol
 - **Email content** — results email (full recommendations) + 5-email drip sequence (not yet written)
 - **Kit automation** — wire email content to Kit autoresponder sequences
 - **Meta Pixel** — tracking integration for ad attribution
-- **Ad creatives** — for Meta campaign launch
+- **Ad creatives** — 4 concepts created (March 16). Creative brief and reference images in `ads/`. See `ads/CREATIVE-BRIEF.md` for Nico's execution doc (text overlays, ad copy, psychology framework, testing strategy) and `ads/NANO-BANANA-PROMPTS.md` for image generation prompts. Locked reference images go in `ads/phase1-references/`. Next: Nico builds final ad images in AdCreative.ai using these references, then Meta campaign launch.
 - **Post-launch optimization** — Pancake Principle: first 2-3 weeks are for data collection, not conversion optimization. Metrics to track: CPC, CPL, quiz completion rate, email capture rate, waitlist check rate, score distribution
 
 ## Design Decisions & Constraints
@@ -88,6 +88,7 @@ None reported. Brian noted he has design/wording tweaks to make — expected pol
 - **Kit integration:** Via `/api/subscribe` Vercel serverless proxy. Kit API key is server-side env var.
 - **Firebase env vars:** `VITE_FIREBASE_*` in `.env` locally and Vercel dashboard
 - **Strategy/content doc:** `HC-PHASE1-DISCOVERY.md` in project root — contains all architecture decisions, all quiz questions with scoring and aha reveals, all results copy, Monte Carlo methodology, research references
+- **Ad campaign assets:** `ads/` directory — `CREATIVE-BRIEF.md` (Nico's execution doc with text overlays, ad copy, persuasion framework), `NANO-BANANA-PROMPTS.md` (image generation prompts), `phase1-references/` (locked Nano Banana reference images)
 
 ## Open Questions / Decisions Pending
 - Brian's design/wording tweaks (will review live site next session)
