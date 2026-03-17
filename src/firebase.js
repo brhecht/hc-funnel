@@ -38,8 +38,14 @@ export async function updateLead(docId, data) {
  * Subscribe an email to Kit (ConvertKit) via server-side proxy.
  * Routes through /api/subscribe so ad blockers can't intercept.
  * API key stays server-side — never exposed to the browser.
+ *
+ * Automatically:
+ *  - Applies the 'quiz-lead' tag
+ *  - Passes UTM params (from metadata.utms) as Kit custom fields
  */
 export async function subscribeToKit(email, metadata = {}) {
+  const utms = metadata.utms || {}
+
   try {
     await fetch("/api/subscribe", {
       method: "POST",
@@ -50,7 +56,9 @@ export async function subscribeToKit(email, metadata = {}) {
           tier: metadata.tier || "",
           friction_area: metadata.frictionArea || "",
           waitlist: metadata.waitlist ? "yes" : "no",
+          ...utms,
         },
+        tags: ["quiz-lead"],
       }),
     })
   } catch (err) {

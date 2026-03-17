@@ -122,6 +122,7 @@ export default function Results() {
     resetQuiz,
     emailCaptured,
     setEmailCaptured,
+    utms,
   } = useFunnel()
   const { theme } = config
 
@@ -152,6 +153,7 @@ export default function Results() {
         tier: tier.id,
         tierName: tier.name,
         waitlist: joinWaitlist,
+        ...(Object.keys(utms).length ? { utms } : {}),
       })
 
       // Subscribe to Kit in parallel (non-blocking)
@@ -159,6 +161,7 @@ export default function Results() {
         tier: tier.name,
         frictionArea: tier.id,
         waitlist: joinWaitlist,
+        utms,
       })
     } catch (err) {
       console.error("Failed to save lead:", err)

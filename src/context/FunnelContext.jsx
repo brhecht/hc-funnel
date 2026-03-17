@@ -35,6 +35,17 @@ export function FunnelProvider({ children }) {
   const [emailCaptured, setEmailCaptured] = useState(false)
   const [calculating, setCalculating] = useState(false)
 
+  // Capture UTM params once on first render (before React Router strips them)
+  const [utms] = useState(() => {
+    const params = new URLSearchParams(window.location.search)
+    const u = {}
+    ;["utm_source", "utm_medium", "utm_campaign", "utm_term", "utm_content"].forEach((k) => {
+      const v = params.get(k)
+      if (v) u[k] = v
+    })
+    return u
+  })
+
   const questions = FUNNEL.quiz.questions
 
   function answerQuestion(questionId, optionId) {
@@ -102,6 +113,7 @@ export function FunnelProvider({ children }) {
       questions,
       emailCaptured,
       calculating,
+      utms,
       answerQuestion,
       getAnswer,
       isQuestionAnswered,
