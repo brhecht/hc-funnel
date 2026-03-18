@@ -1,5 +1,4 @@
 import FUNNEL from "../config/funnel"
-import AppSwitcher from "./AppSwitcher"
 
 export default function Layout({ children }) {
   const { brand, theme } = FUNNEL
@@ -13,7 +12,6 @@ export default function Layout({ children }) {
         fontFamily: theme.bodyFont,
       }}
     >
-      <AppSwitcher current="funnel" />
       {/* Nav */}
       <header className="max-w-3xl mx-auto px-5 py-6 flex items-center gap-3">
         <div
