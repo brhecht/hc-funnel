@@ -126,12 +126,12 @@ const FUNNEL = {
         options: [
           {
             id: "a",
-            label: "Pull up the deck and start walking them through it from slide 1 — you've rehearsed this and the flow is tight",
+            label: "Pull up the deck and start walking them through it from slide 1",
             points: 0,
           },
           {
             id: "b",
-            label: "Start the conversation without opening the deck — only pull it up if they ask or to illustrate a specific point",
+            label: "Start the conversation without opening the deck — pull it up only if they ask",
             points: 2,
           },
           {
@@ -141,7 +141,7 @@ const FUNNEL = {
           },
           {
             id: "d",
-            label: "Send the deck to their email right before the meeting so they can follow along on their own screens",
+            label: "Send the deck to their email beforehand so they can follow along on their own screens",
             points: 0,
           },
         ],
@@ -182,7 +182,7 @@ const FUNNEL = {
         options: [
           {
             id: "a",
-            label: "Your company is genuinely hard to explain in a short pitch — some ideas just need more time to land",
+            label: "Your company is genuinely hard to explain in a short pitch — some ideas need more time to land",
             points: 0,
           },
           {
@@ -192,7 +192,7 @@ const FUNNEL = {
           },
           {
             id: "c",
-            label: "You need to add more detail and context so there are fewer gaps in their understanding",
+            label: "You need to add more detail and context to close the gaps in their understanding",
             points: 0,
           },
           {
@@ -266,7 +266,7 @@ const FUNNEL = {
         options: [
           {
             id: "a",
-            label: "They may have a point about pacing, but the substance is solid — you just need to work on how you deliver it",
+            label: "They may have a point about pacing, but the substance is solid — it's a delivery issue",
             points: 1,
           },
           {
@@ -276,7 +276,7 @@ const FUNNEL = {
           },
           {
             id: "c",
-            label: "You'll trim a bit, but you know which parts are non-negotiable — the core stays",
+            label: "You'll trim a bit, but you know which parts are non-negotiable",
             points: 0,
           },
           {
@@ -294,7 +294,7 @@ const FUNNEL = {
         options: [
           {
             id: "a",
-            label: "Walk them through the full picture — the problem, your solution, the market, and where you're at — so they have complete context",
+            label: "Walk them through the full picture — problem, solution, market, traction — so they have complete context",
             points: 0,
           },
           {
@@ -304,12 +304,12 @@ const FUNNEL = {
           },
           {
             id: "c",
-            label: "Start by asking what they typically invest in, so you can tailor your answer to what matters to them",
+            label: "Ask what they typically invest in so you can tailor your answer",
             points: 1,
           },
           {
             id: "d",
-            label: "Give the high-level concept but caveat that you're still early and figuring some things out",
+            label: "Give the high-level concept but caveat that you're still early",
             points: 0,
           },
         ],
