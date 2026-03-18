@@ -446,17 +446,19 @@ export default function Results() {
         </div>
       )}
 
-      {/* Retake */}
-      <div className="text-center pb-8">
-        <Link
-          to="/quiz"
-          onClick={resetQuiz}
-          className="text-sm underline underline-offset-4 transition-colors hover:opacity-80"
-          style={{ color: theme.faint }}
-        >
-          Retake assessment
-        </Link>
-      </div>
+      {/* Retake — only show before email capture */}
+      {!emailCaptured && (
+        <div className="text-center pb-8">
+          <Link
+            to="/quiz"
+            onClick={resetQuiz}
+            className="text-sm underline underline-offset-4 transition-colors hover:opacity-80"
+            style={{ color: theme.faint }}
+          >
+            Retake assessment
+          </Link>
+        </div>
+      )}
     </div>
   )
 }
