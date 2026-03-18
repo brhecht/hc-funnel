@@ -140,12 +140,20 @@ export default function Results() {
   } = useFunnel()
   const { theme } = config
 
+  // Preview mode: ?preview=captured or ?preview=waitlist to skip quiz
+  const previewMode = new URLSearchParams(window.location.search).get("preview")
+
   // Track whether user checked waitlist (for confirmation variant)
-  const [didJoinWaitlist, setDidJoinWaitlist] = useState(false)
+  const [didJoinWaitlist, setDidJoinWaitlist] = useState(previewMode === "waitlist")
   const [waitlistJoinedLate, setWaitlistJoinedLate] = useState(false)
 
+  // Force emailCaptured in preview mode
+  useEffect(() => {
+    if (previewMode) setEmailCaptured(true)
+  }, [previewMode, setEmailCaptured])
+
   // Calculating pause — 2.5 seconds
-  const [showResults, setShowResults] = useState(!calculating)
+  const [showResults, setShowResults] = useState(!calculating || !!previewMode)
 
   useEffect(() => {
     if (calculating) {
