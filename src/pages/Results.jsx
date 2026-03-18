@@ -140,6 +140,10 @@ export default function Results() {
   } = useFunnel()
   const { theme } = config
 
+  // Track whether user checked waitlist (for confirmation variant)
+  const [didJoinWaitlist, setDidJoinWaitlist] = useState(false)
+  const [waitlistJoinedLate, setWaitlistJoinedLate] = useState(false)
+
   // Calculating pause — 2.5 seconds
   const [showResults, setShowResults] = useState(!calculating)
 
@@ -180,7 +184,14 @@ export default function Results() {
     } catch (err) {
       console.error("Failed to save lead:", err)
     }
+    setDidJoinWaitlist(joinWaitlist)
     setEmailCaptured(true)
+  }
+
+  // ─── Late waitlist join (from confirmation page) ──────
+  async function handleLateWaitlistJoin() {
+    setWaitlistJoinedLate(true)
+    // TODO: update Firestore lead doc + Kit tag with waitlist = true
   }
 
   // ─── Calculating screen ─────────────────────────────────
@@ -276,22 +287,132 @@ export default function Results() {
         />
       )}
 
-      {/* Post-capture confirmation */}
+      {/* Post-capture confirmation + credibility + waitlist */}
       {emailCaptured && (
-        <div
-          className="p-6 rounded-2xl text-center space-y-3"
-          style={{ background: theme.card, border: `1px solid ${theme.border}` }}
-        >
-          <div className="text-3xl" style={{ color: theme.accent }}>&#10003;</div>
-          <h3
-            className="text-lg font-bold"
-            style={{ fontFamily: theme.headingFont, color: theme.text }}
+        <div className="space-y-8">
+          {/* Confirmation */}
+          <div
+            className="p-6 rounded-2xl text-center space-y-3"
+            style={{ background: theme.card, border: `1px solid ${theme.border}` }}
           >
-            Your recommendations are on the way.
-          </h3>
-          <p className="text-sm" style={{ color: theme.muted }}>
-            Check your inbox in a few minutes.
-          </p>
+            <div className="text-3xl" style={{ color: theme.accent }}>&#10003;</div>
+            <h3
+              className="text-lg font-bold"
+              style={{ fontFamily: theme.headingFont, color: theme.text }}
+            >
+              Your action plan is on the way.
+            </h3>
+            <p className="text-sm" style={{ color: theme.muted }}>
+              Check your inbox in a few minutes.
+            </p>
+          </div>
+
+          {/* Waitlist acknowledgment (Variant A — they checked the box) */}
+          {didJoinWaitlist && (
+            <p className="text-center text-sm font-medium" style={{ color: theme.accent }}>
+              You're on the early access list — we'll let you know when the course opens.
+            </p>
+          )}
+
+          {/* Meet Brian — credibility section */}
+          <div
+            className="p-6 md:p-8 rounded-2xl space-y-5"
+            style={{ background: theme.card, border: `1px solid ${theme.border}` }}
+          >
+            <div className="space-y-2">
+              <h3
+                className="text-lg font-bold"
+                style={{ fontFamily: theme.headingFont, color: theme.text, letterSpacing: "-0.3px" }}
+              >
+                Meet the founder behind the assessment
+              </h3>
+              <p className="text-sm leading-relaxed" style={{ color: theme.muted }}>
+                Brian Hecht is a 4x exited founder and venture investor who's coached 2,500+ startup pitches. He built this assessment to show founders what investors actually see — the patterns they notice but will never share.
+              </p>
+            </div>
+
+            {/* Short video — primary */}
+            <div className="space-y-2">
+              <div
+                className="relative w-full rounded-xl overflow-hidden"
+                style={{ paddingBottom: "56.25%" }}
+              >
+                <iframe
+                  className="absolute inset-0 w-full h-full"
+                  src="https://www.youtube.com/embed/iqw1IgRA2sw"
+                  title="This One Trait Makes a Winning Startup Pitch"
+                  frameBorder="0"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                />
+              </div>
+              <p className="text-xs" style={{ color: theme.faint }}>
+                The one trait that separates winning pitches (0:52)
+              </p>
+            </div>
+
+            {/* Long video — secondary */}
+            <div className="space-y-2 pt-2">
+              <p className="text-sm font-semibold" style={{ color: theme.text }}>
+                Go deeper: How to nail your VC pitch
+              </p>
+              <div
+                className="relative w-full rounded-xl overflow-hidden"
+                style={{ paddingBottom: "56.25%" }}
+              >
+                <iframe
+                  className="absolute inset-0 w-full h-full"
+                  src="https://www.youtube.com/embed/_3601d3OpYY"
+                  title="Want VC Investment? Here's How to Nail Your Pitch"
+                  frameBorder="0"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                />
+              </div>
+              <p className="text-xs" style={{ color: theme.faint }}>
+                Brian breaks down the principles of effective pitching (8:16)
+              </p>
+            </div>
+
+            {/* YouTube channel link */}
+            <div className="pt-1">
+              <a
+                href="https://www.youtube.com/@HumbleConviction"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-sm font-medium underline underline-offset-4 transition-colors hover:opacity-80"
+                style={{ color: theme.accent }}
+              >
+                More from Brian on YouTube →
+              </a>
+            </div>
+          </div>
+
+          {/* Variant B — waitlist re-ask for non-checkers (after credibility content) */}
+          {!didJoinWaitlist && !waitlistJoinedLate && (
+            <div
+              className="p-6 rounded-2xl text-center space-y-4"
+              style={{ background: theme.accent + "0D", border: `1px solid ${theme.accent}33` }}
+            >
+              <p className="text-sm leading-relaxed" style={{ color: theme.text }}>
+                We're building a course to help founders close these gaps.
+              </p>
+              <button
+                onClick={handleLateWaitlistJoin}
+                className="px-6 py-3 rounded-xl text-sm font-semibold transition-all hover:scale-[1.02] text-white"
+                style={{ background: theme.accent }}
+              >
+                Get early access when it launches
+              </button>
+            </div>
+          )}
+
+          {/* Late waitlist confirmation */}
+          {waitlistJoinedLate && (
+            <p className="text-center text-sm font-medium" style={{ color: theme.accent }}>
+              You're on the list — we'll let you know when it's ready.
+            </p>
+          )}
         </div>
       )}
 
