@@ -295,51 +295,67 @@ export default function Results() {
         />
       )}
 
-      {/* Post-capture confirmation + credibility + waitlist */}
+      {/* Post-capture: confirmation + authority + waitlist */}
       {emailCaptured && (
         <div className="space-y-8">
-          {/* Confirmation */}
+
+          {/* ── Section 1: Coral confirmation banner ── */}
           <div
-            className="p-6 rounded-2xl text-center space-y-3"
-            style={{ background: theme.card, border: `1px solid ${theme.border}` }}
+            className="p-6 md:p-8 rounded-2xl text-center space-y-3"
+            style={{ background: theme.accent }}
           >
-            <div className="text-3xl" style={{ color: theme.accent }}>&#10003;</div>
+            <div className="text-3xl">&#10003;</div>
             <h3
               className="text-lg font-bold"
-              style={{ fontFamily: theme.headingFont, color: theme.text }}
+              style={{ fontFamily: theme.headingFont, color: "#fff" }}
             >
               Your action plan is on the way.
             </h3>
-            <p className="text-sm" style={{ color: theme.muted }}>
+            <p className="text-sm" style={{ color: "rgba(255,255,255,0.8)" }}>
               Check your inbox in a few minutes.
             </p>
+            {/* Waitlist acknowledgment (Variant A) */}
+            {didJoinWaitlist && (
+              <p className="text-sm font-medium pt-1" style={{ color: "#fff" }}>
+                You're on the early access list — we'll let you know when the course opens.
+              </p>
+            )}
           </div>
 
-          {/* Waitlist acknowledgment (Variant A — they checked the box) */}
-          {didJoinWaitlist && (
-            <p className="text-center text-sm font-medium" style={{ color: theme.accent }}>
-              You're on the early access list — we'll let you know when the course opens.
-            </p>
-          )}
-
-          {/* Meet Brian — credibility section */}
+          {/* ── Section 2+3: Dark authority block with videos ── */}
           <div
-            className="p-6 md:p-8 rounded-2xl space-y-5"
-            style={{ background: theme.card, border: `1px solid ${theme.border}` }}
+            className="p-6 md:p-8 rounded-2xl space-y-6"
+            style={{ background: theme.text }}
           >
-            <div className="space-y-2">
-              <h3
-                className="text-lg font-bold"
-                style={{ fontFamily: theme.headingFont, color: theme.text, letterSpacing: "-0.3px" }}
+            {/* Authority intro */}
+            <div className="space-y-3">
+              <p
+                className="text-xs font-semibold uppercase tracking-widest"
+                style={{ color: theme.accent }}
               >
-                Meet the founder behind the assessment
+                The investor behind the assessment
+              </p>
+              <h3
+                className="text-lg md:text-xl font-bold leading-snug"
+                style={{ fontFamily: theme.headingFont, color: "#fff", letterSpacing: "-0.3px" }}
+              >
+                Brian Hecht
               </h3>
-              <p className="text-sm leading-relaxed" style={{ color: theme.muted }}>
-                Brian Hecht is a 4x exited founder and venture investor who's coached 2,500+ startup pitches. He built this assessment to show founders what investors actually see — the patterns they notice but will never share.
+              <p
+                className="text-sm font-medium"
+                style={{ color: "rgba(255,255,255,0.6)" }}
+              >
+                4x exited founder &middot; Venture investor &middot; 2,500+ pitches coached
+              </p>
+              <p
+                className="text-sm leading-relaxed"
+                style={{ color: "rgba(255,255,255,0.75)" }}
+              >
+                Brian built this assessment from the investor side of the table — to show founders the patterns investors notice but will never share. He's raised capital, invested it, and coached thousands of founders on how to close the gap.
               </p>
             </div>
 
-            {/* Short video — primary */}
+            {/* Primary video (short) */}
             <div className="space-y-2">
               <div
                 className="relative w-full rounded-xl overflow-hidden"
@@ -354,15 +370,21 @@ export default function Results() {
                   allowFullScreen
                 />
               </div>
-              <p className="text-xs" style={{ color: theme.faint }}>
+              <p className="text-xs" style={{ color: "rgba(255,255,255,0.45)" }}>
                 The one trait that separates winning pitches (0:52)
               </p>
             </div>
 
-            {/* Long video — secondary */}
-            <div className="space-y-2 pt-2">
-              <p className="text-sm font-semibold" style={{ color: theme.text }}>
-                Go deeper: How to nail your VC pitch
+            {/* Divider */}
+            <div style={{ borderTop: "1px solid rgba(255,255,255,0.1)" }} />
+
+            {/* Secondary video (long) */}
+            <div className="space-y-3">
+              <p
+                className="text-sm font-semibold"
+                style={{ color: "rgba(255,255,255,0.7)" }}
+              >
+                Go deeper
               </p>
               <div
                 className="relative w-full rounded-xl overflow-hidden"
@@ -377,18 +399,18 @@ export default function Results() {
                   allowFullScreen
                 />
               </div>
-              <p className="text-xs" style={{ color: theme.faint }}>
-                Brian breaks down the principles of effective pitching (8:16)
+              <p className="text-xs" style={{ color: "rgba(255,255,255,0.45)" }}>
+                How to nail your VC pitch (8:16)
               </p>
             </div>
 
             {/* YouTube channel link */}
-            <div className="pt-1">
+            <div className="pt-2">
               <a
                 href="https://www.youtube.com/@HumbleConviction"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-sm font-medium underline underline-offset-4 transition-colors hover:opacity-80"
+                className="text-sm font-medium transition-opacity hover:opacity-80"
                 style={{ color: theme.accent }}
               >
                 More from Brian on YouTube →
@@ -396,10 +418,10 @@ export default function Results() {
             </div>
           </div>
 
-          {/* Variant B — waitlist re-ask for non-checkers (after credibility content) */}
+          {/* ── Section 4: Waitlist re-ask (Variant B — non-checkers only) ── */}
           {!didJoinWaitlist && !waitlistJoinedLate && (
             <div
-              className="p-6 rounded-2xl text-center space-y-4"
+              className="p-6 md:p-8 rounded-2xl text-center space-y-4"
               style={{ background: theme.accent + "0D", border: `1px solid ${theme.accent}33` }}
             >
               <p className="text-sm leading-relaxed" style={{ color: theme.text }}>
