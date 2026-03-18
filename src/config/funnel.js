@@ -62,7 +62,7 @@ const FUNNEL = {
   landing: {
     headline: "Find Out What Investors See\n— Before They Tell You",
     subheadline:
-      "This 2-minute assessment will show you exactly what investors see — the patterns they notice but will never tell you. Based on 2,500+ pitches coached by a 4x exited founder and venture investor.",
+      "This 3-minute assessment will show you exactly what investors see — the patterns they notice but will never tell you. Based on 2,500+ pitches coached by a 4x exited founder and venture investor.",
     ctaText: "Get My Results",
     ctaLink: "/quiz",
     socialProof: null,
