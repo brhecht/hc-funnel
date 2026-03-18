@@ -438,12 +438,15 @@ const FUNNEL = {
 
   // ─── Email Gate CTA ─────────────────────────────────────
   emailGate: {
-    headline:
-      "Your scores tell you what investors see. Your full results and recommendations will show you exactly what to do about it — specific to each dimension, starting with the one that matters most.",
-    buttonText: "Send My Recommendations",
-    waitlistLabel: "Also notify me when the course launches",
+    headline: "Get your personalized action plan",
+    subline:
+      "We'll send you specific next steps for each dimension — starting with the one holding you back most.",
+    buttonText: "Get My Action Plan",
+    waitlistBridge:
+      "We're building a course to help founders close these gaps.",
+    waitlistLabel: "Get early access when it launches",
     disclaimer:
-      "By submitting, you agree to receive your personalized recommendations and occasional insights from Humble Conviction. Unsubscribe anytime.",
+      "By submitting, you agree to receive your personalized action plan and occasional insights from Humble Conviction. Unsubscribe anytime.",
   },
 
   // ─── Waitlist / Course ──────────────────────────────────

@@ -58,9 +58,16 @@ function EmailCapture({ theme, config, onCaptured }) {
       className="p-6 md:p-8 rounded-2xl space-y-5"
       style={{ background: theme.accent, color: "#fff" }}
     >
-      <p className="text-base md:text-lg font-medium leading-relaxed" style={{ color: "rgba(255,255,255,0.95)" }}>
-        {config.emailGate.headline}
-      </p>
+      <div className="space-y-2">
+        <p className="text-lg md:text-xl font-bold leading-snug" style={{ color: "#fff" }}>
+          {config.emailGate.headline}
+        </p>
+        {config.emailGate.subline && (
+          <p className="text-sm md:text-base leading-relaxed" style={{ color: "rgba(255,255,255,0.85)" }}>
+            {config.emailGate.subline}
+          </p>
+        )}
+      </div>
 
       <form onSubmit={handleSubmit} className="space-y-4">
         <div className="flex flex-col sm:flex-row gap-3">
@@ -90,18 +97,25 @@ function EmailCapture({ theme, config, onCaptured }) {
           </button>
         </div>
 
-        <label className="flex items-start gap-3 cursor-pointer">
-          <input
-            type="checkbox"
-            checked={joinWaitlist}
-            onChange={(e) => setJoinWaitlist(e.target.checked)}
-            className="mt-1 w-4 h-4 shrink-0"
-            style={{ accentColor: "#fff" }}
-          />
-          <span className="text-sm leading-snug" style={{ color: "rgba(255,255,255,0.85)" }}>
-            {config.emailGate.waitlistLabel}
-          </span>
-        </label>
+        <div className="space-y-1.5">
+          {config.emailGate.waitlistBridge && (
+            <p className="text-xs italic" style={{ color: "rgba(255,255,255,0.7)" }}>
+              {config.emailGate.waitlistBridge}
+            </p>
+          )}
+          <label className="flex items-start gap-3 cursor-pointer py-1">
+            <input
+              type="checkbox"
+              checked={joinWaitlist}
+              onChange={(e) => setJoinWaitlist(e.target.checked)}
+              className="mt-0.5 w-5 h-5 shrink-0"
+              style={{ accentColor: "#fff" }}
+            />
+            <span className="text-sm leading-snug font-medium" style={{ color: "rgba(255,255,255,0.9)" }}>
+              {config.emailGate.waitlistLabel}
+            </span>
+          </label>
+        </div>
       </form>
 
       <p className="text-xs" style={{ color: "rgba(255,255,255,0.6)" }}>
