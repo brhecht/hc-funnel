@@ -1,5 +1,5 @@
 # HANDOFF — HC Funnel
-*Last updated: March 17, 2026 ~afternoon ET*
+*Last updated: March 18, 2026 ~4pm ET*
 
 ## Project Overview
 Quiz-based lead magnet funnel for Humble Conviction's upcoming pitching/fundraising course ("Eddy"). 8 scenario-based questions score founders across 4 dimensions, deliver a tier result with scorecard, and gate full recommendations behind email capture. Config-driven architecture — all content lives in `src/config/funnel.js`. Part of B-Suite, positioned as a sub-tool under B Marketing.
@@ -43,73 +43,73 @@ hc-funnel/
 ```
 
 ## Current Status
-**Fully rebuilt and deployed (March 15, 2026).** Complete quiz funnel live at hc-funnel.vercel.app with:
-- 8 scenario-based questions (not self-assessment) following emotional arc: easy entry → uncomfortable middle → mirror → aspirational close
-- 4-dimension scoring: Clarity, Investor Fluency, Self-Awareness, Persuasion Instincts
-- 3-level display system (2/5, 3/5, 4/5 — no 5/5 exists; Self-Awareness floors at 3/5)
-- 3 tiers: Lost in the Noise (raw 0-3) / The Pieces Are There (raw 4-9) / So Close It Hurts (raw 10+)
-- Calculating pause animation (2.5s) before results
-- Scorecard with filled-dot visualization + explanation + cracked door line per dimension
-- Email gate with coral CTA card ("Send My Recommendations") + waitlist checkbox
-- Firestore lead capture + Kit subscription fully wired (tag `quiz-lead` confirmed, UTM custom fields passed)
-- New design system: navy/orange palette (#F8F9FC bg, #1A2332 text, #E8845A accent), Inter font throughout
+**Fully rebuilt and deployed (March 15, 2026).** Complete quiz funnel live at hc-funnel.vercel.app. Kit email integration wired (March 17). Ad creatives built in AdCreative.ai (March 18).
 
-## Recent Changes (March 17, 2026)
-- **Kit integration wired end-to-end** — Quiz email capture now subscribes to Kit via `/api/subscribe` Vercel serverless proxy. Tag `quiz-lead` (ID `17618088`) applied via belt-and-suspenders: both on the subscribe call AND individual tag POST (handles existing subscribers). UTM params (`utm_source`, `utm_medium`, `utm_campaign`, `utm_term`, `utm_content`) captured on first render in `FunnelContext.jsx` (before React Router strips query params), stored in Firestore lead docs, and passed as Kit custom fields. Custom fields created in Kit via API.
-- **Vercel env vars configured** — `KIT_API_KEY`, `KIT_FORM_ID` (Clare form), `KIT_TAG_QUIZ_LEAD=17618088` added to Vercel project under Brian's account.
-- **Server-side subscribe proxy enhanced** (`api/subscribe.js`) — Now accepts `tags` array (tag name strings), resolves to Kit tag IDs via env var map, and applies tags both on form subscribe and individually per tag endpoint.
-- **UTM persistence** — `FunnelContext.jsx` captures UTMs in `useState` initializer on mount, exposes via context. `Results.jsx` passes UTMs to both Firestore `saveLead()` and `subscribeToKit()`. UTMs stored as Kit custom fields (not native Kit attribution, which only works with hosted forms).
-- **Files modified:** `src/firebase.js` (subscribeToKit now sends tags + UTM fields), `src/context/FunnelContext.jsx` (UTM capture + context exposure), `src/pages/Results.jsx` (UTM passthrough to save/subscribe), `api/subscribe.js` (tag resolution + belt-and-suspenders tagging)
+## Recent Changes (March 18, 2026)
+- **All 4 ad concepts built in AdCreative.ai** — Nico executed Brian's creative brief, building all 4 concepts as Story (9:16) ads plus Feed (4:5) for Concepts 2 and 4. Six total projects created under the Humble Conviction brand in AdCreative.ai:
+  1. **Pain Angle - Story** (Concept 1 "The Polite Pass") — Text overlay: `"We're going to pass." — every investor`. Conversion Score: 100/100
+  2. **Dunning-Kruger Angle - Feed** (Concept 2 "The Room You Can't Read") — Text overlay: `He thinks the pitch is going well.` + punchline `The investors already decided.`. Conversion Score: 100/100
+  3. **Dunning-Kruger Angle - Story** (Concept 2 Story version) — Same copy. Conversion Score: 100/100
+  4. **Aspiration Angle - Story** (Concept 3 "The Shift") — Text overlay: `He stopped pitching investors.` + punchline `They started pitching him.`. Conversion Score: 100/100
+  5. **Authority Angle - Feed** (Concept 4 "Built From the Other Side") — Text overlay: `2,500 founder pitches reviewed.` + punchline `See what investors see.`. Conversion Score: 99/100
+  6. **Authority Angle - Story** (Concept 4 Story version) — Same copy. Conversion Score: 100/100
+- **Used Brian's recommended Option A text overlays** for all concepts, verbatim from CREATIVE-BRIEF.md
+- **Reference images uploaded to AdCreative.ai library** — All 4 Nano Banana reference images from `ads/phase1-references/` now in HC brand library
+- **Ad copy compiled for Meta Ads Manager** — Full primary text, headlines, CTAs for all 4 concepts ready to paste. All copy verified: 125-char truncation rule passes, identity signals present, text overlays within 3-7 word range
+- **Email draft sent to Brian** with all 4 story creatives attached + full Meta copy for each concept (Gmail draft in Nico's account)
+- **Mockup images generated** — Python-generated mockups with text overlays saved to `B-Suite/hc-ads-mockups/` for reference (not production use)
+
+### Previous Session (March 17, 2026)
+- Kit integration wired end-to-end — subscribe proxy, tag `quiz-lead`, UTM capture/passthrough
+- Vercel env vars configured for Kit
 
 ### Previous Session (March 16, 2026)
-- **Ad creatives package created** — 4 Instagram feed ad concepts with reference images (generated via Nano Banana), text overlay options, ad copy, and social-media-specific persuasion psychology framework. Concepts: (1) "The Polite Pass" (pain/rejection), (2) "The Room You Can't Read" (Dunning-Kruger), (3) "The Shift" (aspiration/power flip), (4) "Built From the Other Side" (authority/credibility). All reference images locked after iterative refinement. Brief emailed to Nico with instructions to build final ads in AdCreative.ai.
-- **ICP defined for ad creative:** White male tech founders, 24-34. Every text overlay and first line of ad copy contains "founder," "investor," or "pitch" for identity signaling.
-- **Waitlist email drip strategy researched** — 5-email sequence over 4 weeks for pre-product nurture. Research memo saved to `research/waitlist-email-drip-strategy.md`. Key finding: waitlist age kills conversion (0% at 6+ months), so nurture is mandatory. Email 4 includes demand validation CTA ("Want early access?") as the signal for whether to build the course.
-- **New directories:** `ads/` (creative brief, image prompts, reference images) and `research/` (research memos)
-- **Legacy handoff files migrated** — b-marketing's date-stamped handoff files consolidated to single HANDOFF.md
+- Ad creatives package created by Brian — 4 concepts with reference images, creative brief, psychology framework
+- ICP defined: White male tech founders, 24-34
+- Waitlist email drip strategy researched (5-email sequence)
 
 ### Previous Session (March 15, 2026)
-- Complete rewrite of all quiz content — 8 locked scenario-based questions with per-option scoring
-- New scoring engine validated via Monte Carlo simulation (10K runs, 3 persona types)
-- New design system: cool-white/navy/orange/Inter
-- Results page, quiz UX, landing page all rebuilt
+- Complete quiz rewrite, scoring engine, design system, full deploy
 
 ## Known Bugs / Issues
 None reported. Brian noted he has design/wording tweaks to make — expected polish pass.
 
 ## Planned Features / Backlog
-- **Design/wording tweaks** — Brian will review live site and provide specific adjustments (next session)
-- **Email content** — results email (full recommendations) + 5-email drip sequence (not yet written)
-- **Kit automation** — quiz-to-Kit wiring complete (March 17). Next: wire email content to Kit autoresponder sequences
-- **Meta Pixel** — tracking integration for ad attribution
-- **Ad creatives** — 4 concepts created (March 16). Creative brief and reference images in `ads/`. See `ads/CREATIVE-BRIEF.md` for Nico's execution doc (text overlays, ad copy, psychology framework, testing strategy) and `ads/NANO-BANANA-PROMPTS.md` for image generation prompts. Locked reference images go in `ads/phase1-references/`. Next: Nico builds final ad images in AdCreative.ai using these references, then Meta campaign launch.
-- **Post-launch optimization** — Pancake Principle: first 2-3 weeks are for data collection, not conversion optimization. Metrics to track: CPC, CPL, quiz completion rate, email capture rate, waitlist check rate, score distribution
+- **Meta Ads Manager setup** — Ad creatives are ready in AdCreative.ai. Next: download best variants, upload to Meta, configure campaigns (Concept 2 for cold traffic, Concept 4 for retargeting per Brian's brief)
+- **Meta Pixel** — tracking integration for ad attribution (must be done before campaign launch)
+- **Design/wording tweaks** — Brian will review live site and provide specific adjustments
+- **Email content** — results email (full recommendations) + 5-email drip sequence (not yet written). Strategy in `research/waitlist-email-drip-strategy.md`
+- **Kit automation** — wire email content to Kit autoresponder sequences
+- **Feed versions for Concepts 1 & 3** — Currently only Story format. Feed (4:5) versions can be created if needed
+- **A/B testing** — Brian's brief includes alternate text overlays (Option B) for each concept. If CTR is below benchmark after 500 impressions, swap overlays. Expect creative fatigue after 2-3 weeks per concept
+- **Post-launch optimization** — Pancake Principle: first 2-3 weeks are data collection, not conversion optimization
 
 ## Design Decisions & Constraints
 - **Config-driven:** All quiz content, scoring, copy, and design tokens in `src/config/funnel.js`. Components have zero hardcoded copy.
-- **Scenario-based questions:** Not self-assessment. Founders choose how they'd respond in real investor situations. Reveals blind spots without requiring self-awareness (Dunning-Kruger is core ICP trait).
+- **Scenario-based questions:** Not self-assessment. Founders choose how they'd respond in real investor situations.
 - **Scoring:** Per-question: Best=2, Next-best=1, Weak=0. Two questions per dimension. Raw 0-4 per dimension → display 2/5, 3/5, or 4/5. Self-Awareness floors at 3. Raw total (0-16) determines tier.
-- **Tier thresholds:** Validated via Monte Carlo (see `HC-PHASE1-DISCOVERY.md` Appendix F). Target distribution: ~25% Lost in the Noise / ~64% Pieces Are There / ~11% So Close It Hurts.
-- **Email gate (Option C):** Show tier + scorecard on web, gate full results and recommendations behind email. Diagnosis on-page, prescription in email.
-- **No back button:** Research-backed — back buttons increase abandonment, not completion.
-- **Mobile-first:** 80%+ traffic from Meta ads on mobile. All elements sized for 375px viewport. 56px min tap targets.
-- **Design system:** Navy text (#1A2332) + orange accent (#E8845A) on cool-white (#F8F9FC). Inter font (single family, fast load). Research-backed for B2B trust and mobile readability.
-- **Server-side Kit proxy** to bypass ad blockers (`/api/subscribe` Vercel serverless function).
-- **"Conversation, Not Pitch"** is a core HC principle — threads through methodology, results copy, and future email content.
+- **Tier thresholds:** ~25% Lost in the Noise / ~64% Pieces Are There / ~11% So Close It Hurts.
+- **Email gate (Option C):** Show tier + scorecard on web, gate full results behind email.
+- **No back button:** Research-backed — back buttons increase abandonment.
+- **Mobile-first:** 80%+ traffic from Meta ads on mobile.
+- **Design system:** Navy text (#1A2332) + orange accent (#E8845A) on cool-white (#F8F9FC). Inter font.
+- **Server-side Kit proxy** to bypass ad blockers.
+- **Ad strategy:** Concept 2 (Dunning-Kruger) is predicted strongest for cold traffic. Concept 4 (authority/mentor) best for retargeting. All text overlays must contain "founder," "investor," or "pitch" for identity signaling.
 
 ## Environment & Config
 - **Production URL:** https://hc-funnel.vercel.app
 - **GitHub:** github.com/brhecht/hc-funnel (auto-deploy on push to main)
 - **Firebase project:** `eddy-tracker-82486` (shared with eddy and b-marketing)
-- **Firestore collection:** `leads` — stores quiz answers, raw scores, display scores, tier, waitlist flag
-- **Kit integration:** Via `/api/subscribe` Vercel serverless proxy. Kit API key is server-side env var (`KIT_API_KEY`). Form: "Clare form" (`KIT_FORM_ID`). Tag: `quiz-lead` (`KIT_TAG_QUIZ_LEAD=17618088`). Custom fields: `tier`, `friction_area`, `waitlist`, `utm_source`, `utm_medium`, `utm_campaign`, `utm_term`, `utm_content`.
-- **Firebase env vars:** `VITE_FIREBASE_*` in `.env` locally and Vercel dashboard
-- **Strategy/content doc:** `HC-PHASE1-DISCOVERY.md` in project root — contains all architecture decisions, all quiz questions with scoring and aha reveals, all results copy, Monte Carlo methodology, research references
-- **Ad campaign assets:** `ads/` directory — `CREATIVE-BRIEF.md` (Nico's execution doc with text overlays, ad copy, persuasion framework), `NANO-BANANA-PROMPTS.md` (image generation prompts), `phase1-references/` (5 locked Nano Banana reference images including 1 alt)
-- **Research memos:** `research/` directory — `waitlist-email-drip-strategy.md` (pre-product email sequence strategy, March 16)
+- **Firestore collection:** `leads`
+- **Kit integration:** Via `/api/subscribe` Vercel serverless proxy. Tag: `quiz-lead` (ID 17618088). Custom fields: tier, friction_area, waitlist, UTM params.
+- **AdCreative.ai:** Logged in via admin@humbleconviction.com (Google auth from Hc Profile Chrome profile). 6 projects under Humble Conviction brand. 67 credits remaining (Professional 75 plan, resets in 25 days).
+- **Ad assets:** `ads/CREATIVE-BRIEF.md` (full copy + psychology), `ads/phase1-references/` (5 reference images)
+- **Mockups:** `B-Suite/hc-ads-mockups/` — reference images (REF-*.png), Python mockups (concept*-.jpg), step-by-step guide (GUIA-ADCREATIVE-PASO-A-PASO.md)
 
 ## Open Questions / Decisions Pending
 - Brian's design/wording tweaks on the live quiz site
-- Email copy: the 5-email drip sequence is strategized (see research memo) but actual copy not yet written. Email 1 (results email) is the most urgent — it's the payoff for the email gate.
-- When to start Meta ad campaign — depends on: (1) Nico building final ads in AdCreative.ai from the reference images, (2) email content being ready so captured leads get nurtured immediately
-- Demand validation: Email 4's "Want early access?" CTA will be the signal for whether to build Eddy as a course. If <5% click, rethink the product.
+- Email copy: 5-email drip sequence strategized but not written. Email 1 (results email) is most urgent
+- When to launch Meta campaign — depends on: (1) Brian approving ad creatives ✅ sent for review, (2) Meta Pixel installed, (3) email content ready so leads get nurtured
+- Which ad variants to use — Brian needs to pick favorites from the AdCreative.ai generated variations (multiple layouts per concept)
+- Feed (4:5) versions for Concepts 1 & 3 — create if Brian wants them for feed placements
+- Demand validation: Email 4's "Want early access?" CTA = signal for whether to build Eddy
