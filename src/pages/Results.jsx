@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react"
 import { Link } from "react-router-dom"
 import { useFunnel } from "../context/FunnelContext"
-import { saveLead, subscribeToKit } from "../firebase"
+import { saveLead, subscribeToKit, requestActionPlan, updateLead } from "../firebase"
 
 // ─── Score Dots Component ─────────────────────────────────
 function ScoreDots({ score, maxScore = 5, theme }) {
@@ -146,6 +146,8 @@ export default function Results() {
   // Track whether user checked waitlist (for confirmation variant)
   const [didJoinWaitlist, setDidJoinWaitlist] = useState(previewMode === "waitlist")
   const [waitlistJoinedLate, setWaitlistJoinedLate] = useState(false)
+  const [leadDocId, setLeadDocId] = useState(null)
+  const [capturedEmail, setCapturedEmail] = useState(null)
 
   // Force emailCaptured in preview mode
   useEffect(() => {
@@ -171,7 +173,7 @@ export default function Results() {
   // ─── Email capture handler ──────────────────────────────
   async function handleEmailCaptured(email, joinWaitlist) {
     try {
-      await saveLead({
+      const docId = await saveLead({
         email,
         quizAnswers: { ...answers },
         rawTotal,
@@ -181,13 +183,25 @@ export default function Results() {
         waitlist: joinWaitlist,
         ...(Object.keys(utms).length ? { utms } : {}),
       })
+      setLeadDocId(docId)
+      setCapturedEmail(email)
 
-      // Subscribe to Kit in parallel (non-blocking)
+      // Find weakest dimension for action plan
+      const dimEntries = Object.entries(displayScores)
+      const weakest = dimEntries.reduce((min, curr) => curr[1] < min[1] ? curr : min, dimEntries[0])
+
+      // Subscribe to Kit + request action plan (non-blocking, parallel)
       subscribeToKit(email, {
         tier: tier.name,
         frictionArea: tier.id,
         waitlist: joinWaitlist,
         utms,
+      })
+      requestActionPlan(email, {
+        tier: tier.id,
+        tierName: tier.name,
+        displayScores: { ...displayScores },
+        weakestDimension: weakest?.[0] || "",
       })
     } catch (err) {
       console.error("Failed to save lead:", err)
@@ -199,7 +213,21 @@ export default function Results() {
   // ─── Late waitlist join (from confirmation page) ──────
   async function handleLateWaitlistJoin() {
     setWaitlistJoinedLate(true)
-    // TODO: update Firestore lead doc + Kit tag with waitlist = true
+    try {
+      if (leadDocId) {
+        await updateLead(leadDocId, { waitlist: true })
+      }
+      if (capturedEmail) {
+        subscribeToKit(capturedEmail, {
+          tier: tier.name,
+          frictionArea: tier.id,
+          waitlist: true,
+          utms,
+        })
+      }
+    } catch (err) {
+      console.error("Failed to update waitlist:", err)
+    }
   }
 
   // ─── Calculating screen ─────────────────────────────────

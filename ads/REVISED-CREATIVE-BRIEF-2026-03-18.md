@@ -51,14 +51,14 @@ These changes apply to ALL active concepts. The copy structure and angles are lo
 
 | Find | Replace | Reason |
 |------|---------|--------|
-| `2-minute assessment` | `3-minute assessment` | Landing page updated to "3-minute" based on research (actual quiz time is 3-4 min post-trim; "2-minute" creates a violation effect) |
-| `2,500+ real pitch reviews` | `2,500+ pitches coached` | Consistency with landing page social proof line |
-| `Built from 2,500+ real pitch reviews` | `Built from 2,500+ pitches coached` | Same |
+| ~~`2-minute assessment`~~ | `3-minute assessment` | ✅ DONE — Landing page updated to "3-minute" based on research (actual quiz time is 3-4 min post-trim; "2-minute" creates a violation effect) |
+| ~~`2,500+ real pitch reviews`~~ | `2,500+ pitches coached` | ✅ DONE — Consistency with landing page social proof line |
+| ~~`Built from 2,500+ real pitch reviews`~~ | `Built from 2,500+ pitches coached` | ✅ DONE — Same |
 | `https://hc-funnel.vercel.app` | `https://humbleconviction.com` | Domain migration (Nico — see Technical Tasks) |
 
 **Concept 4 headline also needs update:**
-- Current: `See What Investors See. 4 Scores. 2 Minutes.`
-- Updated: `See What Investors See. 4 Scores. 3 Minutes.`
+- ~~Current: `See What Investors See. 4 Scores. 2 Minutes.`~~
+- Updated: `See What Investors See. 4 Scores. 3 Minutes.` ✅ DONE
 
 ---
 

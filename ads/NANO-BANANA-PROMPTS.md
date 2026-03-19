@@ -2,7 +2,7 @@
 
 ## Context (paste this first, before any image prompts)
 
-I'm creating reference images for Instagram feed ads (1:1 or 4:5) for a product called Humble Conviction. HC is a free 2-minute online assessment that scores startup founders on 4 dimensions investors actually care about: Clarity, Investor Fluency, Self-Awareness, and Persuasion Instincts. It's built from 2,500+ real pitch reviews by someone who's been on both sides of the table — raising capital and investing it.
+I'm creating reference images for Instagram feed ads (1:1 or 4:5) for a product called Humble Conviction. HC is a free 3-minute online assessment that scores startup founders on 4 dimensions investors actually care about: Clarity, Investor Fluency, Self-Awareness, and Persuasion Instincts. It's built from 2,500+ pitches coached by someone who's been on both sides of the table — raising capital and investing it.
 
 The target audience is male tech founders, 24-34, who are actively fundraising or about to start. They don't know what they don't know — they're getting polite passes from investors and can't figure out why. Think Dunning-Kruger applied to pitching.
 
