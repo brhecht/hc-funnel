@@ -96,14 +96,14 @@ These shorter versions preserve the core message and fit within the 40-char limi
 **Landing page state:**
 - Headline: "Find Out What Investors See — Before They Tell You"
 - Subheadline: "This 3-minute assessment reveals the patterns investors notice — but will never tell you."
-- Social proof: needs updating to "2,500+ pitches analyzed" (currently says "pitches coached")
+- Social proof: needs updating to "2,500+ pitches analyzed" (currently says "pitches analyzed")
 - CTA: "See What Investors See"
 
 | Ad Element | Landing Page Element | Match? |
 |-----------|---------------------|--------|
 | "What investors see/won't tell" (all 3 ads) | "Find Out What Investors See — Before They Tell You" | ✅ |
 | "3-minute assessment" (all 3 ads) | "3-minute assessment" | ✅ |
-| "2,500+ pitches analyzed" (C1, C4) | Social proof line (needs update from "coached" to "analyzed") | ⚠️ Update LP |
+| "2,500+ pitches analyzed" (C1, C4) | Social proof line (needs update from "analyzed" to "analyzed") | ⚠️ Update LP |
 | "Take the Assessment" CTA (all 3 ads) | "See What Investors See" CTA | Acceptable mismatch — Meta CTA from fixed set |
 | Pain/rejection tone (C1) | LP headline + subheadline | ✅ Tonal match |
 | Dunning-Kruger doubt (C2) | LP headline ("before they tell you" = information asymmetry) | ✅ Thematic match |
@@ -122,7 +122,7 @@ These shorter versions preserve the core message and fit within the 40-char limi
 
 3. **Concept 4 overlay:** Add "+" to match primary text: "2,500+ founder pitches analyzed."
 
-4. **Landing page social proof:** Update "pitches coached" → "pitches analyzed" to match all ad copy.
+4. **Landing page social proof:** Update "pitches analyzed" → "pitches analyzed" to match all ad copy.
 
 ### Consider but not blocking:
 

@@ -80,7 +80,7 @@ You've gotten this email from an investor. Probably more than once.
 
 Here's what they don't tell you: it's rarely the idea. It's the 2-3 things in how you pitch that make investors hesitate — patterns they see in the first 5 minutes but will never point out.
 
-This free 3-minute assessment shows you what investors actually see when you pitch. 4 scores across the dimensions that matter. Built from 2,500+ pitches coached.
+This free 3-minute assessment shows you what investors actually see when you pitch. 4 scores across the dimensions that matter. Built from 2,500+ pitches analyzed.
 
 ### Headline
 What Investors See When You Pitch — But Won't Tell You
@@ -188,10 +188,10 @@ Head-and-shoulders portrait. Older man, silver temples, navy crewneck, reading g
 
 ### Primary Text
 (First 125 chars:)
-`After 2,500+ pitches coached, the pattern is always the same: the best founders don't have better ideas.`
+`After 2,500+ pitches analyzed, the pattern is always the same: the best founders don't have better ideas.`
 
 Full copy:
-After 2,500+ pitches coached, the pattern is always the same:
+After 2,500+ pitches analyzed, the pattern is always the same:
 
 The best founders don't have better ideas. They understand how investors think.
 
@@ -229,4 +229,4 @@ Take the Assessment
 - **Creative fatigue plan:** Expect ~2-3 weeks per concept before CTR degradation (Meta data). After the first rotation, add at least one new concept from learnings. Our 4 concepts give the minimum viable rotation.
 
 ### CTA Destination
-hc-funnel.vercel.app
+quiz.humbleconviction.com

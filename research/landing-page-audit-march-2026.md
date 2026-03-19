@@ -8,13 +8,13 @@ The landing page has a strong headline and clean design but is structurally unde
 
 ## What the Current Page Does
 
-Based on the live page at hc-funnel.vercel.app (desktop screenshot captured):
+Based on the live page at quiz.humbleconviction.com (desktop screenshot captured):
 
 **Above the fold (desktop):**
 1. AppSwitcher nav bar (B Eddy, B Things, B Content, B People, B Marketing)
 2. "HC" logo + "Humble Conviction" brand name
 3. Headline: "Find Out What Investors See — Before They Tell You"
-4. Subheadline: "This 3-minute assessment will show you exactly what investors see — the patterns they notice but will never tell you. Based on 2,500+ pitches coached by a 4x exited founder and venture investor."
+4. Subheadline: "This 3-minute assessment will show you exactly what investors see — the patterns they notice but will never tell you. Based on 2,500+ pitches analyzed by a 4x exited founder and venture investor."
 5. CTA button: "Get My Results →"
 6. Three feature cards (partially visible): "Investor-Tested Insights," "4-Dimension Scorecard," "Built From 2,500+ Pitches"
 
@@ -76,11 +76,11 @@ This pattern is relevant for HC Funnel because the quiz concept needs some expla
 **Recommendation:** Keep. This is the strongest element on the page. One potential A/B test: "What Do Investors Really See When You Pitch?" (question format, slightly more direct).
 
 ### 4. Subheadline
-**Current:** "This 3-minute assessment will show you exactly what investors see — the patterns they notice but will never tell you. Based on 2,500+ pitches coached by a 4x exited founder and venture investor."
-**Research says:** This is doing two jobs at once — explaining the quiz AND establishing credibility. On mobile, this is 3 lines of text between the headline and CTA, which pushes the CTA down. The "2,500+ pitches coached by a 4x exited founder and venture investor" credibility claim is buried in the subheadline instead of being a standalone social proof element.
+**Current:** "This 3-minute assessment will show you exactly what investors see — the patterns they notice but will never tell you. Based on 2,500+ pitches analyzed by a 4x exited founder and venture investor."
+**Research says:** This is doing two jobs at once — explaining the quiz AND establishing credibility. On mobile, this is 3 lines of text between the headline and CTA, which pushes the CTA down. The "2,500+ pitches analyzed by a 4x exited founder and venture investor" credibility claim is buried in the subheadline instead of being a standalone social proof element.
 **Recommendation:** Split this into two elements:
 - **Subheadline (short):** "This 3-minute assessment reveals the patterns investors notice — but will never tell you."
-- **Social proof line (standalone, near CTA):** "Based on 2,500+ pitches coached" or "2,500+ founders assessed" (once you have real numbers)
+- **Social proof line (standalone, near CTA):** "Based on 2,500+ pitches analyzed" or "2,500+ founders assessed" (once you have real numbers)
 
 ### 5. CTA Button
 **Current:** "Get My Results →"
@@ -99,7 +99,7 @@ This pattern is relevant for HC Funnel because the quiz concept needs some expla
 **Research says:** This is the single biggest gap. Social proof increases landing page conversion by 34% (MailerLite). Cold traffic bounces in 3-8 seconds without credibility markers (AdAmigo.ai). Usage numbers ("Join 50,000+ businesses") reduce perceived risk through crowd validation (WiserNotify). Placing social proof near the CTA reduces hesitation (Nudgify, Flockler).
 **Recommendation:** Add social proof. Options in order of preference:
 1. **Participant count** (once you have real data): "2,500+ founders have taken this assessment"
-2. **Credibility statement** (available now): "Based on 2,500+ pitches coached" — extract this from the subheadline and make it a standalone element near the CTA
+2. **Credibility statement** (available now): "Based on 2,500+ pitches analyzed" — extract this from the subheadline and make it a standalone element near the CTA
 3. **Authority marker:** "Created by a 4x exited founder and venture investor" — again, extract from subheadline
 4. **Future addition:** Once you have testimonials or notable completers, add a single testimonial near the CTA
 
@@ -119,7 +119,7 @@ This pattern is relevant for HC Funnel because the quiz concept needs some expla
 
 1. **Remove AppSwitcher from the landing page** (and quiz flow) for cold traffic. This is the easiest win — it removes exit links and reclaims vertical space on mobile.
 
-2. **Add social proof near the CTA.** Start with "Based on 2,500+ pitches coached" as a standalone line below the CTA button. Upgrade to participant count once you have data.
+2. **Add social proof near the CTA.** Start with "Based on 2,500+ pitches analyzed" as a standalone line below the CTA button. Upgrade to participant count once you have data.
 
 3. **Change CTA copy from "Get My Results" to "Start My Assessment"** (or "Take the Assessment"). Matches the immediate action rather than the eventual outcome.
 

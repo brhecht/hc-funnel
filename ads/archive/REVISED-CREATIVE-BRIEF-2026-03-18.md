@@ -54,9 +54,9 @@ These changes apply to ALL active concepts. The copy structure and angles are lo
 | Find | Replace | Reason |
 |------|---------|--------|
 | ~~`2-minute assessment`~~ | `3-minute assessment` | ✅ DONE — Landing page updated to "3-minute" based on research (actual quiz time is 3-4 min post-trim; "2-minute" creates a violation effect) |
-| ~~`2,500+ real pitch reviews`~~ | `2,500+ pitches coached` | ✅ DONE — Consistency with landing page social proof line |
-| ~~`Built from 2,500+ real pitch reviews`~~ | `Built from 2,500+ pitches coached` | ✅ DONE — Same |
-| `https://hc-funnel.vercel.app` | `https://humbleconviction.com` | Domain migration (Nico — see Technical Tasks) |
+| ~~`2,500+ real pitch reviews`~~ | `2,500+ pitches analyzed` | ✅ DONE — Consistency with landing page social proof line |
+| ~~`Built from 2,500+ real pitch reviews`~~ | `Built from 2,500+ pitches analyzed` | ✅ DONE — Same |
+| `https://quiz.humbleconviction.com` | `https://humbleconviction.com` | Domain migration (Nico — see Technical Tasks) |
 
 **Concept 4 headline also needs update:**
 - ~~Current: `See What Investors See. 4 Scores. 2 Minutes.`~~
@@ -120,10 +120,10 @@ If AdCreative.ai doesn't allow color customization of the template elements, Nic
 
 For reference when checking ad-to-LP continuity:
 
-- **URL:** hc-funnel.vercel.app (migrating to humbleconviction.com — Nico's task)
+- **URL:** quiz.humbleconviction.com (migrating to humbleconviction.com — Nico's task)
 - **Headline:** "Find Out What Investors See — Before They Tell You"
 - **Subheadline:** "This 3-minute assessment reveals the patterns investors notice — but will never tell you."
-- **Social proof:** "Based on 2,500+ pitches coached by a 4x exited founder and venture investor"
+- **Social proof:** "Based on 2,500+ pitches analyzed by a 4x exited founder and venture investor"
 - **CTA:** "See What Investors See →"
 - **Design:** Navy text, coral accent, cool-white bg, Inter font. No AppSwitcher. Feature cards below the fold.
 
@@ -148,10 +148,10 @@ For reference when checking ad-to-LP continuity:
 | # | Task | Status | Notes |
 |---|------|--------|-------|
 | N1 | Update ad copy: "2-minute" → "3-minute" in all 3 concepts | TODO | Find-replace in all primary text |
-| N2 | Update ad copy: "real pitch reviews" → "pitches coached" | TODO | Concepts 1 and 4 |
+| N2 | Update ad copy: "real pitch reviews" → "pitches analyzed" | TODO | Concepts 1 and 4 |
 | N3 | Update Concept 4 headline: "2 Minutes" → "3 Minutes" | TODO | |
 | N4 | Wire humbleconviction.com domain to hc-funnel Vercel project | TODO | Options: subdomain (quiz.humbleconviction.com → CNAME) or path-based. Brian to decide preference. |
-| N5 | Update URL in all ad copy from hc-funnel.vercel.app → new domain | TODO | After N4 is done |
+| N5 | Update URL in all ad copy from quiz.humbleconviction.com → new domain | TODO | After N4 is done |
 | N6 | Create Feed (4:5) version of Concept 1 | TODO | Story (9:16) exists; Feed version needed |
 | N7 | Spec HC color palette into ad templates (see Visual Continuity Spec above) | TODO | Replace AdCreative.ai blue with HC navy/coral. Rebuild in Figma/Canva if AdCreative.ai doesn't allow color customization. |
 

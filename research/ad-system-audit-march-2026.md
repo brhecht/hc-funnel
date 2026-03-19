@@ -67,7 +67,7 @@ The ad copy is strong across all 4 concepts — the strategic thinking, awarenes
 | Core promise | "What investors see when you pitch" | "Find Out What Investors See — Before They Tell You" | ✅ Strong |
 | Assessment framing | "4 scores across the dimensions that matter" | "4-Dimension Scorecard" (feature card) | ✅ Matches |
 | Time claim | "2-minute assessment" | "3-minute assessment" | ❌ Needs update (ads → 3-minute) |
-| Credibility | "2,500+ real pitch reviews" / "Built from 2,500+ real pitch reviews" | "Based on 2,500+ pitches coached" | ⚠️ Close but different framing ("reviewed" vs "coached") — pick one |
+| Credibility | "2,500+ real pitch reviews" / "Built from 2,500+ real pitch reviews" | "Based on 2,500+ pitches analyzed" | ⚠️ Close but different framing ("reviewed" vs "analyzed") — pick one |
 | CTA language | "Take the Assessment" / "Get My Scores" | "See What Investors See" | ⚠️ Different but not jarring — Meta CTA buttons are from fixed set |
 | Emotional register | Direct, slightly confrontational, no corporate fluff | Same tone | ✅ Strong match |
 | Visual continuity | Blue/white AdCreative.ai template with HC badge | Navy/coral/cool-white HC design system | ⚠️ Different color palette — ads are blue/white, LP is navy/coral |
@@ -78,7 +78,7 @@ The ad copy is strong across all 4 concepts — the strategic thinking, awarenes
 
 **2. The "2-minute" → "3-minute" mismatch is a trust issue.** If the ad says "2-minute" and the landing page says "3-minute," the user notices. This is a small detail but it undermines the precision that the rest of the funnel works hard to establish. Easy fix — update all ad copy to "3-minute."
 
-**3. "Pitched coached" vs "pitch reviews" inconsistency.** The ads say "2,500+ real pitch reviews" and "2,500+ founder pitch reviews." The landing page says "2,500+ pitches coached." These are different claims — "reviewed" implies observation, "coached" implies active work. Pick one and use it everywhere. "Coached" is the stronger credibility claim.
+**3. "Pitched analyzed" vs "pitch reviews" inconsistency.** The ads say "2,500+ real pitch reviews" and "2,500+ founder pitch reviews." The landing page says "2,500+ pitches analyzed." These are different claims — "reviewed" implies observation, "analyzed" implies active work. Pick one and use it everywhere. "Coached" is the stronger credibility claim.
 
 ## The AI Image Question
 
@@ -102,8 +102,8 @@ This is the highest-stakes finding. The research is directionally clear:
 ### Ship now (copy changes only):
 
 1. **Update "2-minute" to "3-minute"** in all 4 primary text copies
-2. **Standardize credibility claim** — "2,500+ pitches coached" everywhere (ads + LP)
-3. **Update URL** — hc-funnel.vercel.app → humbleconviction.com (when domain is ready)
+2. **Standardize credibility claim** — "2,500+ pitches analyzed" everywhere (ads + LP)
+3. **Update URL** — quiz.humbleconviction.com → humbleconviction.com (when domain is ready)
 
 ### Ship Concepts 1 and 4 with current images. Hold Concepts 2 and 3.
 
