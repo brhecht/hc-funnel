@@ -43,6 +43,28 @@ export async function updateLead(docId, data) {
  *  - Applies the 'quiz-lead' tag
  *  - Passes UTM params (from metadata.utms) as Kit custom fields
  */
+/**
+ * Request personalized action plan email via Claude API + Resend.
+ * Non-blocking — fire and forget from the frontend.
+ */
+export async function requestActionPlan(email, quizData = {}) {
+  try {
+    await fetch("/api/action-plan", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        email,
+        tier: quizData.tier || "",
+        tierName: quizData.tierName || "",
+        displayScores: quizData.displayScores || {},
+        weakestDimension: quizData.weakestDimension || "",
+      }),
+    })
+  } catch (err) {
+    console.error("Action plan request failed:", err)
+  }
+}
+
 export async function subscribeToKit(email, metadata = {}) {
   const utms = metadata.utms || {}
 

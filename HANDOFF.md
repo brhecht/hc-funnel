@@ -1,5 +1,5 @@
 # HANDOFF — HC Funnel
-*Last updated: March 18, 2026 ~9:30pm ET*
+*Last updated: March 19, 2026 ~9:30am ET*
 
 ## Project Overview
 Quiz-based lead magnet funnel for Humble Conviction's upcoming pitching/fundraising course. 8 scenario-based questions score founders across 4 dimensions, deliver a tier result with scorecard, and gate a personalized action plan behind email capture. Config-driven architecture — all content lives in `src/config/funnel.js`. Part of B-Suite, positioned as a sub-tool under B Marketing.
@@ -52,14 +52,30 @@ hc-funnel/
 ```
 
 ## Current Status
-**Fully rebuilt, audited, and deployed (March 18, 2026).** Major session tonight:
-- Full expert audit of quiz structure, quiz content, landing page, results page, email capture, and ad creatives
-- Multiple code changes deployed to production
-- Ad creative plan revised — 3 concepts (Concept 3 killed), image regeneration needed for Concept 2
-- Action plan email pipeline specced (Resend + Claude API) but not yet built
-- Autoresponder email templates drafted (tier-specific) but not yet in Kit
+**Fully rebuilt, audited, and deployed (March 18, 2026). Kickoff meeting March 19 set priorities for launch week.**
+
+Brian audited the full funnel end-to-end on March 18 using the expert skill. Quiz wording trimmed, email capture copy tightened, post-capture authority section added, ad plan revised. On March 19 kickoff, Brian confirmed he is working on two things in parallel: (1) finalizing ad creatives (image swaps, copy tweaks) and (2) writing the results logic for the personalized action plan email. Nico handles all technical infrastructure.
+
+**Key March 19 kickoff decisions:**
+- Brian will share GoDaddy login for DNS pointing
+- Quiz answers were ~20% too long — Brian rewrote half of them to be shorter/scannable (already deployed March 18)
+- Email capture language tightened: "get your personalized action plan" framing (already deployed March 18)
+- Waitlist checkbox reworded with bridge sentence explaining the course (already deployed March 18)
+- Thank you page now has Brian's authority section + 2 embedded YouTube videos (already deployed March 18)
+- Autoresponder email not built yet — this is the next big piece (Resend + Claude API pipeline)
+- Brian confirmed using a transactional email platform separate from Kit (Resend) for the one-time results email
+- Ad launch target: next week (week of March 23)
+- V1 expectations: may get zero emails. Goal is DATA — see where funnel drops off and iterate. "Pancake Principle" — first attempts are data collection, not conversion optimization.
 
 **The ad → landing page → quiz → email capture pipeline is the system being tested.** This is NOT pancake territory — this needs to work before spending ad budget. Everything after email capture (autoresponder quality, drip, course sales) IS pancake territory.
+
+## Recent Changes (March 19, 2026 — Kickoff Meeting)
+- Kickoff sync between Brian and Nico. Confirmed all March 18 code changes are live and deployed.
+- Brian confirmed he's killing one of the 4 ad concepts (Concept 3 — The Shift), changing images in another (Concept 2)
+- Content calendar: LinkedIn post today (90-sec clip from YouTube video), YouTube Short tomorrow
+- Brian will send time codes for the LinkedIn clip from today's video
+- Resend implementation plan researched by Nico's AI assistant (see "Action Plan Email Pipeline" section)
+- All action items logged to Nico's Brain Inbox, organized by project (HC Funnel, Content, B-Suite)
 
 ## Recent Changes (March 18, 2026 — Evening Session)
 
@@ -111,23 +127,56 @@ Architecture defined: Vercel serverless endpoint → Claude API (Sonnet) → Res
 
 ## Action Plan Email Pipeline (Nico's Build)
 
-**Architecture:** User submits email → Results.jsx calls `/api/action-plan` → endpoint builds prompt from user's scores/tier → calls Claude API (Sonnet) → converts response to HTML → sends via Resend → returns 200. Non-blocking.
+**Architecture:** Two-tier email system. Resend handles the instant transactional email (personalized results). Kit handles the nurture drip (Emails 2-5 over 3-4 weeks).
 
-**Nico's setup tasks:**
-1. Resend account + humbleconviction.com domain verification (SPF, DKIM in GoDaddy) — 30 min
-2. Anthropic API key (Brian may already have one) — 5 min
-3. Vercel env vars: `ANTHROPIC_API_KEY`, `RESEND_API_KEY`, `RESEND_FROM_EMAIL` (results@humbleconviction.com) — 5 min
-4. Build `api/action-plan.js` endpoint — 1-2 hours
-5. Frontend wiring: `requestActionPlan()` in firebase.js, call from Results.jsx — 15 min
-6. HTML email template matching HC design system — 1 hour
-7. Testing — 1 hour
+```
+User completes quiz → enters email → Results.jsx fires:
+  1. saveLead() → Firestore (existing, works)
+  2. subscribeToKit() → Kit nurture sequence (existing, works)
+  3. NEW: /api/action-plan → Claude API (Sonnet) → Resend → instant personalized email
+```
+
+**Why Resend (not Kit) for the results email:**
+- Transactional (one-off, personalized) vs. marketing (drip, bulk) — different tools for different jobs
+- Resend has sub-second dispatch, native Vercel integration, React JSX email templates
+- Kit stays as the nurture/drip platform (Emails 2-5)
+- Free tier: 100 emails/day (plenty for launch testing)
+- Cost: ~$0.20/email after free tier
+
+**Resend implementation plan (researched March 19):**
+
+Files to create:
+- `/api/action-plan.js` — Vercel serverless endpoint. Receives quiz data + email → builds prompt → calls Claude API → converts to HTML → sends via Resend → returns 200. Follow `/api/subscribe.js` pattern.
+- `/src/components/emails/ResultsEmailTemplate.jsx` — JSX email template with personalized scorecard, dimension breakdowns, contextual Eddy promotions. Resend compiles JSX → HTML at send time.
+
+Files to modify:
+- `/src/pages/Results.jsx` — Add `requestActionPlan()` call in `handleEmailCaptured()`, alongside existing `saveLead()` and `subscribeToKit()`. Non-blocking.
+- `/src/firebase.js` — Add `requestActionPlan()` function (simple fetch to `/api/action-plan`)
+
+Env vars needed in Vercel:
+- `RESEND_API_KEY` — from resend.com dashboard
+- `RESEND_FROM_EMAIL` — `results@humbleconviction.com`
+- `ANTHROPIC_API_KEY` — Brian may already have one
+
+**Nico's setup tasks (in order):**
+1. Sign up at resend.com (free tier) — 5 min
+2. Verify humbleconviction.com domain in Resend (SPF, DKIM DNS records in GoDaddy) — 30 min (needs GoDaddy access from Brian)
+3. Get/confirm Anthropic API key — 5 min
+4. Add env vars to Vercel project — 5 min
+5. `npm install resend @anthropic-ai/sdk` — 1 min
+6. Build `/api/action-plan.js` endpoint — 1-2 hours
+7. Build email template JSX — 1 hour
+8. Wire frontend (`Results.jsx` + `firebase.js`) — 15 min
+9. Test end-to-end — 1 hour
 **Total estimate: ~4-5 hours**
 
-**Also for Kit:** Verify humbleconviction.com as a sending domain in Kit (separate from Resend — both need the same domain verified but independently).
+**Also for Kit:** Verify humbleconviction.com as a sending domain in Kit (separate from Resend — both need the same domain verified independently).
 
-**Prompt template:** Brian will define what Claude should generate per user. This is a separate task — content/tone/structure decisions. Nico just needs to drop the final prompt into the endpoint.
+**Prompt template:** Brian will define what Claude should generate per user. Nico can scaffold the endpoint now and drop the final prompt in later. Brian described the logic in the kickoff: "Given what we know from their answers, what do we tell them? Longer and more prescriptive. Work in Eddy promotion contextually — 'you had this problem, here's how to fix it, you can learn more about this in a lesson in Eddy.'"
 
 **Full spec emailed to Nico** (March 18, subject: "HC Funnel: Action Plan Email Pipeline — Technical Spec & Your To-Dos").
+
+**Direct Resend vs. Zapier middleware:** Go direct. Resend from Vercel serverless function. No Zapier needed — adds latency, cost, and complexity for a simple transactional email. Zapier is overkill here.
 
 ## Meta Pixel Strategy
 Expert research recommends a **two-phase approach:**
@@ -161,50 +210,82 @@ Do NOT skip Phase 1 — optimizing directly for email capture on a test budget w
 - **AdCreative.ai:** Under Humble Conviction brand. 6 projects. Logged in via admin@humbleconviction.com.
 - **YouTube videos (post-capture):** Short: `iqw1IgRA2sw` (0:52). Long: `_3601d3OpYY` (8:16). Channel: @HumbleConviction.
 
-## Next Steps — Action Items by Owner
+## Next Steps — PRIORITIZED for March 19 (from kickoff meeting)
 
-### BRIAN — Creative & Content (Do These In Order)
+### NICO — PRIORITY ORDER (do these in this order)
 
-| # | Task | Details | Blocked by |
-|---|------|---------|------------|
-| B1 | Generate new images for Concept 2 | Use prompts in `ads/REVISED-CREATIVE-BRIEF-2026-03-18.md`. Try Prompt 2A (over-the-shoulder) first. Run 3-5 variations in Nano Banana. Select best — criteria: no AI face artifacts, body language sells disconnect, reads at phone-screen size. | Nothing |
-| B2 | Review selected image with Claude | Upload to Cowork session for evaluation. Claude has full context from the ad system audit. | B1 |
-| B3 | Decide domain: subdomain vs path | `quiz.humbleconviction.com` (CNAME, simple) vs `humbleconviction.com/assessment` (requires consolidation). Tell Nico. | Nothing |
-| B4 | Tell Nico to proceed with his NOW tasks | He can start on copy updates, domain wiring, color palette, and Feed version of Concept 1 without waiting for you. | Nothing |
-| B5 | Final review all 3 ad concepts as a package | Once Nico has applied copy updates + HC color palette + new Concept 2 image, review the complete set. Check: visual continuity with LP, message match, identity signaling. | B1, B2, N1-N7 |
-| B6 | Write autoresponder email copy | 3 tier-specific templates. Drafts in `research/autoresponder-email-audit-march-2026.md`. Review, refine, finalize. Consider passing `weakestDimension` as a Kit custom field for Template 2/3 personalization. | Nothing |
-| B7 | Define action plan prompt template | What should Claude generate per user? Structure, tone, content depth, length. This is the business content spec — Nico drops it into the endpoint. | Nothing (but not urgent — can ship autoresponder first) |
-| B8 | End-to-end expert audit | Once ads + LP + quiz + results + email are all finalized, run one more expert pass on the full journey as a system. This catches discontinuities between components. | B5, B6 |
+**TIER 1 — Unblocks everything (do first):**
 
-### NICO — Technical & Production
+| # | Task | Details | Status |
+|---|------|---------|--------|
+| N1 | DNS setup — point quiz domain | Brian sharing GoDaddy login. Default to `quiz.humbleconviction.com` CNAME → hc-funnel.vercel.app unless Brian says otherwise (Task B3). | Waiting on GoDaddy login |
+| N2 | Meta Pixel installation | Install on hc-funnel. Phase 1: optimize for ViewContent/QuizComplete event (need ~50 events/week to exit learning phase). Phase 2 (after 2-3 weeks): shift to Lead event. Do NOT skip Phase 1. | Ready to do |
+| N3 | Set up Resend account | Sign up at resend.com (free tier). Generate API key. Verify humbleconviction.com domain (SPF, DKIM DNS records — do alongside N1 since both need GoDaddy). | Waiting on GoDaddy login |
 
-**Can do NOW (not blocked on Brian):**
+**TIER 2 — Scaffold email pipeline (can start without Brian's content):**
 
-| # | Task | Details |
-|---|------|---------|
-| N1 | Update ad copy: "2-minute" → "3-minute" | All 3 active concepts (1, 2, 4) |
-| N2 | Update ad copy: "real pitch reviews" → "pitches coached" | Concepts 1, 4 |
-| N3 | Update Concept 4 headline: "2 Minutes" → "3 Minutes" | |
-| N4 | Wire humbleconviction.com to hc-funnel Vercel project | Brian will tell you subdomain vs path (Task B3). If no word yet, default to `quiz.humbleconviction.com` CNAME. |
-| N5 | Update URL in all ad copy | After N4 |
-| N6 | Create Feed (4:5) version of Concept 1 | Only Story exists |
-| N7 | Re-template ads in HC colors (navy #1A2332 / coral #E8845A) | Replace AdCreative.ai blue with HC palette. Full spec in revised creative brief. Rebuild in Figma/Canva if AdCreative.ai doesn't allow. |
-| N8 | Set up Resend account + verify humbleconviction.com | Free tier. Add SPF/DKIM DNS records in GoDaddy. |
-| N9 | Verify humbleconviction.com in Kit | Separate from Resend — both need the domain verified independently. |
-| N10 | Set up tier-based Kit automations | 3 automations triggered by `quiz-lead` tag + `tier` custom field. Templates in `research/autoresponder-email-audit-march-2026.md`. WAIT for Brian to finalize copy (Task B6). |
+| # | Task | Details | Status |
+|---|------|---------|--------|
+| N4 | Add Vercel env vars | `RESEND_API_KEY`, `RESEND_FROM_EMAIL` (results@humbleconviction.com), `ANTHROPIC_API_KEY` | After N3 |
+| N5 | `npm install resend @anthropic-ai/sdk` | Add to hc-funnel package.json | Ready to do |
+| N6 | Scaffold `/api/action-plan.js` endpoint | Follow `/api/subscribe.js` pattern. Build the full pipeline: receive quiz data → call Claude → render HTML → send via Resend. Use placeholder prompt — Brian will provide final prompt (Task B7). | Ready to do |
+| N7 | Build email template JSX | Personalized scorecard, dimension breakdowns, HC design system. Plain text preferred (42% more clicks per research). | Ready to do |
+| N8 | Wire frontend | Add `requestActionPlan()` to firebase.js. Call from Results.jsx `handleEmailCaptured()` alongside existing `saveLead()` + `subscribeToKit()`. Non-blocking. | After N6 |
+| N9 | Wire `handleLateWaitlistJoin()` | TODO in Results.jsx line ~200. Currently updates UI only — needs to write to Firestore + Kit. | Ready to do |
 
-**Blocked on Brian:**
+**TIER 3 — Ad creatives (partially blocked on Brian):**
+
+| # | Task | Details | Status |
+|---|------|---------|--------|
+| N10 | Update ad copy: "2-minute" → "3-minute" | All 3 active concepts (1, 2, 4) | Ready to do |
+| N11 | Update ad copy: "pitch reviews" → "pitches coached" | Concepts 1, 4 | Ready to do |
+| N12 | Update Concept 4 headline: "2 Minutes" → "3 Minutes" | | Ready to do |
+| N13 | Update URL in all ad copy to humbleconviction.com | After N1 (DNS) | Blocked on N1 |
+| N14 | Create Feed (4:5) version of Concept 1 | Only Story exists | Ready to do |
+| N15 | Re-template ads in HC colors (navy #1A2332 / coral #E8845A) | Replace AdCreative.ai blue. Rebuild in Figma/Canva if needed. | Ready to do |
+| N16 | Verify humbleconviction.com in Kit | Separate from Resend — both need domain verified independently | After GoDaddy access |
+| N17 | Set up tier-based Kit automations | 3 automations: `quiz-lead` tag + `tier` custom field. Templates in `research/autoresponder-email-audit-march-2026.md`. WAIT for Brian's final copy (Task B6). | Blocked on Brian |
+
+**BLOCKED ON BRIAN:**
 
 | # | Task | Blocked by |
 |---|------|------------|
-| N11 | Apply text overlay to new Concept 2 image | Brian selecting image (B2) |
-| N12 | Generate Story + Feed versions of Concept 2 | N11 |
-| N13 | Build `api/action-plan.js` endpoint | Brian defining prompt template (B7). Can scaffold the endpoint now, drop prompt in later. |
-| N14 | Final Meta Ads Manager setup | Brian's final approval (B5) |
+| N18 | Apply text overlay to new Concept 2 image | Brian selecting image (B2) |
+| N19 | Generate Story + Feed versions of Concept 2 | N18 |
+| N20 | Drop final prompt into `/api/action-plan.js` | Brian defining prompt template (B7) |
+| N21 | Final Meta Ads Manager setup + campaign launch | Brian's final approval (B5) |
+| N22 | Write Meta Ads account instructions for Brian | Figure out what Brian needs to do in his FB account for Nico to run ads. Write clearest possible instructions. Brian hates going into Meta. |
+
+### BRIAN — Creative & Content (from March 18 + March 19 kickoff)
+
+| # | Task | Details | Blocked by |
+|---|------|---------|------------|
+| B1 | Finalize ad creatives | Kill one ad, swap images on another. Hand off final assets + copy to Nico. | Nothing — working on this now |
+| B2 | Generate new Concept 2 image | Prompts in revised creative brief. Nano Banana. | Nothing |
+| B3 | Decide domain: subdomain vs path | Tell Nico. Default: `quiz.humbleconviction.com` CNAME. | Nothing |
+| B4 | Share GoDaddy login with Nico | For DNS pointing + domain verification (Resend + Kit) | Nothing |
+| B5 | Grant Nico Firebase access | Request is in B Things (starred). Nico needs this to finish a build. | Nothing |
+| B6 | Write results logic | Query logic: given quiz answers, what do we tell them? Longer, more prescriptive. Work in Eddy promotions contextually. | Nothing — working on this now |
+| B7 | Write autoresponder email copy | 3 tier-specific templates. Drafts in `research/autoresponder-email-audit-march-2026.md`. | Nothing |
+| B8 | Define action plan prompt template | What should Claude generate per user? Structure, tone, content depth. Nico drops it into the endpoint. | Nothing (not urgent — ship autoresponder first) |
+| B9 | Send LinkedIn clip time codes | Watch today's video, send Nico the moments for ~90-sec clip. | Nothing |
+| B10 | Write LinkedIn post today | May share Expert Skill / red team workflow. | Nothing |
+| B11 | End-to-end expert audit | Full journey as a system once everything is finalized. | B1, B6, B7 |
+
+### CONTENT — Today (March 19)
+
+| Task | Owner | Status |
+|------|-------|--------|
+| LinkedIn post today: ~90-sec clip from latest video | Nico cuts clip, Brian writes post | Waiting for Brian's time codes |
+| YouTube Short for tomorrow | Nico | Deliver to YouTube Studio by noon |
+| Additional Short clips from Brian's 5-min video | Nico | Ready — can grab 3+ clips |
+| Update content calendar | Nico | In progress |
 
 ## Open Questions / Decisions Pending
-- **Domain:** subdomain (`quiz.humbleconviction.com`) vs path-based (`humbleconviction.com/assessment`). Brian's call.
+- **Domain:** subdomain (`quiz.humbleconviction.com`) vs path-based (`humbleconviction.com/assessment`). Brian's call (Task B3).
 - **Feed versions:** Should Nico create Feed (4:5) for Concept 2 as well, or Story-only initially?
 - **Meta campaign structure:** Single campaign with 3 ad sets? Separate campaigns for cold (Concepts 1+2) and retargeting (Concept 4)?
 - **Kit `weakestDimension` custom field:** Should this be added to the quiz's Kit subscriber data for autoresponder personalization? (~15 min frontend change)
 - **Concept 1 image:** Usable as-is but not perfect. Worth regenerating? Low priority — only if time permits after Concept 2 is done.
+- **Meta Ads account connection:** Nico needs to figure out what Brian needs to do in his Facebook account so ads can run properly. Remote desktop idea was tabled — Nico will write instructions instead.
+- **Anthropic API key:** Does Brian already have one? Need to confirm before building the action-plan endpoint.

@@ -78,7 +78,7 @@ You've gotten this email from an investor. Probably more than once.
 
 Here's what they don't tell you: it's rarely the idea. It's the 2-3 things in how you pitch that make investors hesitate — patterns they see in the first 5 minutes but will never point out.
 
-This free 2-minute assessment shows you what investors actually see when you pitch. 4 scores across the dimensions that matter. Built from 2,500+ real pitch reviews.
+This free 3-minute assessment shows you what investors actually see when you pitch. 4 scores across the dimensions that matter. Built from 2,500+ pitches coached.
 
 ### Headline
 What Investors See When You Pitch — But Won't Tell You
@@ -117,7 +117,7 @@ You're thinking: great sign. You're wrong.
 
 "Interesting" means they're figuring out if they need to act now — or can wait and watch from the sideline. It's not a yes. It's not a no. It's a test most founders don't know they're taking.
 
-The signals investors send are almost never what they seem. This free 2-minute assessment scores you on the 4 dimensions investors actually evaluate — including the ones they'll never mention.
+The signals investors send are almost never what they seem. This free 3-minute assessment scores you on the 4 dimensions investors actually evaluate — including the ones they'll never mention.
 
 ### Headline
 Most Founders Misread Investor Signals. Do You?
@@ -156,7 +156,7 @@ They give a tight 30-second version and stop. They let the investor decide what 
 
 It's the hardest instinct to develop — because every nerve in your body wants to explain more, prove more, cover more.
 
-This free assessment scores you on the 4 dimensions investors actually use to evaluate founders. 2 minutes. See where you stand.
+This free assessment scores you on the 4 dimensions investors actually use to evaluate founders. 3 minutes. See where you stand.
 
 ### Headline
 Stop Pitching Investors. Start Conversations.
@@ -186,10 +186,10 @@ Head-and-shoulders portrait. Older man, silver temples, navy crewneck, reading g
 
 ### Primary Text
 (First 125 chars:)
-`After 2,500+ founder pitch reviews, the pattern is always the same: the best founders don't have better ideas.`
+`After 2,500+ pitches coached, the pattern is always the same: the best founders don't have better ideas.`
 
 Full copy:
-After 2,500+ founder pitch reviews, the pattern is always the same:
+After 2,500+ pitches coached, the pattern is always the same:
 
 The best founders don't have better ideas. They understand how investors think.
 
@@ -198,7 +198,7 @@ They know that "interesting" doesn't mean interested. They know when to stop tal
 This assessment was built by someone who's raised capital and invested it — to show founders the gaps nobody in their world will point out.
 
 ### Headline
-See What Investors See. 4 Scores. 2 Minutes.
+See What Investors See. 4 Scores. 3 Minutes.
 
 ### CTA Button
 Take the Assessment
