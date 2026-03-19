@@ -373,7 +373,7 @@ export default function Results() {
                 className="text-sm font-medium"
                 style={{ color: "rgba(255,255,255,0.6)" }}
               >
-                4x exited founder &middot; Venture investor &middot; 2,500+ pitches coached
+                4x exited founder &middot; Venture investor &middot; 2,500+ pitches analyzed
               </p>
               <p
                 className="text-sm leading-relaxed"

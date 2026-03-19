@@ -65,7 +65,7 @@ const FUNNEL = {
       "This 3-minute assessment reveals the patterns investors notice — but will never tell you.",
     ctaText: "See What Investors See",
     ctaLink: "/quiz",
-    socialProof: "Based on 2,500+ pitches coached by a 4x exited founder and venture investor",
+    socialProof: "Based on 2,500+ pitches analyzed by a 4x exited founder and venture investor",
     features: [
       {
         title: "Investor-Tested Insights",
