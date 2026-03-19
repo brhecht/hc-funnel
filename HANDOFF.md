@@ -1,5 +1,5 @@
 # HANDOFF — HC Funnel
-*Last updated: March 19, 2026 ~3:00pm ET*
+*Last updated: March 19, 2026 ~5:30pm ET*
 
 ## Project Overview
 Quiz-based lead magnet funnel for Humble Conviction's upcoming pitching/fundraising course. 8 scenario-based questions score founders across 4 dimensions, deliver a tier result with scorecard, and gate a personalized action plan behind email capture. Config-driven architecture — all content lives in `src/config/funnel.js`. Part of B-Suite, positioned as a sub-tool under B Marketing.
@@ -45,6 +45,7 @@ hc-funnel/
 │   ├── results-page-audit-march-2026.md     — Results/email capture page audit
 │   ├── autoresponder-email-audit-march-2026.md — Tier-specific email template strategy + drafts
 │   ├── ad-system-audit-march-2026.md        — Ad creative + LP system evaluation
+│   ├── ad-copy-final-review-march-2026.md   — Final copy coherence + Meta compliance check
 │   └── waitlist-email-drip-strategy.md      — Pre-product email sequence (March 16)
 ├── HC-PHASE1-DISCOVERY.md   — Strategy/content bible (819 lines, all decisions + copy)
 ├── index.html               — Inter font loaded via Google Fonts
@@ -68,6 +69,16 @@ hc-funnel/
 **The full pipeline is now: Ad → quiz.humbleconviction.com → quiz → email capture → Firestore + Kit + Claude action plan email via Resend.**
 
 **Still pending:** Brian's prompt template for action plan (currently using placeholder), autoresponder email copy in Kit, ad creatives in HC colors, Meta Pixel, Meta Ads Manager setup.
+
+**Ad creative decisions finalized (March 19 evening):**
+- All ad copy passed final coherence + Meta compliance review (`research/ad-copy-final-review-march-2026.md`)
+- All 3 headlines shortened to fit Instagram's 40-char limit (were 47-54 chars, now 28-34)
+- Concept 1 primary text truncation fix (was 126 chars, 1 over Instagram's 125-char gate)
+- Concept 2: NEW overlay text locked ("The investor tuned out five minutes ago." replaces "The investors already decided."), NEW image selected (founder facing VC in Patagonia vest)
+- Concept 4 overlay: "2,500" → "2,500+" for consistency
+- Universal change: "coached"/"reviewed" → "analyzed" everywhere (ads, landing page social proof, post-capture authority section — all deployed)
+- Revised creative brief (`ads/REVISED-CREATIVE-BRIEF-2026-03-18.md`) is now FINAL with per-concept execution specs and Nico's step-by-step checklist
+- Brian still needs to send Nico the Concept 2 image file
 
 Ad launch target: week of March 23. V1 expectations: goal is DATA, not conversions. Pancake Principle applies to everything after email capture.
 
@@ -268,11 +279,11 @@ Do NOT skip Phase 1 — optimizing directly for email capture on a test budget w
 | # | Task | Details | Blocked by |
 |---|------|---------|------------|
 | B1 | ~~Share GoDaddy login~~ | ✅ Done | — |
-| B2 | Generate new Concept 2 image | Prompts in revised creative brief. Nano Banana. Try Prompt 2A first. | Nothing |
+| B2 | ~~Generate new Concept 2 image~~ | ✅ Done — founder facing VC in Patagonia vest. Needs to be sent to Nico. | — |
 | B3 | ~~Decide domain~~ | ✅ Done — quiz.humbleconviction.com | — |
 | B4 | Grant Nico Firebase access | Request in B Things (starred) | Nothing |
 | B5 | Final approve all 3 ad concepts | Review copy updates + new image + HC colors as a package | B2 |
-| B6 | Finalize ad creatives | Kill Concept 3 ✅, swap Concept 2 image | B2 |
+| B6 | Finalize ad creatives | Kill Concept 3 ✅, Concept 2 image selected ✅, all copy finalized ✅. Send image to Nico, then final package review. | Send image to Nico |
 | B7 | Write autoresponder email copy | 3 tier-specific templates. Drafts in research/autoresponder-email-audit-march-2026.md | Nothing |
 | B8 | Define action plan prompt template | What should Claude generate per user? Structure, tone, Eddy promotions. Nico drops it in. | Not urgent |
 | B9 | End-to-end expert audit | Full journey once everything finalized | B5, B7 |
