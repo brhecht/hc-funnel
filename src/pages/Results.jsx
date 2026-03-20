@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react"
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import { useFunnel } from "../context/FunnelContext"
 import { saveLead, subscribeToKit, requestActionPlan, updateLead } from "../firebase"
 import { trackPixel } from "../hooks/useMetaPixel"
@@ -141,9 +141,18 @@ export default function Results() {
     utms,
   } = useFunnel()
   const { theme } = config
+  const navigate = useNavigate()
 
   // Preview mode: ?preview=captured or ?preview=waitlist to skip quiz
   const previewMode = new URLSearchParams(window.location.search).get("preview")
+
+  // Redirect to quiz if no answers (direct /results navigation)
+  const hasAnswers = Object.keys(answers || {}).length > 0
+  useEffect(() => {
+    if (!hasAnswers && !previewMode) {
+      navigate("/quiz", { replace: true })
+    }
+  }, [hasAnswers, previewMode, navigate])
 
   // Track whether user checked waitlist (for confirmation variant)
   const [didJoinWaitlist, setDidJoinWaitlist] = useState(previewMode === "waitlist")
@@ -216,7 +225,7 @@ export default function Results() {
       // Subscribe to Kit + request action plan (non-blocking, parallel)
       subscribeToKit(email, {
         tier: tier.name,
-        frictionArea: tier.id,
+        frictionArea: weakest?.[0] || "",
         waitlist: joinWaitlist,
         utms,
       })
@@ -238,6 +247,8 @@ export default function Results() {
       })
     } catch (err) {
       console.error("Failed to save lead:", err)
+      alert("Something went wrong — please try again.")
+      return
     }
     setDidJoinWaitlist(joinWaitlist)
     setEmailCaptured(true)
