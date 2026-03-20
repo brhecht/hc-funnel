@@ -59,7 +59,14 @@ export async function requestActionPlan(email, quizData = {}) {
         displayScores: quizData.displayScores || {},
         rawDimensions: quizData.rawDimensions || {},
         weakestDimension: quizData.weakestDimension || "",
+        weakestScore: quizData.weakestScore || "",
+        secondWeakest: quizData.secondWeakest || "",
+        secondWeakestScore: quizData.secondWeakestScore || "",
+        strongestDimension: quizData.strongestDimension || "",
+        strongestScore: quizData.strongestScore || "",
         answers: quizData.answers || {},
+        waitlistStatus: quizData.waitlistStatus || "not_on_waitlist",
+        scorecardCopy: quizData.scorecardCopy || "",
       }),
     })
   } catch (err) {

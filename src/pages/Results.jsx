@@ -186,9 +186,19 @@ export default function Results() {
       setLeadDocId(docId)
       setCapturedEmail(email)
 
-      // Find weakest dimension for action plan
+      // Sort dimensions by score for action plan targeting
       const dimEntries = Object.entries(displayScores)
-      const weakest = dimEntries.reduce((min, curr) => curr[1] < min[1] ? curr : min, dimEntries[0])
+      const sorted = [...dimEntries].sort((a, b) => a[1] - b[1])
+      const weakest = sorted[0]
+      const secondWeakest = sorted[1]
+      const strongest = sorted[sorted.length - 1]
+
+      // Build scorecard copy so Claude can avoid repeating it
+      const scorecardCopy = Object.entries(displayScores).map(([dim, score]) => {
+        const dimConfig = config.dimensions[dim]
+        const level = dimConfig?.levels?.[score]
+        return `${dimConfig?.label} (${score}/5): "${level?.explanation || ""}" / "${level?.crackedDoor || ""}"`
+      }).join("\n")
 
       // Subscribe to Kit + request action plan (non-blocking, parallel)
       subscribeToKit(email, {
@@ -203,7 +213,14 @@ export default function Results() {
         displayScores: { ...displayScores },
         rawDimensions: { ...rawDimensions },
         weakestDimension: weakest?.[0] || "",
+        weakestScore: weakest?.[1] || "",
+        secondWeakest: secondWeakest?.[0] || "",
+        secondWeakestScore: secondWeakest?.[1] || "",
+        strongestDimension: strongest?.[0] || "",
+        strongestScore: strongest?.[1] || "",
         answers: { ...answers },
+        waitlistStatus: joinWaitlist ? "on_waitlist" : "not_on_waitlist",
+        scorecardCopy,
       })
     } catch (err) {
       console.error("Failed to save lead:", err)
