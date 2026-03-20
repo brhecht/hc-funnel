@@ -1,5 +1,5 @@
 # HANDOFF — HC Funnel
-*Last updated: March 19, 2026 ~5:30pm ET*
+*Last updated: March 19, 2026 ~9:30pm ET*
 
 ## Project Overview
 Quiz-based lead magnet funnel for Humble Conviction's upcoming pitching/fundraising course. 8 scenario-based questions score founders across 4 dimensions, deliver a tier result with scorecard, and gate a personalized action plan behind email capture. Config-driven architecture — all content lives in `src/config/funnel.js`. Part of B-Suite, positioned as a sub-tool under B Marketing.
@@ -46,7 +46,9 @@ hc-funnel/
 │   ├── autoresponder-email-audit-march-2026.md — Tier-specific email template strategy + drafts
 │   ├── ad-system-audit-march-2026.md        — Ad creative + LP system evaluation
 │   ├── ad-copy-final-review-march-2026.md   — Final copy coherence + Meta compliance check
+│   ├── action-plan-expert-review-march-2026.md — Action plan prompt evaluation + full user journey trace
 │   └── waitlist-email-drip-strategy.md      — Pre-product email sequence (March 16)
+├── ACTION-PLAN-PROMPT.md    — Claude prompt template for personalized action plan email generation
 ├── HC-PHASE1-DISCOVERY.md   — Strategy/content bible (819 lines, all decisions + copy)
 ├── index.html               — Inter font loaded via Google Fonts
 └── package.json
@@ -68,7 +70,16 @@ hc-funnel/
 
 **The full pipeline is now: Ad → quiz.humbleconviction.com → quiz → email capture → Firestore + Kit + Claude action plan email via Resend.**
 
-**Still pending:** Brian's prompt template for action plan (currently using placeholder), autoresponder email copy in Kit, ad creatives in HC colors, Meta Pixel, Meta Ads Manager setup.
+**Still pending:** Final test of action plan prompt (template written, needs live testing), autoresponder email copy in Kit, ad creatives in HC colors, Meta Pixel, Meta Ads Manager setup.
+
+**Action plan prompt template finalized (March 19 evening):**
+- Full prompt template committed to `ACTION-PLAN-PROMPT.md` in project root
+- Key features: passes quiz answers (not just scores) for dramatically better personalization, mentor tone ("hey buddy" not "your score is low"), pattern-recognition framing, no scorecard repetition, 5:1 content-to-promotion ratio for Eddy nudges, contrast closers on separate lines, holistic paragraph that seeds the course concept before first Eddy mention, 4th dimension acknowledgment, first-sentence-standalone for skimmers
+- Expert review memo: `research/action-plan-expert-review-march-2026.md`
+- [INTRO] is hardcoded in the HTML template (not AI-generated) — Nico needs to put the fixed text in the email template
+- Subject line locked: "Your personalized pitch action plan is ready"
+- **Nico's next step:** Wire `{quizAnswers}` (specific option IDs + labels chosen) into the `/api/action-plan` endpoint. Currently only scores are passed. This is the single highest-leverage personalization change.
+- **Brian's next step:** Paste the prompt into claude.ai with sample scores to test the actual output before deploying. Then do the end-to-end test (take the quiz, submit email, receive the real formatted email).
 
 **Ad creative decisions finalized (March 19 evening):**
 - All ad copy passed final coherence + Meta compliance review (`research/ad-copy-final-review-march-2026.md`)
@@ -78,7 +89,7 @@ hc-funnel/
 - Concept 4 overlay: "2,500" → "2,500+" for consistency
 - Universal change: "coached"/"reviewed" → "analyzed" everywhere (ads, landing page social proof, post-capture authority section — all deployed)
 - Revised creative brief (`ads/REVISED-CREATIVE-BRIEF-2026-03-18.md`) is now FINAL with per-concept execution specs and Nico's step-by-step checklist
-- Brian still needs to send Nico the Concept 2 image file
+- ~~Brian still needs to send Nico the Concept 2 image file~~ ✅ Sent
 
 Ad launch target: week of March 23. V1 expectations: goal is DATA, not conversions. Pancake Principle applies to everything after email capture.
 
@@ -152,7 +163,7 @@ Architecture defined: Vercel serverless endpoint → Claude API (Sonnet) → Res
 3 tier-specific email templates written in `research/autoresponder-email-audit-march-2026.md`. These are placeholder templates until the AI pipeline is built. Plain text format (not HTML — research shows 42% more clicks for plain text with cold traffic). Need to be set up in Kit with tag-based automation.
 
 ## Known Bugs / Issues
-- **Action plan prompt is placeholder** — endpoint works but uses a generic prompt. Brian needs to define final content/tone/structure (Task B8). Current prompt generates reasonable output but isn't tuned to Brian's voice or Eddy promotions.
+- **Action plan prompt written but not deployed** — `ACTION-PLAN-PROMPT.md` has the final prompt. Nico needs to swap it into `api/action-plan.js` and wire `{quizAnswers}` variable. Brian needs to live-test before launch.
 - **No Meta Pixel yet** — must be installed before ad launch.
 
 ## Action Plan Email Pipeline (Nico's Build)
@@ -269,9 +280,9 @@ Do NOT skip Phase 1 — optimizing directly for email capture on a test budget w
 
 | # | Task | Blocked by |
 |---|------|------------|
-| N7 | Apply text overlay to new Concept 2 image | Brian selecting image (B2) |
+| N7 | Apply text overlay to new Concept 2 image | ✅ UNBLOCKED — Brian sent image. New overlay: "He thinks the pitch is going well. / The investor tuned out five minutes ago." |
 | N8 | Generate Story + Feed versions of Concept 2 | N7 |
-| N9 | Drop final prompt into api/action-plan.js | Brian defining prompt (B8) |
+| N9 | Swap final prompt into api/action-plan.js + wire {quizAnswers} | ✅ UNBLOCKED — prompt in `ACTION-PLAN-PROMPT.md`. Also needs `{quizAnswers}` passed from frontend (specific option IDs + labels, not just scores). |
 | N10 | Final Meta Ads Manager setup + launch | Brian's final approval (B5) |
 
 ### BRIAN — Remaining Tasks
@@ -283,9 +294,9 @@ Do NOT skip Phase 1 — optimizing directly for email capture on a test budget w
 | B3 | ~~Decide domain~~ | ✅ Done — quiz.humbleconviction.com | — |
 | B4 | Grant Nico Firebase access | Request in B Things (starred) | Nothing |
 | B5 | Final approve all 3 ad concepts | Review copy updates + new image + HC colors as a package | B2 |
-| B6 | Finalize ad creatives | Kill Concept 3 ✅, Concept 2 image selected ✅, all copy finalized ✅. Send image to Nico, then final package review. | Send image to Nico |
+| B6 | Finalize ad creatives | Kill Concept 3 ✅, Concept 2 image selected ✅, all copy finalized ✅, image sent to Nico ✅. Final package review once Nico applies HC colors. | N4 (HC colors) |
 | B7 | Write autoresponder email copy | 3 tier-specific templates. Drafts in research/autoresponder-email-audit-march-2026.md | Nothing |
-| B8 | Define action plan prompt template | What should Claude generate per user? Structure, tone, Eddy promotions. Nico drops it in. | Not urgent |
+| B8 | ~~Define action plan prompt template~~ | ✅ Written — `ACTION-PLAN-PROMPT.md`. Needs live testing: paste into claude.ai with sample scores, then end-to-end test after Nico wires quizAnswers. | Nico wiring quizAnswers |
 | B9 | End-to-end expert audit | Full journey once everything finalized | B5, B7 |
 
 ## Open Questions / Decisions Pending
