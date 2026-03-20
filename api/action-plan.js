@@ -384,7 +384,16 @@ function formatActionPlan(text) {
   html = html.replace(/Output this EXACT text as the PS[^\n]*/gm, "")
 
   // Catch remaining markdown headers (### Title or ## Title) that weren't part of a section marker
-  html = html.replace(/^#{1,3}\s+(.+)$/gm, (_, title) => sectionHeader(title.trim()))
+  // Also strip any leftover [BRACKETS] from the title text
+  html = html.replace(/^#{1,3}\s+(.+)$/gm, (_, title) => {
+    const clean = title.replace(/\[([^\]]*)\]/g, "$1").trim()
+    return clean ? sectionHeader(clean) : ""
+  })
+
+  // Strip any remaining standalone [SECTION_MARKER] lines Claude may output
+  html = html.replace(/^\[(?:HOLISTIC|WEAKEST|SECOND|STRENGTH|FOURTH|CLOSING|PS|INTRO)\][^\n]*/gm, "")
+  // Strip leftover brackets around dimension names (e.g., "[Investor Fluency]" → "Investor Fluency")
+  html = html.replace(/\[([A-Z][^\]]{2,})\]/g, "$1")
 
   // Bold text: **text**
   html = html.replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>")
