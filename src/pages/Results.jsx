@@ -131,6 +131,7 @@ export default function Results() {
   const {
     config,
     answers,
+    questions,
     calculating,
     setCalculating,
     calculateResults,
@@ -202,6 +203,16 @@ export default function Results() {
         return `${dimConfig?.label} (${score}/5): "${level?.explanation || ""}" / "${level?.crackedDoor || ""}"`
       }).join("\n")
 
+      // Build answer labels map: { q1_clarity: "Walk them through..." }
+      const answerLabels = {}
+      for (const q of questions) {
+        const chosen = answers[q.id]
+        if (chosen) {
+          const opt = q.options.find((o) => o.id === chosen)
+          if (opt) answerLabels[q.id] = opt.label
+        }
+      }
+
       // Subscribe to Kit + request action plan (non-blocking, parallel)
       subscribeToKit(email, {
         tier: tier.name,
@@ -221,6 +232,7 @@ export default function Results() {
         strongestDimension: strongest?.[0] || "",
         strongestScore: strongest?.[1] || "",
         answers: { ...answers },
+        answerLabels,
         waitlistStatus: joinWaitlist ? "on_waitlist" : "not_on_waitlist",
         scorecardCopy,
       })

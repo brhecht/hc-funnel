@@ -43,6 +43,7 @@ export default async function handler(req, res) {
     strongestDimension,
     strongestScore,
     answers,
+    answerLabels,
     waitlistStatus,
     scorecardCopy,
   } = req.body || {}
@@ -75,6 +76,7 @@ export default async function handler(req, res) {
       strongestDimension,
       strongestScore,
       answers,
+      answerLabels,
       waitlistStatus,
       launchStatus,
       scorecardCopy,
@@ -128,12 +130,16 @@ async function generateActionPlan({
   strongestDimension,
   strongestScore,
   answers,
+  answerLabels,
   waitlistStatus,
   launchStatus,
   scorecardCopy,
 }) {
   const allScores = JSON.stringify(displayScores || {})
-  const quizAnswers = JSON.stringify(answers || {})
+  const quizAnswers = Object.entries(answers || {}).map(([qId, optId]) => {
+    const label = answerLabels?.[qId] || ""
+    return `${qId}: ${optId}${label ? ` — "${label}"` : ""}`
+  }).join("\n")
   const wLabel = DIM_LABELS[weakestDimension] || weakestDimension
   const swLabel = DIM_LABELS[secondWeakest] || secondWeakest
   const sLabel = DIM_LABELS[strongestDimension] || strongestDimension
@@ -233,6 +239,7 @@ If there's a 4th dimension not yet addressed, include 1 sentence acknowledging i
 Sign off: "— Brian"
 
 ### [PS]
+Output this EXACT text as the PS (do not generate your own):
 ${waitlistStatus === "on_waitlist" ? "P.S. — You're on the early access list for the course. I'll let you know as soon as it opens." : launchStatus === "post_launch" ? "P.S. — Everything in this action plan is covered in depth in Pitch Better, Get Funded Faster." : "P.S. — I'm building a course around exactly what your scorecard revealed. Reply 'interested' if you want early access when it launches."}
 
 ## What NOT to do
@@ -358,13 +365,19 @@ function formatActionPlan(text) {
   let html = text
 
   // Replace section markers with styled headers
-  html = html.replace(/###?\s*\[HOLISTIC\][^\n]*/g, "")
-  html = html.replace(/###?\s*\[WEAKEST\]\s*—?\s*(.*)/g, '<hr style="border:none;border-top:1px solid #E5E7EB;margin:24px 0 16px;"><p style="margin:0 0 12px;font-size:16px;font-weight:700;color:#1A2332;">$1</p>')
-  html = html.replace(/###?\s*\[SECOND\]\s*—?\s*(.*)/g, '<hr style="border:none;border-top:1px solid #E5E7EB;margin:24px 0 16px;"><p style="margin:0 0 12px;font-size:16px;font-weight:700;color:#1A2332;">$1</p>')
-  html = html.replace(/###?\s*\[STRENGTH\]\s*—?\s*(.*)/g, '<hr style="border:none;border-top:1px solid #E5E7EB;margin:24px 0 16px;"><p style="margin:0 0 12px;font-size:16px;font-weight:700;color:#1A2332;">$1</p>')
-  html = html.replace(/###?\s*\[FOURTH\][^\n]*/g, '<hr style="border:none;border-top:1px solid #E5E7EB;margin:24px 0 16px;">')
-  html = html.replace(/###?\s*\[CLOSING\][^\n]*/g, '<hr style="border:none;border-top:1px solid #E5E7EB;margin:24px 0 16px;">')
-  html = html.replace(/###?\s*\[PS\][^\n]*/g, '<hr style="border:none;border-top:1px solid #E5E7EB;margin:24px 0 16px;">')
+  // Flexible: matches with or without ### prefix, handles ## and ### and bare [MARKER]
+  const sectionDivider = '<hr style="border:none;border-top:1px solid #E5E7EB;margin:24px 0 16px;">'
+  const sectionHeader = (title) => `${sectionDivider}<p style="margin:0 0 12px;font-size:16px;font-weight:700;color:#1A2332;">${title}</p>`
+
+  html = html.replace(/^#{0,3}\s*\[HOLISTIC\][^\n]*/gm, "")
+  html = html.replace(/^#{0,3}\s*\[WEAKEST\]\s*[-—]?\s*(.*)/gm, (_, title) => sectionHeader(title.trim()))
+  html = html.replace(/^#{0,3}\s*\[SECOND\]\s*[-—]?\s*(.*)/gm, (_, title) => sectionHeader(title.trim()))
+  html = html.replace(/^#{0,3}\s*\[STRENGTH\]\s*[-—]?\s*(.*)/gm, (_, title) => sectionHeader(title.trim()))
+  html = html.replace(/^#{0,3}\s*\[FOURTH\][^\n]*/gm, sectionDivider)
+  html = html.replace(/^#{0,3}\s*\[CLOSING\][^\n]*/gm, sectionDivider)
+  html = html.replace(/^#{0,3}\s*\[PS\][^\n]*/gm, sectionDivider)
+  // Also catch "Output this EXACT text as the PS" instruction if Claude echoes it
+  html = html.replace(/Output this EXACT text as the PS[^\n]*/gm, "")
 
   // Bold text: **text**
   html = html.replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>")

@@ -65,6 +65,7 @@ export async function requestActionPlan(email, quizData = {}) {
         strongestDimension: quizData.strongestDimension || "",
         strongestScore: quizData.strongestScore || "",
         answers: quizData.answers || {},
+        answerLabels: quizData.answerLabels || {},
         waitlistStatus: quizData.waitlistStatus || "not_on_waitlist",
         scorecardCopy: quizData.scorecardCopy || "",
       }),
