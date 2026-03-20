@@ -1,9 +1,15 @@
+import { useEffect } from "react"
 import { Link } from "react-router-dom"
 import { useFunnel } from "../context/FunnelContext"
+import { trackPixel } from "../hooks/useMetaPixel"
 
 export default function Landing() {
   const { config } = useFunnel()
   const { landing, theme } = config
+
+  useEffect(() => {
+    trackPixel("ViewContent", { content_name: "Landing Page" })
+  }, [])
 
   return (
     <div className="flex flex-col items-center pt-6 md:pt-20 space-y-10 md:space-y-14">

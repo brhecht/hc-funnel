@@ -1,5 +1,7 @@
+import { useEffect } from "react"
 import { useNavigate } from "react-router-dom"
 import { useFunnel } from "../context/FunnelContext"
+import { trackPixel } from "../hooks/useMetaPixel"
 
 const LETTERS = ["A", "B", "C", "D"]
 
@@ -17,6 +19,12 @@ export default function Quiz() {
   } = useFunnel()
   const { theme } = config
 
+  useEffect(() => {
+    if (currentQuestion === 0) {
+      trackPixel("ViewContent", { content_name: "Quiz Start" })
+    }
+  }, [])
+
   const q = questions[currentQuestion]
   const answered = isQuestionAnswered(q.id)
   const selectedId = getAnswer(q.id)
@@ -29,6 +37,7 @@ export default function Quiz() {
 
   function handleNext() {
     if (isLast) {
+      trackPixel("CompleteRegistration", { content_name: "Quiz Complete" })
       setCalculating(true)
       navigate("/results")
     } else {

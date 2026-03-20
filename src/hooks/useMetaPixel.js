@@ -1,10 +1,9 @@
-import { useEffect } from "react"
-
-export function useMetaPixel(eventName, params = {}) {
-  const pixelId = import.meta.env.VITE_META_PIXEL_ID
-
-  useEffect(() => {
-    if (!pixelId || typeof window.fbq !== "function") return
+/**
+ * Meta Pixel helper — fires standard + custom events.
+ * Pixel is initialized in index.html, so we just call window.fbq.
+ */
+export function trackPixel(eventName, params = {}) {
+  if (typeof window !== "undefined" && typeof window.fbq === "function") {
     window.fbq("track", eventName, params)
-  }, [eventName, pixelId])
+  }
 }

@@ -2,6 +2,7 @@ import { useState, useEffect } from "react"
 import { Link } from "react-router-dom"
 import { useFunnel } from "../context/FunnelContext"
 import { saveLead, subscribeToKit, requestActionPlan, updateLead } from "../firebase"
+import { trackPixel } from "../hooks/useMetaPixel"
 
 // ─── Score Dots Component ─────────────────────────────────
 function ScoreDots({ score, maxScore = 5, theme }) {
@@ -185,6 +186,7 @@ export default function Results() {
       })
       setLeadDocId(docId)
       setCapturedEmail(email)
+      trackPixel("Lead", { content_name: tier.name })
 
       // Sort dimensions by score for action plan targeting
       const dimEntries = Object.entries(displayScores)
