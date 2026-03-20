@@ -1,5 +1,5 @@
 # HANDOFF — HC Funnel
-*Last updated: March 19, 2026 ~9:30pm ET*
+*Last updated: March 20, 2026 ~11:00am ET*
 
 ## Project Overview
 Quiz-based lead magnet funnel for Humble Conviction's upcoming pitching/fundraising course. 8 scenario-based questions score founders across 4 dimensions, deliver a tier result with scorecard, and gate a personalized action plan behind email capture. Config-driven architecture — all content lives in `src/config/funnel.js`. Part of B-Suite, positioned as a sub-tool under B Marketing.
@@ -55,7 +55,19 @@ hc-funnel/
 ```
 
 ## Current Status
-**Action plan pipeline built, deployed, and live (March 19, 2026).** Major infrastructure session — all technical blockers for email pipeline resolved.
+**Quiz answer wiring complete, QA protocol ready, pixel code ready for deploy (March 20, 2026).** FRAIS sync confirmed Tuesday March 24 launch target — Monday is testing day.
+
+**What shipped today (March 20 morning):**
+- `api/action-plan.js` now receives individual quiz answers + raw dimension scores (not just aggregated display scores). Claude can now see exactly what each founder chose per question.
+- `src/firebase.js` and `src/pages/Results.jsx` updated to pass `answers` and `rawDimensions` through the pipeline.
+- `QA-PROTOCOL.md` created — 7 test scenarios covering happy path (desktop + mobile), email content validation, Meta Pixel verification, data pipeline, edge cases, and ad simulation.
+- Meta Pixel code changes ready (from March 19 session) — need `git push` to deploy.
+- Ad creatives nearly complete in AdCreative.ai — Concept 2 templates with new image pending.
+
+**Still pending:** Brian's final prompt + hard-coded intro for action plan email (placeholder still in code — Brian confirmed he'll define it), git push for pixel + wiring changes, ad creative PDF for Brian's review tonight, Meta Events Manager domain setup.
+
+**Previous status (March 19):**
+Action plan pipeline built, deployed, and live. Major infrastructure session — all technical blockers for email pipeline resolved.
 
 **What shipped today (March 19 afternoon):**
 - Resend account created, humbleconviction.com domain verified (SPF, DKIM, DMARC in GoDaddy)
@@ -282,7 +294,7 @@ Do NOT skip Phase 1 — optimizing directly for email capture on a test budget w
 |---|------|------------|
 | N7 | Apply text overlay to new Concept 2 image | ✅ UNBLOCKED — Brian sent image. New overlay: "He thinks the pitch is going well. / The investor tuned out five minutes ago." |
 | N8 | Generate Story + Feed versions of Concept 2 | N7 |
-| N9 | Swap final prompt into api/action-plan.js + wire {quizAnswers} | ✅ UNBLOCKED — prompt in `ACTION-PLAN-PROMPT.md`. Also needs `{quizAnswers}` passed from frontend (specific option IDs + labels, not just scores). |
+| N9 | Drop final prompt into api/action-plan.js | Brian defining prompt (B8). Quiz answers + raw scores NOW WIRED into endpoint (March 20). |
 | N10 | Final Meta Ads Manager setup + launch | Brian's final approval (B5) |
 
 ### BRIAN — Remaining Tasks

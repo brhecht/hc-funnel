@@ -167,7 +167,7 @@ export default function Results() {
     }
   }, [calculating, setCalculating])
 
-  const { rawTotal, displayScores, tier } = calculateResults()
+  const { rawDimensions, rawTotal, displayScores, tier } = calculateResults()
   const tierColor = theme[tier.themeColor]
 
   // ─── Email capture handler ──────────────────────────────
@@ -201,7 +201,9 @@ export default function Results() {
         tier: tier.id,
         tierName: tier.name,
         displayScores: { ...displayScores },
+        rawDimensions: { ...rawDimensions },
         weakestDimension: weakest?.[0] || "",
+        answers: { ...answers },
       })
     } catch (err) {
       console.error("Failed to save lead:", err)

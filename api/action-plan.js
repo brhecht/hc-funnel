@@ -19,7 +19,7 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: "Method not allowed" })
   }
 
-  const { email, tier, tierName, displayScores, weakestDimension } = req.body || {}
+  const { email, tier, tierName, displayScores, rawDimensions, weakestDimension, answers } = req.body || {}
 
   if (!email || !tier) {
     return res.status(400).json({ error: "email and tier are required" })
@@ -40,7 +40,9 @@ export default async function handler(req, res) {
       tier,
       tierName,
       displayScores,
+      rawDimensions,
       weakestDimension,
+      answers,
     })
 
     // 2. Build HTML email
@@ -78,8 +80,11 @@ export default async function handler(req, res) {
  * Call Claude API to generate a personalized action plan.
  * Brian will define the final prompt template — this is the scaffold.
  */
-async function generateActionPlan({ anthropicKey, tier, tierName, displayScores, weakestDimension }) {
-  // TODO: Brian defines final prompt content/tone/structure (Task B7)
+async function generateActionPlan({ anthropicKey, tier, tierName, displayScores, rawDimensions, weakestDimension, answers }) {
+  // TODO: Brian defines final prompt content/tone/structure (Task B8)
+  // Individual answer data is now available for Brian's final prompt to use
+  const answersBlock = Object.entries(answers || {}).map(([qId, optId]) => `  ${qId}: ${optId}`).join("\n")
+
   const prompt = `You are a pitch coaching expert at Humble Conviction. A founder just completed our Pitch Readiness Assessment.
 
 Their results:
@@ -89,6 +94,20 @@ Their results:
 - Self-Awareness: ${displayScores?.selfAwareness || "?"}/5
 - Persuasion Instincts: ${displayScores?.persuasionInstincts || "?"}/5
 - Weakest dimension: ${weakestDimension || "unknown"}
+- Raw scores (0-4 per dimension): Clarity ${rawDimensions?.clarity ?? "?"}/4, Investor Fluency ${rawDimensions?.investorFluency ?? "?"}/4, Self-Awareness ${rawDimensions?.selfAwareness ?? "?"}/4, Persuasion Instincts ${rawDimensions?.persuasionInstincts ?? "?"}/4
+
+Individual answers (questionId: selectedOptionId):
+${answersBlock}
+
+Here's the question → answer mapping for reference (so you can interpret what each answer means):
+- q1_clarity (clarity): a=problem-first(1pt), b=what-who-why(2pt BEST), c=background-first(0pt), d=traction-first(0pt)
+- q2_persuasion (persuasionInstincts): a=open-deck-immediately(0pt), b=conversation-first(2pt BEST), c=let-them-choose(1pt), d=send-deck-beforehand(0pt)
+- q3_fluency (investorFluency): a=strong-signal(0pt), b=polite-pass(0pt), c=timing-assessment(2pt BEST), d=promising(1pt)
+- q4_awareness (selfAwareness): a=hard-to-explain(0pt), b=clarity-problem(2pt BEST), c=need-more-detail(0pt), d=deck-issue(1pt)
+- q5_clarity (clarity): a=good-sign(0pt), b=buried-model(2pt BEST), c=testing-you(1pt), d=power-move(0pt)
+- q6_fluency (investorFluency): a=move-on(0pt), b=ask-why(0pt), c=gracious-reply-nurture(2pt BEST), d=send-new-data(1pt)
+- q7_awareness (selfAwareness): a=delivery-issue(1pt), b=confirms-simplify(2pt BEST), c=trim-but-non-negotiable(0pt), d=not-an-investor(0pt)
+- q8_persuasion (persuasionInstincts): a=full-picture(0pt), b=tight-30-sec-stop(2pt BEST), c=ask-what-they-invest(1pt), d=high-level-caveat-early(0pt)
 
 Write a personalized action plan for this founder. Focus on their weakest dimension first, then give 1-2 actionable tips for each other dimension. Keep it direct, practical, and under 500 words. Use "you" voice. No fluff. End with a single motivating sentence that reflects Humble Conviction's philosophy: it's a conversation, not a pitch.`
 

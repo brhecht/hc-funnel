@@ -57,7 +57,9 @@ export async function requestActionPlan(email, quizData = {}) {
         tier: quizData.tier || "",
         tierName: quizData.tierName || "",
         displayScores: quizData.displayScores || {},
+        rawDimensions: quizData.rawDimensions || {},
         weakestDimension: quizData.weakestDimension || "",
+        answers: quizData.answers || {},
       }),
     })
   } catch (err) {
