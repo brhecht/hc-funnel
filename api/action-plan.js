@@ -383,6 +383,9 @@ function formatActionPlan(text) {
   // Also catch "Output this EXACT text as the PS" instruction if Claude echoes it
   html = html.replace(/Output this EXACT text as the PS[^\n]*/gm, "")
 
+  // Catch remaining markdown headers (### Title or ## Title) that weren't part of a section marker
+  html = html.replace(/^#{1,3}\s+(.+)$/gm, (_, title) => sectionHeader(title.trim()))
+
   // Bold text: **text**
   html = html.replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>")
 
