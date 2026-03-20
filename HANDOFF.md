@@ -58,13 +58,16 @@ hc-funnel/
 **Quiz answer wiring complete, QA protocol ready, pixel code ready for deploy (March 20, 2026).** FRAIS sync confirmed Tuesday March 24 launch target — Monday is testing day.
 
 **What shipped today (March 20 morning):**
-- `api/action-plan.js` now receives individual quiz answers + raw dimension scores (not just aggregated display scores). Claude can now see exactly what each founder chose per question.
-- `src/firebase.js` and `src/pages/Results.jsx` updated to pass `answers` and `rawDimensions` through the pipeline.
+- `api/action-plan.js` fully rewritten — Brian's final prompt from `ACTION-PLAN-PROMPT.md` integrated with hardcoded intro, section marker parser (`formatActionPlan()`), coral-accented contrast closers, Brian header with headshot, proper footer. Subject line: "Your personalized pitch action plan is ready". From: Brian Hecht. max_tokens bumped to 2048.
+- Quiz answers + raw dimension scores + scorecard copy + waitlist status now flow through the full pipeline (Results.jsx → firebase.js → api/action-plan.js → Claude prompt).
+- Section marker regex hardened (`#{0,3}` with `gm` flags) to handle Claude output variations.
+- PS duplication risk fixed — explicit instruction tells Claude to output exact PS text, plus cleanup regex.
 - `QA-PROTOCOL.md` created — 7 test scenarios covering happy path (desktop + mobile), email content validation, Meta Pixel verification, data pipeline, edge cases, and ad simulation.
 - Meta Pixel code changes ready (from March 19 session) — need `git push` to deploy.
 - Ad creatives nearly complete in AdCreative.ai — Concept 2 templates with new image pending.
+- `LAUNCH_STATUS` env var support added — controls PS text (pre_launch vs post_launch).
 
-**Still pending:** Brian's final prompt + hard-coded intro for action plan email (placeholder still in code — Brian confirmed he'll define it), git push for pixel + wiring changes, ad creative PDF for Brian's review tonight, Meta Events Manager domain setup.
+**Still pending:** Git push for all changes (prompt integration + pixel + quiz answer wiring), add `LAUNCH_STATUS=pre_launch` env var in Vercel, ad creative PDF for Brian's review tonight, Meta Events Manager domain setup.
 
 **Previous status (March 19):**
 Action plan pipeline built, deployed, and live. Major infrastructure session — all technical blockers for email pipeline resolved.
@@ -90,7 +93,7 @@ Action plan pipeline built, deployed, and live. Major infrastructure session —
 - Expert review memo: `research/action-plan-expert-review-march-2026.md`
 - [INTRO] is hardcoded in the HTML template (not AI-generated) — Nico needs to put the fixed text in the email template
 - Subject line locked: "Your personalized pitch action plan is ready"
-- **Nico's next step:** Wire `{quizAnswers}` (specific option IDs + labels chosen) into the `/api/action-plan` endpoint. Currently only scores are passed. This is the single highest-leverage personalization change.
+- **Nico's next step:** ✅ DONE — `{quizAnswers}` wired into endpoint. All quiz data now passes through. Next: `git push` to deploy + add `LAUNCH_STATUS=pre_launch` env var in Vercel.
 - **Brian's next step:** Paste the prompt into claude.ai with sample scores to test the actual output before deploying. Then do the end-to-end test (take the quiz, submit email, receive the real formatted email).
 
 **Ad creative decisions finalized (March 19 evening):**
@@ -175,7 +178,7 @@ Architecture defined: Vercel serverless endpoint → Claude API (Sonnet) → Res
 3 tier-specific email templates written in `research/autoresponder-email-audit-march-2026.md`. These are placeholder templates until the AI pipeline is built. Plain text format (not HTML — research shows 42% more clicks for plain text with cold traffic). Need to be set up in Kit with tag-based automation.
 
 ## Known Bugs / Issues
-- **Action plan prompt written but not deployed** — `ACTION-PLAN-PROMPT.md` has the final prompt. Nico needs to swap it into `api/action-plan.js` and wire `{quizAnswers}` variable. Brian needs to live-test before launch.
+- **Action plan prompt integrated but not deployed** — Brian's full prompt from `ACTION-PLAN-PROMPT.md` is now wired into `api/action-plan.js` with hardcoded intro, section marker parser, coral-accented contrast closers, and all quiz data (answers, raw scores, scorecard copy, waitlist status). Needs `git push` + `LAUNCH_STATUS=pre_launch` env var in Vercel. Brian needs to live-test before launch.
 - **No Meta Pixel yet** — must be installed before ad launch.
 
 ## Action Plan Email Pipeline (Nico's Build)
@@ -294,7 +297,7 @@ Do NOT skip Phase 1 — optimizing directly for email capture on a test budget w
 |---|------|------------|
 | N7 | Apply text overlay to new Concept 2 image | ✅ UNBLOCKED — Brian sent image. New overlay: "He thinks the pitch is going well. / The investor tuned out five minutes ago." |
 | N8 | Generate Story + Feed versions of Concept 2 | N7 |
-| N9 | Drop final prompt into api/action-plan.js | Brian defining prompt (B8). Quiz answers + raw scores NOW WIRED into endpoint (March 20). |
+| N9 | ~~Drop final prompt into api/action-plan.js~~ | ✅ DONE — Full prompt integrated, quiz answers wired, hardcoded intro, section parser, all fields passing. Needs git push + LAUNCH_STATUS env var. |
 | N10 | Final Meta Ads Manager setup + launch | Brian's final approval (B5) |
 
 ### BRIAN — Remaining Tasks
@@ -308,7 +311,7 @@ Do NOT skip Phase 1 — optimizing directly for email capture on a test budget w
 | B5 | Final approve all 3 ad concepts | Review copy updates + new image + HC colors as a package | B2 |
 | B6 | Finalize ad creatives | Kill Concept 3 ✅, Concept 2 image selected ✅, all copy finalized ✅, image sent to Nico ✅. Final package review once Nico applies HC colors. | N4 (HC colors) |
 | B7 | Write autoresponder email copy | 3 tier-specific templates. Drafts in research/autoresponder-email-audit-march-2026.md | Nothing |
-| B8 | ~~Define action plan prompt template~~ | ✅ Written — `ACTION-PLAN-PROMPT.md`. Needs live testing: paste into claude.ai with sample scores, then end-to-end test after Nico wires quizAnswers. | Nico wiring quizAnswers |
+| B8 | ~~Define action plan prompt template~~ | ✅ Written + integrated into code. Needs live testing: take quiz end-to-end after deploy, review received email for voice/tone/quality. | Deploy (git push) |
 | B9 | End-to-end expert audit | Full journey once everything finalized | B5, B7 |
 
 ## Open Questions / Decisions Pending

@@ -338,10 +338,14 @@ function buildEmailHtml({ tierName, actionPlan }) {
             <tr><td align="center">
               <p style="margin: 0 0 4px; font-size: 14px; font-weight: 700; color: #1A2332;">Humble Conviction</p>
               <p style="margin: 0 0 12px; font-size: 12px; color: #5A6578;">Investor-Tested Insights</p>
-              <p style="margin: 0; font-size: 11px; color: #9CA3AF;">
+              <p style="margin: 0 0 8px; font-size: 11px; color: #9CA3AF;">
                 <a href="https://www.youtube.com/@HumbleConviction" style="color: #E8845A; text-decoration: none;">YouTube</a>
                 &nbsp;&middot;&nbsp;
                 <a href="https://humbleconviction.com" style="color: #9CA3AF; text-decoration: none;">humbleconviction.com</a>
+              </p>
+              <p style="margin: 0; font-size: 10px; color: #C0C5CE;">
+                You're receiving this because you completed the Humble Conviction Pitch Assessment.
+                <a href="https://humbleconviction.com/unsubscribe" style="color: #C0C5CE; text-decoration: underline;">Unsubscribe</a>
               </p>
             </td></tr>
           </table>
