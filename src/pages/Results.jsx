@@ -481,7 +481,7 @@ export default function Results() {
             {/* YouTube channel link */}
             <div className="pt-2">
               <a
-                href="https://www.youtube.com/@HumbleConviction"
+                href="https://www.youtube.com/@humbleconvictionstartups"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-sm font-medium transition-opacity hover:opacity-80"
