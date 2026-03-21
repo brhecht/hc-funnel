@@ -1,5 +1,5 @@
-import { useState, useEffect } from "react"
-import { Link, useNavigate } from "react-router-dom"
+import { useState, useEffect, useRef } from "react"
+import { Link } from "react-router-dom"
 import { useFunnel } from "../context/FunnelContext"
 import { saveLead, subscribeToKit, requestActionPlan, updateLead } from "../firebase"
 import { trackPixel } from "../hooks/useMetaPixel"
@@ -141,18 +141,9 @@ export default function Results() {
     utms,
   } = useFunnel()
   const { theme } = config
-  const navigate = useNavigate()
 
   // Preview mode: ?preview=captured or ?preview=waitlist to skip quiz
   const previewMode = new URLSearchParams(window.location.search).get("preview")
-
-  // Redirect to quiz if no answers (direct /results navigation)
-  const hasAnswers = Object.keys(answers || {}).length > 0
-  useEffect(() => {
-    if (!hasAnswers && !previewMode) {
-      navigate("/quiz", { replace: true })
-    }
-  }, [hasAnswers, previewMode, navigate])
 
   // Track whether user checked waitlist (for confirmation variant)
   const [didJoinWaitlist, setDidJoinWaitlist] = useState(previewMode === "waitlist")
@@ -160,10 +151,20 @@ export default function Results() {
   const [leadDocId, setLeadDocId] = useState(null)
   const [capturedEmail, setCapturedEmail] = useState(null)
 
+  // Ref for scroll-to-top after capture
+  const topRef = useRef(null)
+
   // Force emailCaptured in preview mode
   useEffect(() => {
     if (previewMode) setEmailCaptured(true)
   }, [previewMode, setEmailCaptured])
+
+  // Scroll to top when email is captured (skip for preview mode)
+  useEffect(() => {
+    if (emailCaptured && !previewMode) {
+      window.scrollTo({ top: 0, behavior: "instant" })
+    }
+  }, [emailCaptured, previewMode])
 
   // Calculating pause — 2.5 seconds
   const [showResults, setShowResults] = useState(!calculating || !!previewMode)
@@ -225,7 +226,7 @@ export default function Results() {
       // Subscribe to Kit + request action plan (non-blocking, parallel)
       subscribeToKit(email, {
         tier: tier.name,
-        frictionArea: weakest?.[0] || "",
+        frictionArea: tier.id,
         waitlist: joinWaitlist,
         utms,
       })
@@ -247,8 +248,6 @@ export default function Results() {
       })
     } catch (err) {
       console.error("Failed to save lead:", err)
-      alert("Something went wrong — please try again.")
-      return
     }
     setDidJoinWaitlist(joinWaitlist)
     setEmailCaptured(true)
@@ -287,84 +286,87 @@ export default function Results() {
       className="max-w-2xl mx-auto pt-6 md:pt-12 space-y-8 transition-opacity duration-500"
       style={{ opacity: showResults ? 1 : 0 }}
     >
-      {/* Tier Badge */}
-      <div className="text-center space-y-4">
-        <div
-          className="inline-block px-6 py-2 rounded-full text-sm font-bold uppercase tracking-wide text-white"
-          style={{ background: tierColor }}
-        >
-          {tier.name}
-        </div>
-        <p
-          className="text-base md:text-lg leading-relaxed max-w-lg mx-auto"
-          style={{ color: theme.muted }}
-        >
-          {tier.description}
-        </p>
-      </div>
-
-      {/* Scorecard */}
-      <div
-        className="p-6 md:p-8 rounded-2xl space-y-6"
-        style={{ background: theme.card, border: `1px solid ${theme.border}` }}
-      >
-        <h3
-          className="text-lg font-bold"
-          style={{ fontFamily: theme.headingFont, color: theme.text, letterSpacing: "-0.3px" }}
-        >
-          Your Scorecard
-        </h3>
-
-        <div className="space-y-6">
-          {dimensionKeys.map((dimKey) => {
-            const dimConfig = config.dimensions[dimKey]
-            const score = displayScores[dimKey]
-            const level = dimConfig.levels[score]
-
-            return (
-              <div key={dimKey} className="space-y-2">
-                {/* Dimension name + dots */}
-                <div className="flex items-center justify-between">
-                  <span className="text-sm font-semibold" style={{ color: theme.text }}>
-                    {dimConfig.label}
-                  </span>
-                  <div className="flex items-center gap-2">
-                    <ScoreDots score={score} theme={theme} />
-                    <span className="text-xs font-medium" style={{ color: theme.faint }}>
-                      {score}/5
-                    </span>
-                  </div>
-                </div>
-
-                {/* Explanation */}
-                {level && (
-                  <p className="text-sm leading-relaxed" style={{ color: theme.muted }}>
-                    {level.explanation}
-                  </p>
-                )}
-
-                {/* Cracked door */}
-                {level && (
-                  <p
-                    className="text-sm leading-relaxed italic"
-                    style={{ color: theme.faint }}
-                  >
-                    {level.crackedDoor}
-                  </p>
-                )}
-              </div>
-            )
-          })}
-        </div>
-      </div>
-
-      {/* Email Gate CTA */}
+      {/* Tier Badge + Scorecard + Email Gate — hidden after capture */}
       {!emailCaptured && (
-        <EmailCapture
-          theme={theme}
-          config={config}
-          onCaptured={handleEmailCaptured}
-        />
+        <>
+          {/* Tier Badge */}
+          <div className="text-center space-y-4">
+            <div
+              className="inline-block px-6 py-2 rounded-full text-sm font-bold uppercase tracking-wide text-white"
+              style={{ background: tierColor }}
+            >
+              {tier.name}
+            </div>
+            <p
+              className="text-base md:text-lg leading-relaxed max-w-lg mx-auto"
+              style={{ color: theme.muted }}
+            >
+              {tier.description}
+            </p>
+          </div>
+
+          {/* Scorecard */}
+          <div
+            className="p-6 md:p-8 rounded-2xl space-y-6"
+            style={{ background: theme.card, border: `1px solid ${theme.border}` }}
+          >
+            <h3
+              className="text-lg font-bold"
+              style={{ fontFamily: theme.headingFont, color: theme.text, letterSpacing: "-0.3px" }}
+            >
+              Your Scorecard
+            </h3>
+
+            <div className="space-y-6">
+              {dimensionKeys.map((dimKey) => {
+                const dimConfig = config.dimensions[dimKey]
+                const score = displayScores[dimKey]
+                const level = dimConfig.levels[score]
+
+                return (
+                  <div key={dimKey} className="space-y-2">
+                    {/* Dimension name + dots */}
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm font-semibold" style={{ color: theme.text }}>
+                        {dimConfig.label}
+                      </span>
+                      <div className="flex items-center gap-2">
+                        <ScoreDots score={score} theme={theme} />
+                        <span className="text-xs font-medium" style={{ color: theme.faint }}>
+                          {score}/5
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* Explanation */}
+                    {level && (
+                      <p className="text-sm leading-relaxed" style={{ color: theme.muted }}>
+                        {level.explanation}
+                      </p>
+                    )}
+
+                    {/* Cracked door */}
+                    {level && (
+                      <p
+                        className="text-sm leading-relaxed italic"
+                        style={{ color: theme.faint }}
+                      >
+                        {level.crackedDoor}
+                      </p>
+                    )}
+                  </div>
+                )
+              })}
+            </div>
+          </div>
+
+          {/* Email Gate CTA */}
+          <EmailCapture
+            theme={theme}
+            config={config}
+            onCaptured={handleEmailCaptured}
+          />
+        </>
       )}
 
       {/* Post-capture: confirmation + authority + waitlist */}
