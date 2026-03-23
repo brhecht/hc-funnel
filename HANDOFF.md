@@ -1,5 +1,5 @@
 # HANDOFF — HC Funnel
-*Last updated: March 21, 2026 ~12:30pm ET*
+*Last updated: March 23, 2026 ~12:00pm ET*
 
 ## Project Overview
 Quiz-based lead magnet funnel for Humble Conviction's upcoming pitching/fundraising course. 8 scenario-based questions score founders across 4 dimensions, deliver a tier result with scorecard, and gate a personalized action plan behind email capture. Config-driven architecture — all content lives in `src/config/funnel.js`. Part of B-Suite, positioned as a sub-tool under B Marketing.
@@ -29,10 +29,14 @@ hc-funnel/
 │   │   └── funnel.js        — ALL content: questions, scoring, results copy, email gate copy, design tokens
 │   ├── context/
 │   │   └── FunnelContext.jsx — Quiz state, scoring engine (raw → display → tier), UTM capture
+│   ├── utils/
+│   │   └── analytics.js     — GA4 dynamic loader + trackGA() helper. Reads VITE_GA_MEASUREMENT_ID.
 │   └── pages/
 │       ├── Landing.jsx      — Hero + social proof + CTA. Tightened for mobile. No AppSwitcher.
 │       ├── Quiz.jsx         — 8 scenario cards, A/B/C/D badges, progress bar, no back button
 │       └── Results.jsx      — Calculating pause → tier → scorecard → email gate → post-capture confirmation with authority section + videos + waitlist re-ask. Preview mode: ?preview=captured or ?preview=waitlist
+├── public/
+│   └── brian-headshot.jpg   — Brian's LinkedIn profile photo (300x300, served at /brian-headshot.jpg)
 ├── ads/
 │   ├── CREATIVE-BRIEF.md         — Original creative brief (March 16). Superseded by revised brief.
 │   ├── REVISED-CREATIVE-BRIEF-2026-03-18.md — CURRENT execution doc for ads. Read this first.
@@ -55,13 +59,18 @@ hc-funnel/
 ```
 
 ## Current Status
-**Post-capture UX shipped, Meta domain verification in progress, GCP IAM granted to Nico (March 21, 2026).** Launch target: Tuesday March 24 — Monday is testing day.
+**GA4 analytics added, Brian's headshot in action plan email, Meta Pixel verified (March 23, 2026).** Launch target: Tuesday March 24 — Monday is testing day.
 
-**What shipped today (March 21 — Brian + Claude):**
+**What shipped today (March 23 — Nico + Claude):**
+- **Google Analytics 4 added:** Dynamic gtag.js loader in `src/utils/analytics.js`. Tracks 5 funnel events: `quiz_start`, `quiz_progress` (per question), `quiz_complete`, `email_capture_view`, `email_capture_submit` (with tier). Requires `VITE_GA_MEASUREMENT_ID` env var in Vercel (already set).
+- **Brian's LinkedIn headshot in action plan email:** 80px circular photo replaces the "B" initial avatar in the email header. Image hosted at `quiz.humbleconviction.com/brian-headshot.jpg` (public/ folder). Source: Brian's LinkedIn profile photo.
+- **Meta Pixel verified:** `Lead` event already fires correctly inside `handleEmailCaptured()` after successful Firestore save — not on page load. No changes needed.
+
+**What shipped March 21 (Brian + Claude):**
 - **Post-capture thank-you page redesign:** After email submission, the tier badge + scorecard + email gate now disappear entirely. Page scrolls to top. User sees only the coral confirmation banner + Brian authority section + videos. Feels like a distinct "thank you" page without needing a separate route. Commit: `7263f8e`.
 - **YouTube channel link fixed:** Was pointing to `@HumbleConviction` (wrong), now points to `@humbleconvictionstartups` (correct). Commit: `7895813`.
 - **GCP IAM: Nico granted Service Usage Consumer** on `eddy-tracker-82486` project. He can now deploy Firebase Storage rules for b-resources Vault (and anything else in that project).
-- **Meta domain verification (in progress):** Nico added `humbleconviction.com` as main domain. Subdomain `quiz.humbleconviction.com` verification pending — Nico handling when home (~90 min from 12:24pm).
+- **Meta domain verification (in progress):** Nico added `humbleconviction.com` as main domain. Subdomain `quiz.humbleconviction.com` verification pending — Nico handling.
 
 **Brian's scoping decisions (carried from March 20):**
 - Kit nurture drip (Emails 2-5 after action plan) is **OUT OF SCOPE for launch**. No course to sell yet. Quiz leads get added to newsletter manually.
@@ -125,6 +134,19 @@ Action plan pipeline built, deployed, and live. Major infrastructure session —
 - ~~Brian still needs to send Nico the Concept 2 image file~~ ✅ Sent
 
 Ad launch target: week of March 23. V1 expectations: goal is DATA, not conversions. Pancake Principle applies to everything after email capture.
+
+## Recent Changes (March 23, 2026 — Sunday Session)
+
+### Analytics & Tracking
+- **Google Analytics 4 added:** `src/utils/analytics.js` dynamically loads gtag.js using `VITE_GA_MEASUREMENT_ID` env var. Initialized in `main.jsx`. Events wired into Landing.jsx (`page_view`), Quiz.jsx (`quiz_start`, `quiz_progress`, `quiz_complete`), Results.jsx (`email_capture_view`, `email_capture_submit`).
+- **Meta Pixel audit:** Confirmed `Lead` event fires inside `handleEmailCaptured()` after successful `saveLead()` — correctly tied to email submission, not page load. No changes needed.
+
+### Action Plan Email
+- **Brian's headshot added:** 80px circular LinkedIn profile photo replaces the 48px "B" initial circle in the email header. Image hosted from `public/brian-headshot.jpg` → served at `quiz.humbleconviction.com/brian-headshot.jpg`. Uses inline styles for Gmail/Outlook/Apple Mail compatibility.
+
+### Commits
+- `592e09f` — Add GA4 funnel tracking + Brian's headshot in action plan email
+- `5e67b8d` — Replace Brian headshot with LinkedIn profile photo
 
 ## Recent Changes (March 21, 2026 — Saturday Session)
 
@@ -212,6 +234,7 @@ Architecture defined: Vercel serverless endpoint → Claude API (Sonnet) → Res
 - **`LAUNCH_STATUS=pre_launch` env var not yet set in Vercel** — controls PS text in action plan email. Nico needs to add this.
 - **Meta Pixel domain verification pending** — `humbleconviction.com` added, `quiz.humbleconviction.com` subdomain still needs verification. Nico handling.
 - **VM git lock files** — Cowork VM cannot remove `.git/HEAD.lock` on mounted volumes (EPERM). Workaround: clone to `/tmp/` for pushes.
+- **humbleconviction.com/images/headshot.jpg is 0 bytes** — broken placeholder on main HC website. Needs fixing in hc-website repo (separate from hc-funnel).
 
 ## Action Plan Email Pipeline (Nico's Build)
 
@@ -296,7 +319,9 @@ Do NOT skip Phase 1 — optimizing directly for email capture on a test budget w
 - **Kit account:** Humble Conviction (brhnyc1970@gmail.com). Auto-confirm ON (no double opt-in).
 - **Sending email:** results@humbleconviction.com (Resend verified, Kit verified)
 - **AdCreative.ai:** Under Humble Conviction brand. 6 projects. Logged in via admin@humbleconviction.com.
-- **YouTube videos (post-capture):** Short: `iqw1IgRA2sw` (0:52). Long: `_3601d3OpYY` (8:16). Channel: @HumbleConviction.
+- **YouTube videos (post-capture):** Short: `iqw1IgRA2sw` (0:52). Long: `_3601d3OpYY` (8:16). Channel: @humbleconvictionstartups.
+- **Google Analytics 4:** Measurement ID via `VITE_GA_MEASUREMENT_ID` env var. Dynamic loader in `src/utils/analytics.js`. Events: quiz_start, quiz_progress, quiz_complete, email_capture_view, email_capture_submit.
+- **Meta Pixel:** HC Eddy Pixel, ID `1407883507304464`. Events: PageView (index.html), ViewContent (Landing + Quiz start), CompleteRegistration (quiz complete), Lead (email submit). All verified working.
 
 ## Next Steps — Updated March 19
 
@@ -345,7 +370,7 @@ Do NOT skip Phase 1 — optimizing directly for email capture on a test budget w
 | B7 | ~~Write autoresponder email copy~~ | ❌ OUT OF SCOPE — postponed until course exists. Leads go to newsletter manually. | Cancelled |
 | B8 | ~~Define action plan prompt template~~ | ✅ Written + integrated + spec emailed to Nico. Needs live testing after deploy. | Deploy (git push) |
 | B9 | Review action plan email screenshots | Nico sends screenshots of all 3 tiers after deploy | Nico deploy |
-| B10 | Provide headshot for email header | After full pipeline audit. Placeholder is fine for launch. | B9 |
+| B10 | ~~Provide headshot for email header~~ | ✅ DONE — LinkedIn headshot added to email header (March 23). | — |
 | B11 | Follow Nico's Meta Ads Manager setup instructions | Nico sending instructions | N6 |
 
 ## Open Questions / Decisions Pending
