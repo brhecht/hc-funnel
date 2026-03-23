@@ -1,5 +1,5 @@
 # HANDOFF — HC Funnel
-*Last updated: March 20, 2026 ~12:30pm ET*
+*Last updated: March 23, 2026 ~3:30pm ET*
 
 ## Project Overview
 Quiz-based lead magnet funnel for Humble Conviction's upcoming pitching/fundraising course. 8 scenario-based questions score founders across 4 dimensions, deliver a tier result with scorecard, and gate a personalized action plan behind email capture. Config-driven architecture — all content lives in `src/config/funnel.js`. Part of B-Suite, positioned as a sub-tool under B Marketing.
@@ -23,311 +23,158 @@ hc-funnel/
 │   ├── main.jsx             — React entry
 │   ├── index.css            — Tailwind imports
 │   ├── components/
-│   │   ├── Layout.jsx       — Branded shell (header, footer, cool-white bg, Inter font). AppSwitcher REMOVED.
-│   │   (AppSwitcher.jsx deleted — was unused)
+│   │   └── Layout.jsx       — Branded shell (header, footer, cool-white bg, Inter font)
 │   ├── config/
 │   │   └── funnel.js        — ALL content: questions, scoring, results copy, email gate copy, design tokens
 │   ├── context/
 │   │   └── FunnelContext.jsx — Quiz state, scoring engine (raw → display → tier), UTM capture
 │   └── pages/
-│       ├── Landing.jsx      — Hero + social proof + CTA. Tightened for mobile. No AppSwitcher.
+│       ├── Landing.jsx      — Hero + social proof + CTA. Mobile-first. Social proof needs "coached" → "analyzed" update.
 │       ├── Quiz.jsx         — 8 scenario cards, A/B/C/D badges, progress bar, no back button
-│       └── Results.jsx      — Calculating pause → tier → scorecard → email gate → post-capture confirmation with authority section + videos + waitlist re-ask. Preview mode: ?preview=captured or ?preview=waitlist
+│       └── Results.jsx      — Calculating pause → tier → scorecard → email gate → post-capture confirmation with authority section + videos + waitlist re-ask
 ├── ads/
-│   ├── CREATIVE-BRIEF.md         — Original creative brief (March 16). Superseded by revised brief.
-│   ├── REVISED-CREATIVE-BRIEF-2026-03-18.md — CURRENT execution doc for ads. Read this first.
-│   ├── NANO-BANANA-PROMPTS.md    — Image generation prompts for reference images
-│   └── phase1-references/        — 4 locked Nano Banana reference images + 1 alt
-├── research/                     — Expert audit memos from March 18 session
-│   ├── quiz-design-audit-march-2026.md      — Quiz structure (length, format, gate, UX)
-│   ├── quiz-substance-audit-march-2026.md   — Quiz content, Pixel strategy, cognitive load
-│   ├── landing-page-audit-march-2026.md     — Landing page element-by-element audit
-│   ├── results-page-audit-march-2026.md     — Results/email capture page audit
-│   ├── autoresponder-email-audit-march-2026.md — Tier-specific email template strategy + drafts
-│   ├── ad-system-audit-march-2026.md        — Ad creative + LP system evaluation
-│   ├── ad-copy-final-review-march-2026.md   — Final copy coherence + Meta compliance check
-│   ├── action-plan-expert-review-march-2026.md — Action plan prompt evaluation + full user journey trace
-│   └── waitlist-email-drip-strategy.md      — Pre-product email sequence (March 16)
-├── ACTION-PLAN-PROMPT.md    — Claude prompt template for personalized action plan email generation
-├── HC-PHASE1-DISCOVERY.md   — Strategy/content bible (819 lines, all decisions + copy)
+│   ├── AD-CREATIVE-BRIEF-V3-FINAL.md  — ⭐ CANONICAL execution doc for ads. Only use this.
+│   ├── reference-comps/               — 6 visual reference PNGs (3 concepts × Feed + Story)
+│   ├── NANO-BANANA-PROMPTS.md         — Image generation prompts for reference images
+│   ├── phase1-references/             — Source Nano Banana images (Polite Pass, Room You Can't Read, Built From the Other Side)
+│   └── archive/                       — Deprecated briefs (CREATIVE-BRIEF.md, REVISED-CREATIVE-BRIEF-2026-03-18.md)
+├── research/                          — Expert audit memos from March 18–19 sessions
+│   ├── quiz-design-audit-march-2026.md
+│   ├── quiz-substance-audit-march-2026.md
+│   ├── landing-page-audit-march-2026.md
+│   ├── results-page-audit-march-2026.md
+│   ├── autoresponder-email-audit-march-2026.md
+│   ├── ad-system-audit-march-2026.md
+│   ├── ad-copy-final-review-march-2026.md
+│   ├── action-plan-expert-review-march-2026.md
+│   └── waitlist-email-drip-strategy.md
+├── ACTION-PLAN-PROMPT.md    — Claude prompt template for personalized action plan email
+├── NICO-SPEC-ACTION-PLAN-LAUNCH.md — Comprehensive spec for Nico's action plan pipeline build
+├── QA-PROTOCOL.md           — 7 test scenarios for end-to-end QA
 ├── index.html               — Inter font loaded via Google Fonts
 └── package.json
 ```
 
 ## Current Status
-**Quiz answer wiring complete, QA protocol ready, pixel code ready for deploy (March 20, 2026).** FRAIS sync confirmed Tuesday March 24 launch target — Monday is testing day.
+**Ad creatives need a rebuild pass; pipeline and app code are launch-ready.** Launch target slipped from March 24 — ads are the blocker.
 
-**Brian's scoping decisions (March 20 session):**
-- Kit nurture drip (Emails 2-5 after action plan) is **OUT OF SCOPE for launch**. No course to sell yet. Quiz leads get added to newsletter manually.
-- Kit tier-based automations (N5) — **cancelled for launch**. Kit captures with `quiz-lead` tag + custom fields. Already working.
-- Autoresponder email copy (B7) — **postponed**. Drafts exist in `research/autoresponder-email-audit-march-2026.md` for future use.
-- Firebase console access (B4) — nice-to-have, not a launch blocker.
-- Brian's headshot for email header — add after full pipeline audit. Placeholder "B" circle is fine for launch.
-- `NICO-SPEC-ACTION-PLAN-LAUNCH.md` created and committed — comprehensive spec with code snippets, fixed copy elements, and prioritized task list. Emailed to Nico.
-- **No remaining blockers from Brian.** All creative decisions made, all copy finalized, all images sent.
+**The full pipeline is built and deployed:** Ad → quiz.humbleconviction.com → quiz → email capture → Firestore + Kit + Claude action plan email via Resend.
 
-**What shipped today (March 20 morning — Nico):**
-- `api/action-plan.js` fully rewritten — Brian's final prompt from `ACTION-PLAN-PROMPT.md` integrated with hardcoded intro, section marker parser (`formatActionPlan()`), coral-accented contrast closers, Brian header with headshot, proper footer. Subject line: "Your personalized pitch action plan is ready". From: Brian Hecht. max_tokens bumped to 2048.
-- Quiz answers + raw dimension scores + scorecard copy + waitlist status now flow through the full pipeline (Results.jsx → firebase.js → api/action-plan.js → Claude prompt).
-- Section marker regex hardened (`#{0,3}` with `gm` flags) to handle Claude output variations.
-- PS duplication risk fixed — explicit instruction tells Claude to output exact PS text, plus cleanup regex.
-- `QA-PROTOCOL.md` created — 7 test scenarios covering happy path (desktop + mobile), email content validation, Meta Pixel verification, data pipeline, edge cases, and ad simulation.
-- Meta Pixel code changes ready (from March 19 session) — need `git push` to deploy.
-- Ad creatives nearly complete in AdCreative.ai — Concept 2 templates with new image pending.
-- `LAUNCH_STATUS` env var support added — controls PS text (pre_launch vs post_launch).
+**Ad creative status:** Nico built V1 creatives from the March 18 revised brief, but that brief was stale — a compliance review on March 19 changed headlines, overlay text, and CTA but the changes were written into a research memo instead of patched back into the brief. Additionally, AdCreative.ai's template engine produced weak typography and cramped layouts. Brian reviewed the V1 batch on March 23, identified the gaps, and a V3 FINAL brief was created with exact specs, corrected copy, and 6 visual reference comps. Nico needs to rebuild all 6 creatives in Canva (not AdCreative.ai) matching the reference comps.
 
-**Still pending:** Git push for Nico's changes (prompt integration + pixel + quiz answer wiring), add `LAUNCH_STATUS=pre_launch` env var in Vercel, end-to-end testing (all 3 tiers — screenshots to Brian), ad creative production (HC colors + Feed versions), Meta Ads Manager setup instructions for Brian.
+**Email to Nico:** Gmail draft created (March 23) explaining the process error, what changed, and pointing to V3 brief + comps. Brian sending a heads-up Slack DM first.
 
-**Previous status (March 19):**
-Action plan pipeline built, deployed, and live. Major infrastructure session — all technical blockers for email pipeline resolved.
+## Recent Changes (March 23, 2026 — Ad Creative Audit Session)
 
-**What shipped today (March 19 afternoon):**
-- Resend account created, humbleconviction.com domain verified (SPF, DKIM, DMARC in GoDaddy)
-- Kit sending domain verified (humbleconviction.com)
-- `quiz.humbleconviction.com` live — CNAME pointing to Vercel
-- `api/action-plan.js` built and deployed — Claude Sonnet generates personalized action plan → HC-branded HTML email → sent via Resend
-- Frontend wired: `requestActionPlan()` fires automatically on email capture alongside existing `saveLead()` + `subscribeToKit()`
-- `handleLateWaitlistJoin()` bug fixed — now writes to Firestore + Kit (was UI-only)
-- Ad copy updated across all briefs: "2-minute"→"3-minute", "pitch reviews"→"pitches coached", Concept 4 headline fixed
-- AppSwitcher.jsx deleted, legacy handoff files cleaned up
-- Vercel env vars configured: `RESEND_API_KEY`, `RESEND_FROM_EMAIL`, `ANTHROPIC_API_KEY`
+### Ad Creative Brief V3 FINAL
+- **Root cause identified:** March 19 compliance review changes (shortened headlines, C2 overlay update, C1 truncation fix, CTA alignment) were written as a research memo but never patched back into the execution brief. Nico built from a stale brief — not his fault.
+- **`ads/AD-CREATIVE-BRIEF-V3-FINAL.md` created** — single canonical execution doc. Supersedes all previous briefs. Includes:
+  - Exact typography specs: Inter Semi-Bold/Bold, specific pixel sizes per element, hex colors
+  - Corrected overlay text (C2 gets both lines back, C4 gets "+" and "analyzed")
+  - In-image CTA changed from "Take the Assessment" → "See What Investors See" (matches LP)
+  - Headline removed from image — goes in Meta Ads Manager headline field only
+  - All 3 headlines shortened to under 40 chars for Instagram compliance
+  - Build tool: Canva (not AdCreative.ai)
+  - "Analyzed" as universal credibility language across all ads + LP
 
-**The full pipeline is now: Ad → quiz.humbleconviction.com → quiz → email capture → Firestore + Kit + Claude action plan email via Resend.**
+### Visual Reference Comps
+- **`ads/reference-comps/`** — 6 PNGs created (C1/C2/C4 × Feed/Story) showing exact text positioning, sizing, hierarchy, gradient wash, and CTA button placement. These are the "make it look like this" targets for Nico.
+- C2 comps use the old reference image for layout purposes — Nico uses the new image Brian sent (founder facing VC in Patagonia vest).
 
-**Still pending:** Final test of action plan prompt (template written, needs live testing), autoresponder email copy in Kit, ad creatives in HC colors, Meta Pixel, Meta Ads Manager setup.
+### Brief Cleanup
+- Old briefs (`CREATIVE-BRIEF.md`, `REVISED-CREATIVE-BRIEF-2026-03-18.md`) moved to `ads/archive/` with deprecation headers. Preserves decision history without ambiguity about which doc is current.
 
-**Action plan prompt template finalized (March 19 evening):**
-- Full prompt template committed to `ACTION-PLAN-PROMPT.md` in project root
-- Key features: passes quiz answers (not just scores) for dramatically better personalization, mentor tone ("hey buddy" not "your score is low"), pattern-recognition framing, no scorecard repetition, 5:1 content-to-promotion ratio for Eddy nudges, contrast closers on separate lines, holistic paragraph that seeds the course concept before first Eddy mention, 4th dimension acknowledgment, first-sentence-standalone for skimmers
-- Expert review memo: `research/action-plan-expert-review-march-2026.md`
-- [INTRO] is hardcoded in the HTML template (not AI-generated) — Nico needs to put the fixed text in the email template
-- Subject line locked: "Your personalized pitch action plan is ready"
-- **Nico's next step:** ✅ DONE — `{quizAnswers}` wired into endpoint. All quiz data now passes through. Next: `git push` to deploy + add `LAUNCH_STATUS=pre_launch` env var in Vercel.
-- **Brian's next step:** Paste the prompt into claude.ai with sample scores to test the actual output before deploying. Then do the end-to-end test (take the quiz, submit email, receive the real formatted email).
+### Key Ad Creative Changes (V2 → V3 Summary)
 
-**Ad creative decisions finalized (March 19 evening):**
-- All ad copy passed final coherence + Meta compliance review (`research/ad-copy-final-review-march-2026.md`)
-- All 3 headlines shortened to fit Instagram's 40-char limit (were 47-54 chars, now 28-34)
-- Concept 1 primary text truncation fix (was 126 chars, 1 over Instagram's 125-char gate)
-- Concept 2: NEW overlay text locked ("The investor tuned out five minutes ago." replaces "The investors already decided."), NEW image selected (founder facing VC in Patagonia vest)
-- Concept 4 overlay: "2,500" → "2,500+" for consistency
-- Universal change: "coached"/"reviewed" → "analyzed" everywhere (ads, landing page social proof, post-capture authority section — all deployed)
-- Revised creative brief (`ads/REVISED-CREATIVE-BRIEF-2026-03-18.md`) is now FINAL with per-concept execution specs and Nico's step-by-step checklist
-- ~~Brian still needs to send Nico the Concept 2 image file~~ ✅ Sent
-
-Ad launch target: week of March 23. V1 expectations: goal is DATA, not conversions. Pancake Principle applies to everything after email capture.
-
-## Recent Changes (March 19, 2026 — Afternoon Session)
-
-### Infrastructure (all deployed to production)
-- **Resend verified** — account created (admin@humbleconviction.com), humbleconviction.com domain verified with SPF/DKIM/DMARC records in GoDaddy
-- **Kit domain verified** — humbleconviction.com sending domain verified (separate CNAME records)
-- **quiz.humbleconviction.com live** — CNAME `quiz` → `cname.vercel-dns.com` in GoDaddy, domain added to Vercel project
-- **Action plan endpoint built** (`api/action-plan.js`) — receives email + quiz scores → builds prompt → Claude Sonnet generates personalized action plan → wraps in HC-branded HTML email → sends via Resend
-- **Frontend wiring** — `requestActionPlan()` added to firebase.js, called from Results.jsx on email capture. Calculates weakest dimension and passes to endpoint.
-- **handleLateWaitlistJoin() fixed** — was a TODO (UI-only). Now writes `waitlist: true` to Firestore via `updateLead()` and re-subscribes to Kit with updated tag.
-- **Vercel env vars set** — `RESEND_API_KEY`, `RESEND_FROM_EMAIL` (results@humbleconviction.com), `ANTHROPIC_API_KEY`
-
-### Ad Copy Updates (all brief files updated)
-- "2-minute" → "3-minute" in CREATIVE-BRIEF.md, REVISED-CREATIVE-BRIEF.md, NANO-BANANA-PROMPTS.md
-- "real pitch reviews" → "pitches coached" in Concepts 1, 4
-- Concept 4 headline: "2 Minutes" → "3 Minutes"
-
-### Cleanup
-- AppSwitcher.jsx deleted (was unused since March 18)
-- Legacy handoff files deleted (HANDOFF-HCFunnel-2026-03-03.md, HANDOFF-HCFunnel-2026-03-12.md)
-
-### Morning Kickoff (March 19)
-- Kickoff sync between Brian and Nico. Confirmed all March 18 code changes are live.
-- Brian confirmed killing Concept 3, changing images on Concept 2
-- Content calendar: LinkedIn post today, YouTube Short tomorrow
-- Ad launch target: week of March 23
-
-## Recent Changes (March 18, 2026 — Evening Session)
-
-### Landing Page
-- **Removed AppSwitcher** from Layout.jsx — no more B-Suite nav bar for cold traffic. Every link was an exit. Research: removing nav increases conversion 16-28%.
-- **Added social proof line** below CTA: "Based on 2,500+ pitches coached by a 4x exited founder and venture investor" (was `null`, now renders)
-- **Changed CTA** from "Get My Results" to "See What Investors See" — echoes headline, benefit-forward, no tense mismatch
-- **Shortened subheadline** — pulled credibility claim into standalone social proof. Subheadline is now: "This 3-minute assessment reveals the patterns investors notice — but will never tell you."
-- **Tightened mobile spacing** — reduced top padding, tighter gaps, smaller mobile heading font. CTA should now be above the fold on 375px.
-
-### Quiz
-- **Trimmed option text** across 10 answer options — ~15-20% reduction in reading load. Gets closer to the "3-minute" claim.
-- **Changed "2-minute" to "3-minute"** on the landing page. Research: understating duration by >50% creates a violation effect that increases abandonment.
-
-### Email Gate (Results Page)
-- **New headline:** "Get your personalized action plan"
-- **New subline:** "We'll send you specific next steps for each dimension — starting with the one holding you back most."
-- **New button:** "Get My Action Plan" (was "Send My Recommendations")
-- **Waitlist checkbox rewrite:** Added bridge sentence "We're building a course to help founders close these gaps." above checkbox. Label changed to "Get early access when it launches" (was "Also notify me when the course launches" — "the course" was an unexplained jump).
-- **Larger checkbox tap target** — w-5 h-5 (20px) up from w-4 h-4 (16px), plus py-1 on the label for mobile.
-- **Disclaimer updated** to say "personalized action plan" instead of "recommendations"
-
-### Post-Capture Confirmation (New)
-Completely rebuilt. Was a dead-end "Your recommendations are on the way" card. Now:
-- **Coral confirmation banner** (matches email gate visual) — checkmark + "Your action plan is on the way."
-- **Dark navy authority block** — "THE INVESTOR BEHIND THE ASSESSMENT" (uppercase label in coral) → "Brian Hecht" → credentials line → 2-sentence bio → short YouTube embed (0:52) → divider → "Go deeper" long YouTube embed (8:16) → "More from Brian on YouTube →" link
-- **Two variants:** Variant A (waitlist checkers) shows "You're on the early access list." Variant B (non-checkers) shows waitlist re-ask button after the videos — one click, no form.
-- **"Retake assessment" link** now hidden after email capture.
-- **Preview mode** added: `?preview=captured` and `?preview=waitlist` URL params to view confirmation without completing quiz.
-
-### Ad Creative Plan (Revised)
-- **Concept 3 (The Shift) KILLED** for launch. Image can't convey "power flip" in a still frame. 3 strong concepts > 3 strong + 1 weak.
-- **Concept 2 (Room You Can't Read) needs new image.** Best copy in the set, but conference room AI image has visible artifacts. Image prompts written in revised brief.
-- **Concepts 1 and 4 ship as-is** with minor copy updates.
-- **All ad copy needs:** "2-minute" → "3-minute", "pitch reviews" → "pitches coached", URL → humbleconviction.com
-- **Visual continuity spec:** Ads need HC color palette (navy/coral) instead of AdCreative.ai's blue template.
-- **Full revised brief:** `ads/REVISED-CREATIVE-BRIEF-2026-03-18.md` — has everything including task lists for Brian and Nico.
-
-### Action Plan Email Pipeline (Specced, Not Built)
-Architecture defined: Vercel serverless endpoint → Claude API (Sonnet) → Resend transactional email. Spec emailed to Nico. See "Action Plan Pipeline" section below for full details.
-
-### Autoresponder Emails (Drafted, Not in Kit)
-3 tier-specific email templates written in `research/autoresponder-email-audit-march-2026.md`. These are placeholder templates until the AI pipeline is built. Plain text format (not HTML — research shows 42% more clicks for plain text with cold traffic). Need to be set up in Kit with tag-based automation.
+| Element | V2 Brief | V3 Final |
+|---------|----------|----------|
+| In-image CTA (all) | "Take the Assessment" | "See What Investors See" |
+| Headline on image | Baked in by AdCreative.ai | Removed — Meta field only |
+| C2 overlay line 2 | Missing in execution | "The investor tuned out five minutes ago." |
+| C1 headline | 54 chars (truncates) | "What Investors See (But Won't Say)" (34) |
+| C2 headline | 47 chars (truncates) | "Do You Misread Investor Signals?" (32) |
+| C4 headline | Stale | "See What Investors Really See" (28) |
+| C4 overlay | "2,500 founder pitches reviewed." | "2,500+ founder pitches analyzed." |
+| Credibility language | Mixed | "analyzed" everywhere |
+| Build tool | AdCreative.ai | Canva |
 
 ## Known Bugs / Issues
-- **Action plan prompt integrated but not deployed** — Brian's full prompt from `ACTION-PLAN-PROMPT.md` is now wired into `api/action-plan.js` with hardcoded intro, section marker parser, coral-accented contrast closers, and all quiz data (answers, raw scores, scorecard copy, waitlist status). Needs `git push` + `LAUNCH_STATUS=pre_launch` env var in Vercel. Brian needs to live-test before launch.
-- **No Meta Pixel yet** — must be installed before ad launch.
+- **`LAUNCH_STATUS=pre_launch` env var not yet set in Vercel** — controls PS text in action plan email. Nico needs to add this.
+- **Meta Pixel domain verification pending** — `humbleconviction.com` added, `quiz.humbleconviction.com` subdomain still needs verification. Nico handling.
+- **LP social proof says "pitches coached"** — needs code change in `Landing.jsx` to "pitches analyzed" for consistency with all ad copy. Minor.
+- **VM git lock files** — Cowork VM cannot remove `.git/HEAD.lock` on mounted volumes (EPERM). Workaround: clone to `/tmp/` for pushes.
 
-## Action Plan Email Pipeline (Nico's Build)
+## Planned Features / Backlog
+- Kit nurture drip (Emails 2-5 after action plan) — **OUT OF SCOPE for launch**. No course to sell yet.
+- Kit tier-based automations — **cancelled for launch**. Leads go to newsletter manually.
+- Autoresponder email copy — **postponed**. Drafts exist in `research/autoresponder-email-audit-march-2026.md`.
+- Brian's headshot for email header — placeholder "B" circle is fine for launch.
+- Firebase console access for Brian — nice-to-have, not a launch blocker.
 
-**Architecture:** Two-tier email system. Resend handles the instant transactional email (personalized results). Kit handles the nurture drip (Emails 2-5 over 3-4 weeks).
+## Action Plan Email Pipeline
+**Architecture:** Two-tier email system. Resend handles the instant transactional email (personalized results). Kit handles marketing/nurture (out of scope for launch).
 
 ```
 User completes quiz → enters email → Results.jsx fires:
-  1. saveLead() → Firestore (existing, works)
-  2. subscribeToKit() → Kit nurture sequence (existing, works)
-  3. NEW: /api/action-plan → Claude API (Sonnet) → Resend → instant personalized email
+  1. saveLead() → Firestore (working)
+  2. subscribeToKit() → Kit with quiz-lead tag + custom fields (working)
+  3. requestActionPlan() → /api/action-plan → Claude Sonnet → Resend email (working)
 ```
 
-**Why Resend (not Kit) for the results email:**
-- Transactional (one-off, personalized) vs. marketing (drip, bulk) — different tools for different jobs
-- Resend has sub-second dispatch, native Vercel integration, React JSX email templates
-- Kit stays as the nurture/drip platform (Emails 2-5)
-- Free tier: 100 emails/day (plenty for launch testing)
-- Cost: ~$0.20/email after free tier
-
-**Resend implementation plan (researched March 19):**
-
-Files to create:
-- `/api/action-plan.js` — Vercel serverless endpoint. Receives quiz data + email → builds prompt → calls Claude API → converts to HTML → sends via Resend → returns 200. Follow `/api/subscribe.js` pattern.
-- `/src/components/emails/ResultsEmailTemplate.jsx` — JSX email template with personalized scorecard, dimension breakdowns, contextual Eddy promotions. Resend compiles JSX → HTML at send time.
-
-Files to modify:
-- `/src/pages/Results.jsx` — Add `requestActionPlan()` call in `handleEmailCaptured()`, alongside existing `saveLead()` and `subscribeToKit()`. Non-blocking.
-- `/src/firebase.js` — Add `requestActionPlan()` function (simple fetch to `/api/action-plan`)
-
-Env vars needed in Vercel:
-- `RESEND_API_KEY` — from resend.com dashboard
-- `RESEND_FROM_EMAIL` — `results@humbleconviction.com`
-- `ANTHROPIC_API_KEY` — Brian may already have one
-
-**Nico's setup tasks (in order):**
-1. Sign up at resend.com (free tier) — 5 min
-2. Verify humbleconviction.com domain in Resend (SPF, DKIM DNS records in GoDaddy) — 30 min (needs GoDaddy access from Brian)
-3. Get/confirm Anthropic API key — 5 min
-4. Add env vars to Vercel project — 5 min
-5. `npm install resend @anthropic-ai/sdk` — 1 min
-6. Build `/api/action-plan.js` endpoint — 1-2 hours
-7. Build email template JSX — 1 hour
-8. Wire frontend (`Results.jsx` + `firebase.js`) — 15 min
-9. Test end-to-end — 1 hour
-**Total estimate: ~4-5 hours**
-
-**Also for Kit:** Verify humbleconviction.com as a sending domain in Kit (separate from Resend — both need the same domain verified independently).
-
-**Prompt template:** Brian will define what Claude should generate per user. Nico can scaffold the endpoint now and drop the final prompt in later. Brian described the logic in the kickoff: "Given what we know from their answers, what do we tell them? Longer and more prescriptive. Work in Eddy promotion contextually — 'you had this problem, here's how to fix it, you can learn more about this in a lesson in Eddy.'"
-
-**Full spec emailed to Nico** (March 18, subject: "HC Funnel: Action Plan Email Pipeline — Technical Spec & Your To-Dos").
-
-**Direct Resend vs. Zapier middleware:** Go direct. Resend from Vercel serverless function. No Zapier needed — adds latency, cost, and complexity for a simple transactional email. Zapier is overkill here.
+Full prompt template in `ACTION-PLAN-PROMPT.md`. Nico's implementation spec in `NICO-SPEC-ACTION-PLAN-LAUNCH.md`.
 
 ## Meta Pixel Strategy
-Expert research recommends a **two-phase approach:**
-1. **Phase 1:** Optimize for quiz completion (ViewContent or custom QuizComplete event). Higher volume, exits learning phase faster (need ~50 events/week). Gives clean completion rate data.
-2. **Phase 2 (after 2-3 weeks):** Shift to email capture (Lead event) optimization once stable delivery and enough conversion history.
-
-Do NOT skip Phase 1 — optimizing directly for email capture on a test budget will likely keep Meta stuck in learning phase.
+Two-phase approach:
+1. **Phase 1:** Optimize for quiz completion (ViewContent/QuizComplete event). Higher volume, exits learning phase faster (~50 events/week needed).
+2. **Phase 2 (after 2-3 weeks):** Shift to email capture (Lead event) optimization once stable delivery.
 
 ## Design Decisions & Constraints
 - **Config-driven:** All quiz content, scoring, copy, and design tokens in `src/config/funnel.js`. Components have zero hardcoded copy.
-- **Scenario-based questions:** Not self-assessment. Founders choose how they'd respond in real investor situations. Validated by SJT research (less prone to Dunning-Kruger faking than self-report).
-- **Scoring:** Per-question: Best=2, Next-best=1, Weak=0. Two questions per dimension. Raw 0-4 per dimension → display 2/5, 3/5, or 4/5. Self-Awareness floors at 3. Raw total (0-16) determines tier.
-- **Tier thresholds:** Validated via Monte Carlo (10K runs). ~25% Lost in the Noise / ~64% Pieces Are There / ~11% So Close It Hurts.
-- **Email gate: partial reveal (trust-first).** Show tier + scorecard on web, gate action plan behind email. Decided to launch with this and monitor email capture rate. Below 20% → tighten gate. Above 25% → keep.
+- **Scenario-based questions:** Not self-assessment. SJT research validated (less prone to Dunning-Kruger faking).
+- **Scoring:** Per-question: Best=2, Next-best=1, Weak=0. Two questions per dimension. Raw 0-4 → display 2/5, 3/5, or 4/5. Self-Awareness floors at 3. Raw total (0-16) determines tier.
+- **Tier thresholds:** Monte Carlo validated. ~25% Lost in the Noise / ~64% Pieces Are There / ~11% So Close It Hurts.
+- **Email gate: partial reveal (trust-first).** Show tier + scorecard, gate action plan behind email. Monitor: below 20% capture → tighten gate.
 - **No back button:** Research-backed for scenario-based quiz on mobile.
 - **Mobile-first:** 80%+ traffic from Meta ads on mobile. All elements sized for 375px viewport.
-- **Design system:** Navy text (#1A2332) + coral accent (#E8845A) on cool-white (#F8F9FC). Inter font throughout.
-- **Server-side Kit proxy** to bypass ad blockers.
-- **"Conversation, Not Pitch"** is a core HC principle — threads through methodology, results copy, and email content.
-- **Post-capture authority framing:** Brian is introduced as "the investor behind the assessment" — not "the founder." Investor credibility is the authority angle for the entire funnel.
-- **Ad strategy:** 3 concepts (Concept 3 killed). Concept 2 (Dunning-Kruger) predicted strongest for cold traffic. Concept 4 (authority) for retargeting. See revised creative brief for full details.
+- **Design system:** Navy (#1A2332) + coral (#E8845A) on cool-white (#F8F9FC). Inter font throughout.
+- **Ad strategy:** 3 concepts (Concept 3 killed). C2 (Dunning-Kruger) predicted strongest for cold. C4 (authority) for retargeting. All ad specs in `ads/AD-CREATIVE-BRIEF-V3-FINAL.md`.
+- **Ad creatives built in Canva** — AdCreative.ai's template engine was producing weak typography. Canva gives full control.
 
 ## Environment & Config
 - **Production URL:** https://quiz.humbleconviction.com (also https://hc-funnel.vercel.app)
 - **GitHub:** github.com/brhecht/hc-funnel (auto-deploy on push to main)
 - **Firebase project:** `eddy-tracker-82486` (shared with eddy and b-marketing)
-- **Firestore collection:** `leads` — stores quiz answers, raw scores, display scores, tier, waitlist flag, UTMs
-- **Kit integration:** Via `/api/subscribe` Vercel serverless proxy. Tag: `quiz-lead` (ID 17618088). Custom fields: tier, friction_area, waitlist, utm_source, utm_medium, utm_campaign, utm_term, utm_content.
-- **Kit account:** Humble Conviction (brhnyc1970@gmail.com). Auto-confirm ON (no double opt-in).
+- **Firestore collection:** `leads`
+- **Kit integration:** Via `/api/subscribe` Vercel serverless proxy. Tag: `quiz-lead` (ID 17618088). Custom fields: tier, friction_area, waitlist, UTMs.
+- **Kit account:** Humble Conviction (brhnyc1970@gmail.com). Auto-confirm ON.
 - **Sending email:** results@humbleconviction.com (Resend verified, Kit verified)
-- **AdCreative.ai:** Under Humble Conviction brand. 6 projects. Logged in via admin@humbleconviction.com.
-- **YouTube videos (post-capture):** Short: `iqw1IgRA2sw` (0:52). Long: `_3601d3OpYY` (8:16). Channel: @HumbleConviction.
+- **YouTube videos (post-capture):** Short: `iqw1IgRA2sw` (0:52). Long: `_3601d3OpYY` (8:16). Channel: @humbleconvictionstartups.
 
-## Next Steps — Updated March 19
+## Next Steps
 
-### NICO — Remaining Tasks
-
-**Done today (✅):**
-- ~~DNS setup — quiz.humbleconviction.com~~ ✅
-- ~~Resend account + domain verification~~ ✅
-- ~~Kit domain verification~~ ✅
-- ~~Vercel env vars (Resend, Anthropic)~~ ✅
-- ~~Scaffold api/action-plan.js~~ ✅
-- ~~Wire frontend (requestActionPlan + handleLateWaitlistJoin)~~ ✅
-- ~~Ad copy updates (2-min→3-min, pitch reviews→pitches coached)~~ ✅
-- ~~Cleanup (AppSwitcher, legacy handoffs)~~ ✅
-
-**Still TODO:**
+### NICO — Active Tasks
 
 | # | Task | Details | Status |
 |---|------|---------|--------|
-| N1 | Meta Pixel installation | Phase 1: ViewContent/QuizComplete event. Phase 2 (2-3 weeks): Lead event. | Ready to do |
-| N2 | Update URL in all ad copy | Change to quiz.humbleconviction.com | Ready to do |
-| N3 | Create Feed (4:5) version of Concept 1 | Only Story exists — needs Canva/Figma | Ready to do |
-| N4 | Re-template ads in HC colors (navy/coral) | Replace AdCreative.ai blue template | Ready to do |
-| N5 | ~~Set up tier-based Kit automations~~ | ❌ OUT OF SCOPE — no course to sell yet. Leads go to newsletter manually. | Cancelled |
-| N6 | Write Meta Ads account instructions for Brian | What he needs to do in FB for Nico to run ads | Ready to do |
+| N1 | Rebuild all 6 ad creatives in Canva | Match `ads/reference-comps/` visual targets. Use V3 FINAL brief for exact specs. | **Waiting on Brian's email** |
+| N2 | Set `LAUNCH_STATUS=pre_launch` env var in Vercel | Controls PS text in action plan email | Ready to do |
+| N3 | Meta Pixel domain verification | `quiz.humbleconviction.com` subdomain | In progress |
+| N4 | End-to-end testing (all 3 tiers) | Screenshots to Brian | After N2 |
+| N5 | Update LP social proof | "pitches coached" → "pitches analyzed" in `Landing.jsx` | Ready to do |
+| N6 | Meta Ads Manager setup instructions for Brian | What Brian needs to do in FB | Ready to do |
+| N7 | Final Meta Ads Manager setup + launch | After Brian approves rebuilt creatives | Blocked on N1 |
 
-**Blocked on Brian:**
+### BRIAN — Active Tasks
 
-| # | Task | Blocked by |
-|---|------|------------|
-| N7 | Apply text overlay to new Concept 2 image | ✅ UNBLOCKED — Brian sent image. New overlay: "He thinks the pitch is going well. / The investor tuned out five minutes ago." |
-| N8 | Generate Story + Feed versions of Concept 2 | N7 |
-| N9 | ~~Drop final prompt into api/action-plan.js~~ | ✅ DONE — Full prompt integrated, quiz answers wired, hardcoded intro, section parser, all fields passing. Needs git push + LAUNCH_STATUS env var. |
-| N10 | Final Meta Ads Manager setup + launch | Brian's final approval (B5) |
-
-### BRIAN — Remaining Tasks
-
-| # | Task | Details | Blocked by |
-|---|------|---------|------------|
-| B1 | ~~Share GoDaddy login~~ | ✅ Done | — |
-| B2 | ~~Generate new Concept 2 image~~ | ✅ Done — founder facing VC in Patagonia vest. Needs to be sent to Nico. | — |
-| B3 | ~~Decide domain~~ | ✅ Done — quiz.humbleconviction.com | — |
-| B4 | ~~Grant Nico Firebase access~~ | Deprioritized — not a launch blocker. Can grant later. | — |
-| B5 | Final approve all 3 ad concepts | Review once Nico applies HC colors | N4 (HC colors) |
-| B6 | ~~Finalize ad creatives~~ | ✅ Kill Concept 3 ✅, Concept 2 image ✅, all copy ✅, image sent ✅. Waiting on HC color re-template. | N4 |
-| B7 | ~~Write autoresponder email copy~~ | ❌ OUT OF SCOPE — postponed until course exists. Leads go to newsletter manually. | Cancelled |
-| B8 | ~~Define action plan prompt template~~ | ✅ Written + integrated + spec emailed to Nico. Needs live testing after deploy. | Deploy (git push) |
-| B9 | Review action plan email screenshots | Nico sends screenshots of all 3 tiers after deploy | Nico deploy |
-| B10 | Provide headshot for email header | After full pipeline audit. Placeholder is fine for launch. | B9 |
-| B11 | Follow Nico's Meta Ads Manager setup instructions | Nico sending instructions | N6 |
+| # | Task | Details | Status |
+|---|------|---------|--------|
+| B1 | Send Nico heads-up Slack DM | Before the email lands | Ready now |
+| B2 | Send Nico the email (Gmail draft ready) | V3 brief context, change summary, repo pointers | Ready now |
+| B3 | Review + approve rebuilt ad creatives | After Nico rebuilds in Canva | Blocked on N1 |
+| B4 | Review action plan email screenshots | After Nico deploys + tests all 3 tiers | Blocked on N4 |
+| B5 | Follow Nico's Meta Ads Manager setup instructions | After Nico writes them | Blocked on N6 |
 
 ## Open Questions / Decisions Pending
-- **Feed versions:** Create Feed (4:5) for Concept 2 as well, or Story-only initially?
-- **Meta campaign structure:** Single campaign with 3 ad sets? Or separate for cold (1+2) vs retargeting (4)?
+- **Meta campaign structure:** Single campaign with 3 ad sets? Or separate for cold (C1+C2) vs retargeting (C4)?
 - **Kit `weakestDimension` custom field:** Add to subscriber data for personalization? (~15 min change)
-- **Concept 1 image:** Worth regenerating? Low priority.
-- **Meta Ads account:** Nico writing instructions for what Brian needs to do in FB.
+- **Launch date:** Was March 24, now depends on Nico's Canva rebuild turnaround.
