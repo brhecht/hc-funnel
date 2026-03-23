@@ -222,11 +222,15 @@ The main event — roughly 40% of the email.
   - Self-Awareness: "learning from investor feedback"
   - Persuasion Instincts: "the conversation framework" or "storytelling for investors"
   - Waitlist CTA: ${waitlistStatus === "on_waitlist" ? "\"You're already on the early access list — you'll be first to know when it opens.\"" : launchStatus === "post_launch" ? "Include link to course page." : "\"If you want early access when it launches, just reply 'interested' and I'll add you.\""}
-- End with a two-line contrast closer. BOTH lines must use IDENTICAL formatting — each wrapped in single asterisks, each on its own line, with a blank line between them. No other markup (no bold, no extra asterisks). Format EXACTLY:
+- End with a two-line contrast closer. Rules for the CONTENT:
+  1. Both lines MUST address the exact same situation or scenario (e.g., both about what happens after a "no," both about how you open a pitch meeting, both about how you handle tough questions). If the "struggle" line is about mindset and the "funded" line is about a specific tactical moment, they don't contrast — they're just two unrelated observations.
+  2. The "struggle" line MUST describe a genuinely counterproductive behavior — something that actively hurts the founder. NOT something reasonable that just isn't optimal. Test: if a smart founder would say "wait, that's actually good advice," the line fails. Examples of GOOD "struggle" lines: "rehearse their pitch until it sounds robotic," "answer the question they wish they'd been asked." Examples of BAD "struggle" lines: "treat every investor interaction as a learning opportunity" (that's good advice), "try to be thorough" (reasonable instinct).
+  3. The "funded" line must be the counterintuitive flip of the SAME scenario — not a different scenario that happens to sound smart.
+  Rules for FORMATTING: BOTH lines must use IDENTICAL formatting — each wrapped in single asterisks, each on its own line, with a blank line between them. No other markup (no bold, no extra asterisks). Format EXACTLY:
 
-*Founders who struggle [common mistake].*
+*Founders who struggle [genuinely counterproductive behavior in specific situation].*
 
-*Founders who get funded [counterintuitive truth].*
+*Founders who get funded [counterintuitive flip of that same situation].*
 
 ### [SECOND] — ${swLabel}
 Shorter — roughly 20% of the email.
@@ -234,7 +238,7 @@ Shorter — roughly 20% of the email.
 - 1-2 sentences on what the score means practically, grounded in their specific answer for this dimension. Same rules as WEAKEST: reference what they chose, explain the pattern it reveals, never fabricate scenarios or state as fact what you're inferring. New insight, not scorecard repetition.
 - One sentence pointing them in the right direction with a concrete action or reframe.
 - Course callback (ONE sentence MAX — see Course Mention Architecture): reference the course as already-introduced, e.g. "The course also covers..." or "There's a module on this too." Do NOT re-introduce it.
-- Pithy closer in italic (same two-line format).
+- Pithy closer in italic (same two-line contrast closer format — same content rules: both lines same scenario, "struggle" must be genuinely counterproductive, "funded" is the counterintuitive flip).
 
 ### [STRENGTH] — ${sLabel}
 Brief — roughly 10% of the email.
@@ -360,6 +364,11 @@ Read the full email top to bottom and check:
 ## Layer 3: Parity Check
 - Does EVERY dimension section (including FOURTH/STRENGTH) end with something actionable or a concrete direction forward? Mid-range scores (2-3/5) need MORE care, not less — fix any section that just labels a score without a prescription.
 - Are the "Founders who struggle / Founders who get funded" contrast pairs formatted identically? Both lines must be wrapped in single *asterisks* with identical markup. Fix any asymmetry.
+- CRITICAL — Contrast closer CONTENT coherence: For each contrast pair, verify:
+  (a) Both lines address the exact same situation or scenario. If the "struggle" line is about one context and the "funded" line is about a different context, rewrite so they contrast the same moment.
+  (b) The "struggle" line describes something genuinely counterproductive — NOT reasonable advice stated negatively. Test: would a smart founder say "wait, that's actually good advice"? If yes, it fails. "Treat every investor interaction as a learning opportunity" = FAILS (that's good advice). "Rehearse their pitch until it sounds robotic" = PASSES (genuinely harmful).
+  (c) The "funded" line is the counterintuitive flip of the same scenario, not an unrelated smart-sounding observation.
+  If any contrast pair fails these checks, rewrite BOTH lines to properly contrast the same situation with a genuinely counterproductive behavior vs. its surprising flip.
 - Do all section markers ([HOLISTIC], [WEAKEST], etc.) appear exactly once and in the correct order?
 
 ## Output
