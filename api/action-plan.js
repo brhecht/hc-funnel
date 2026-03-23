@@ -248,7 +248,7 @@ If there's a 4th dimension not yet addressed:
 - 1-2 sentences — this section is brief but NOT throwaway. Mid-range scores (2-3/5) deserve care: the reader may feel "average" here, which stings more than a clear weakness. Acknowledge where they are with specificity, and give them ONE concrete thing to think about or try. Every dimension must leave the reader with something actionable, regardless of score level. Never just label a score without a direction forward.
 
 ### [CLOSING]
-2-3 sentences. Bring it back to the big picture. Frame the gap as smaller than they think — but only if they work on the right things in the right order.
+2-3 sentences. Bring it back to the big picture. Frame the gap as smaller than they think — but only if they work on the right things in the right order. ZERO mentions of the course, the framework, coaching, modules, or early access. This section is pure encouragement — no selling, no hinting, no seeding. End on coaching, not commerce.
 
 Sign off: "— Brian"
 
@@ -266,11 +266,11 @@ The course must be introduced and referenced with intentional narrative flow, no
 
 3. **[SECOND] — Callback only.** One sentence MAX. Must reference the course as already-introduced: "The course also covers..." or "There's a module on this too." Never re-introduce it as if the reader hasn't heard about it yet.
 
-4. **[STRENGTH], [FOURTH], [CLOSING] — No course mentions.** These sections are pure coaching. Zero promotion. The reader should finish the email feeling coached, not sold to.
+4. **[STRENGTH], [FOURTH], [CLOSING] — No course mentions.** These sections are pure coaching. Zero promotion. This includes the words "course," "framework," "module," "coaching," and "early access." None of these words should appear in STRENGTH, FOURTH, or CLOSING. The reader should finish the email feeling coached, not sold to.
 
 5. **[PS] — Final CTA.** This is hardcoded (not AI-generated). It handles the waitlist/launch CTA.
 
-**Total course mentions in the AI-generated portion: exactly 2** (one intro in WEAKEST, one callback in SECOND). If you find yourself writing a third, delete it.
+**Total course mentions in the AI-generated portion (HOLISTIC through CLOSING): exactly 2** (one intro in WEAKEST, one callback in SECOND). The PS is hardcoded by the system — ignore it. If you find yourself writing a third mention anywhere in HOLISTIC through CLOSING, delete it.
 
 ## What NOT to do
 - DO NOT repeat or closely paraphrase the scorecard copy.
@@ -339,7 +339,13 @@ Run these three audit layers and revise the email:
 Read every sentence as the founder who answered those specific questions. Flag and fix any sentence where:
 - You'd think "that's not what I said" or "how would you know that?" — the writer is fabricating a scenario about your meetings that you never described
 - You'd think "that doesn't apply to me" — the writer is being too specifically diagnostic based on limited information
-- A claim is stated as definitive fact rather than a pattern ("investors can't..." → "investors often struggle to...")
+- A claim is stated as definitive fact rather than a pattern. Be aggressive about catching these — they're the most common failure. Examples to fix:
+  "investors can't picture..." → "investors often struggle to picture..."
+  "you're losing the room" → "founders in this pattern tend to lose the room"
+  "the fix isn't X, it's Y" → "in my experience, the fix usually isn't X — it's Y"
+  "that choice often reveals..." → OK (already hedged)
+  "what that means is..." → "what that often means is..."
+  Any sentence claiming to know what IS happening in the reader's meetings (vs what TENDS to happen based on patterns) must be rewritten.
 - Something references a quiz answer without reminding you what the question was about
 
 ## Layer 2: Course Flow Audit
@@ -348,7 +354,7 @@ Read the full email top to bottom and check:
 - The HOLISTIC section should only hint that a framework/system exists — NOT name or describe the course.
 - Is there exactly ONE callback in the SECOND section that references the course as already-introduced?
 - Are there any course mentions in STRENGTH, FOURTH, or CLOSING? There should be ZERO.
-- Total course mentions in the body (excluding PS): exactly 2. Fix if more or fewer.
+- Total course mentions in the AI-generated body (HOLISTIC through CLOSING): exactly 2. The [PS] section is hardcoded by the system and is NOT AI-generated — do NOT count it when tallying course mentions. Fix if the AI-generated sections have more or fewer than 2.
 - Does any mention feel like it interrupts the coaching value or reads as a sales pitch?
 
 ## Layer 3: Parity Check
