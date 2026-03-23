@@ -2,6 +2,7 @@ import { useEffect } from "react"
 import { Link } from "react-router-dom"
 import { useFunnel } from "../context/FunnelContext"
 import { trackPixel } from "../hooks/useMetaPixel"
+import { trackGA } from "../utils/analytics"
 
 export default function Landing() {
   const { config } = useFunnel()
@@ -9,6 +10,7 @@ export default function Landing() {
 
   useEffect(() => {
     trackPixel("ViewContent", { content_name: "Landing Page" })
+    trackGA("page_view", { page_title: "Landing" })
   }, [])
 
   return (

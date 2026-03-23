@@ -306,11 +306,11 @@ function buildEmailHtml({ tierName, actionPlan }) {
       <table width="100%" cellpadding="0" cellspacing="0" style="max-width: 600px; background: #FFFFFF; border-radius: 12px; padding: 40px 32px; border: 1px solid rgba(26,35,50,0.08);">
         <tr><td>
 
-          <!-- Header: Brian's name + HC -->
+          <!-- Header: Brian's headshot + name + HC -->
           <table cellpadding="0" cellspacing="0" style="margin-bottom: 8px;">
             <tr>
               <td style="vertical-align: middle; padding-right: 12px;">
-                <div style="width: 48px; height: 48px; border-radius: 50%; background: #1A2332; color: #fff; font-size: 18px; font-weight: 700; line-height: 48px; text-align: center;">B</div>
+                <img src="https://quiz.humbleconviction.com/brian-headshot.jpg" alt="Brian Hecht" width="80" height="80" style="width: 80px; height: 80px; border-radius: 50%; display: block; object-fit: cover;" />
               </td>
               <td style="vertical-align: middle;">
                 <p style="margin: 0; font-size: 15px; font-weight: 700; color: #1A2332;">Brian Hecht</p>

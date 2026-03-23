@@ -3,6 +3,7 @@ import { Link } from "react-router-dom"
 import { useFunnel } from "../context/FunnelContext"
 import { saveLead, subscribeToKit, requestActionPlan, updateLead } from "../firebase"
 import { trackPixel } from "../hooks/useMetaPixel"
+import { trackGA } from "../utils/analytics"
 
 // ─── Score Dots Component ─────────────────────────────────
 function ScoreDots({ score, maxScore = 5, theme }) {
@@ -182,6 +183,13 @@ export default function Results() {
   const { rawDimensions, rawTotal, displayScores, tier } = calculateResults()
   const tierColor = theme[tier.themeColor]
 
+  // Track results page view + email capture form shown
+  useEffect(() => {
+    if (showResults && !emailCaptured) {
+      trackGA("email_capture_view", { tier: tier.name })
+    }
+  }, [showResults, emailCaptured])
+
   // ─── Email capture handler ──────────────────────────────
   async function handleEmailCaptured(email, joinWaitlist) {
     try {
@@ -198,6 +206,7 @@ export default function Results() {
       setLeadDocId(docId)
       setCapturedEmail(email)
       trackPixel("Lead", { content_name: tier.name })
+      trackGA("email_capture_submit", { tier: tier.name })
 
       // Sort dimensions by score for action plan targeting
       const dimEntries = Object.entries(displayScores)

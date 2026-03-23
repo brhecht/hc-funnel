@@ -2,6 +2,7 @@ import { useEffect } from "react"
 import { useNavigate } from "react-router-dom"
 import { useFunnel } from "../context/FunnelContext"
 import { trackPixel } from "../hooks/useMetaPixel"
+import { trackGA } from "../utils/analytics"
 
 const LETTERS = ["A", "B", "C", "D"]
 
@@ -22,6 +23,7 @@ export default function Quiz() {
   useEffect(() => {
     if (currentQuestion === 0) {
       trackPixel("ViewContent", { content_name: "Quiz Start" })
+      trackGA("quiz_start")
     }
   }, [])
 
@@ -33,11 +35,13 @@ export default function Quiz() {
 
   function handleSelect(optionId) {
     answerQuestion(q.id, optionId)
+    trackGA("quiz_progress", { question_number: currentQuestion + 1, question_id: q.id })
   }
 
   function handleNext() {
     if (isLast) {
       trackPixel("CompleteRegistration", { content_name: "Quiz Complete" })
+      trackGA("quiz_complete")
       setCalculating(true)
       navigate("/results")
     } else {
