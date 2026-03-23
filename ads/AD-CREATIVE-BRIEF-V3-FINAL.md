@@ -22,7 +22,7 @@ The March 18 revised brief was the execution doc, but a compliance review on Mar
 | C4 overlay | "2,500 founder pitches reviewed." | "2,500+ founder pitches analyzed." | Added "+", changed "reviewed" → "analyzed" for consistency |
 | C1 primary text | "Probably more than once." in first 125 chars | Moved below the fold | Was 126 chars — 1 over Instagram's truncation gate |
 | Credibility language | Mixed: "reviewed" / "coached" / "analyzed" | "analyzed" everywhere | Universal consistency across ads + landing page |
-| Build tool | AdCreative.ai | **Figma or Canva** | AdCreative.ai's template engine controls font, weight, sizing, and positioning — producing weak typography and cramped layouts. Final creatives must be built manually for full control. |
+| Build tool | AdCreative.ai | **Canva** | AdCreative.ai's template engine controls font, weight, sizing, and positioning — producing weak typography and cramped layouts. Final creatives must be built manually in Canva for full control. |
 
 ---
 
@@ -59,7 +59,7 @@ The March 18 revised brief was the execution doc, but a compliance review on Mar
 - No headline (goes in Meta Ads Manager only)
 - No HC badge / logo
 - No decorative template elements (no geometric swooshes, no borders, no framing chrome)
-- No AdCreative.ai template — build from scratch in Figma/Canva
+- No AdCreative.ai template — build from scratch in Canva
 
 ### Format Specs
 
@@ -208,7 +208,7 @@ All ads point to: **https://quiz.humbleconviction.com**
 - **In-image CTA** — "See What Investors See" (all 3 concepts)
 - **Primary text** — as specified above, with truncation compliance confirmed
 - **Meta headlines** — shortened versions as specified above (all under 40 chars)
-- **Build tool** — Figma or Canva. Not AdCreative.ai.
+- **Build tool** — Canva. Not AdCreative.ai.
 - **Testing strategy** — all 3 concepts run simultaneously, identical targeting/budget. Pre-commit to image replacement for any concept below 25% hook rate after 1,000 impressions.
 - **Concept 4 is for retargeting.**
 
@@ -216,7 +216,7 @@ All ads point to: **https://quiz.humbleconviction.com**
 
 ## Nico's Task List
 
-### Build in Figma/Canva (not AdCreative.ai):
+### Build in Canva (not AdCreative.ai):
 
 | # | Task | Notes |
 |---|------|-------|
