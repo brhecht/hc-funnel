@@ -4,9 +4,10 @@
  * Flow: User submits email on Results page →
  *   1. Build prompt from user's scores/tier/answers
  *   2. Call Claude API (Sonnet) to generate personalized action plan
- *   3. Wrap response in HC-branded HTML email with hardcoded intro
- *   4. Send via Resend
- *   5. Return 200
+ *   3. Run 3-layer self-eval audit (recipient sim, course flow, parity check)
+ *   4. Wrap response in HC-branded HTML email with hardcoded intro
+ *   5. Send via Resend
+ *   6. Return 200
  *
  * Prompt template: ACTION-PLAN-PROMPT.md (Brian's final version, March 19 2026)
  *
@@ -82,10 +83,21 @@ export default async function handler(req, res) {
       scorecardCopy,
     })
 
-    // 2. Build HTML email
-    const html = buildEmailHtml({ tierName, actionPlan })
+    // 2. Run self-eval audit and get revised version
+    const auditedPlan = await auditActionPlan({
+      anthropicKey,
+      actionPlan,
+      quizAnswers: Object.entries(answers || {}).map(([qId, optId]) => {
+        const label = answerLabels?.[qId] || ""
+        return `${qId}: ${optId}${label ? ` — "${label}"` : ""}`
+      }).join("\n"),
+      displayScores,
+    })
 
-    // 3. Send via Resend
+    // 3. Build HTML email
+    const html = buildEmailHtml({ tierName, actionPlan: auditedPlan })
+
+    // 4. Send via Resend
     const sendRes = await fetch("https://api.resend.com/emails", {
       method: "POST",
       headers: {
@@ -157,7 +169,7 @@ Their results:
 - Their specific quiz answers: ${quizAnswers}
 - Waitlist status: ${waitlistStatus || "not_on_waitlist"}
 
-IMPORTANT — Reference their specific quiz answers where natural. For example, if they chose "Start with your background" on Q1, you can say "You mentioned you'd lead with your background — here's why that instinct tends to work against founders." This is the single most powerful personalization tool — it makes the email feel like you actually reviewed their specific responses, not just their scores.
+IMPORTANT — Reference their specific quiz answers where natural. For example, if they chose "Start with your background" on Q1, you can say "You mentioned you'd lead with your background — in my experience, that instinct tends to work against founders because..." This is the single most powerful personalization tool — it makes the email feel like you actually reviewed their specific responses, not just their scores. But NEVER overreach: you have 8 quiz answers, not a window into their meetings. Frame observations as patterns you recognize, not diagnoses of their specific situation.
 
 ALSO IMPORTANT — Here is the EXACT copy they already saw on the Scorecard for each dimension. DO NOT repeat, closely paraphrase, or echo any of this language. Every sentence in this email must be NEW insight they haven't read:
 ${scorecardCopy || ""}
@@ -202,36 +214,38 @@ One paragraph (3-5 sentences). This is the mentor-meets-student moment. Synthesi
 ### [WEAKEST] — ${wLabel}
 The main event — roughly 40% of the email.
 - Name the dimension as a bold header.
-- 2-3 sentences explaining what their score means IN PRACTICE — what it looks like in a real investor meeting. Use a scenario or anecdote from Brian's experience. DO NOT repeat the scorecard explanation.
+- 2-3 sentences explaining what their score means IN PRACTICE. Ground this in THEIR SPECIFIC QUIZ ANSWERS — reference what they chose and explain what that choice reveals about their current approach. Do NOT invent scenarios about what happens in their investor meetings (you weren't there). Instead, explain the PATTERN you've seen in founders who think this way: "When founders lead with X approach, what tends to happen is..." Use "often," "tends to," "in my experience" — never state as fact what you're inferring from 8 quiz answers. DO NOT repeat the scorecard explanation.
 - One specific, concrete action step. Not "practice your pitch" — something they could do TODAY.
-- Eddy nudge (1-2 sentences, woven naturally): connect to the relevant course topic.
+- Course mention (FIRST INTRODUCTION — see Course Mention Architecture above): introduce the course naturally as part of the action step. Connect to the relevant module:
   - Clarity: "the 30-second pitch module" or "building your one-liner"
   - Investor Fluency: "reading the room" or "the four types of investor questions"
   - Self-Awareness: "learning from investor feedback"
   - Persuasion Instincts: "the conversation framework" or "storytelling for investors"
-  - If waitlist is "on_waitlist": "You're already on the early access list — you'll be first to know when it opens."
-  - If waitlist is "not_on_waitlist" and launch is "pre_launch": "If you want early access when it launches, just reply 'interested' and I'll add you."
-  - If launch is "post_launch": include link to course page.
-- End with a two-line contrast closer. Each line MUST be on its own separate line. Format:
+  - Waitlist CTA: ${waitlistStatus === "on_waitlist" ? "\"You're already on the early access list — you'll be first to know when it opens.\"" : launchStatus === "post_launch" ? "Include link to course page." : "\"If you want early access when it launches, just reply 'interested' and I'll add you.\""}
+- End with a two-line contrast closer. BOTH lines must use IDENTICAL formatting — each wrapped in single asterisks, each on its own line, with a blank line between them. No other markup (no bold, no extra asterisks). Format EXACTLY:
+
 *Founders who struggle [common mistake].*
+
 *Founders who get funded [counterintuitive truth].*
 
 ### [SECOND] — ${swLabel}
 Shorter — roughly 20% of the email.
 - Bold dimension name as header.
-- 1-2 sentences on what the score means practically. New insight, not scorecard repetition.
-- One sentence pointing them in the right direction.
-- One sentence Eddy nudge connecting to the relevant course topic.
+- 1-2 sentences on what the score means practically, grounded in their specific answer for this dimension. Same rules as WEAKEST: reference what they chose, explain the pattern it reveals, never fabricate scenarios or state as fact what you're inferring. New insight, not scorecard repetition.
+- One sentence pointing them in the right direction with a concrete action or reframe.
+- Course callback (ONE sentence MAX — see Course Mention Architecture): reference the course as already-introduced, e.g. "The course also covers..." or "There's a module on this too." Do NOT re-introduce it.
 - Pithy closer in italic (same two-line format).
 
 ### [STRENGTH] — ${sLabel}
 Brief — roughly 10% of the email.
 - Bold dimension name as header.
 - 1-2 sentences acknowledging the strength genuinely — why this specific strength matters and how it gives them an edge.
-- Optional: one sentence on how to leverage it.
+- One sentence on how to leverage this strength or take it further.
 
 ### [FOURTH]
-If there's a 4th dimension not yet addressed, include 1 sentence acknowledging it.
+If there's a 4th dimension not yet addressed:
+- Bold dimension name as header.
+- 1-2 sentences — this section is brief but NOT throwaway. Mid-range scores (2-3/5) deserve care: the reader may feel "average" here, which stings more than a clear weakness. Acknowledge where they are with specificity, and give them ONE concrete thing to think about or try. Every dimension must leave the reader with something actionable, regardless of score level. Never just label a score without a direction forward.
 
 ### [CLOSING]
 2-3 sentences. Bring it back to the big picture. Frame the gap as smaller than they think — but only if they work on the right things in the right order.
@@ -241,6 +255,22 @@ Sign off: "— Brian"
 ### [PS]
 Output this EXACT text as the PS (do not generate your own):
 ${waitlistStatus === "on_waitlist" ? "P.S. — You're on the early access list for the course. I'll let you know as soon as it opens." : launchStatus === "post_launch" ? "P.S. — Everything in this action plan is covered in depth in Pitch Better, Get Funded Faster." : "P.S. — I'm building a course around exactly what your scorecard revealed. Reply 'interested' if you want early access when it launches."}
+
+## Course Mention Architecture (follow this precisely)
+
+The course must be introduced and referenced with intentional narrative flow, not scattered randomly. Follow this exact sequence:
+
+1. **[HOLISTIC] — Plant the seed.** Mention that you've built a framework/system around these patterns. Do NOT name the course, do NOT link it, do NOT say "I'm building a course." Just hint that a structured approach exists: "I've spent years turning these patterns into a framework that helps founders fix them."
+
+2. **[WEAKEST] — First real mention.** This is where the reader first learns a course exists. Introduce it naturally as part of the action step: "The course I'm building tackles exactly this — [specific module]." This is the ONE section where the course gets a proper introduction. Include the waitlist/access CTA here.
+
+3. **[SECOND] — Callback only.** One sentence MAX. Must reference the course as already-introduced: "The course also covers..." or "There's a module on this too." Never re-introduce it as if the reader hasn't heard about it yet.
+
+4. **[STRENGTH], [FOURTH], [CLOSING] — No course mentions.** These sections are pure coaching. Zero promotion. The reader should finish the email feeling coached, not sold to.
+
+5. **[PS] — Final CTA.** This is hardcoded (not AI-generated). It handles the waitlist/launch CTA.
+
+**Total course mentions in the AI-generated portion: exactly 2** (one intro in WEAKEST, one callback in SECOND). If you find yourself writing a third, delete it.
 
 ## What NOT to do
 - DO NOT repeat or closely paraphrase the scorecard copy.
@@ -256,7 +286,8 @@ ${waitlistStatus === "on_waitlist" ? "P.S. — You're on the early access list f
 - DO NOT use absolutes. Use "often," "tend to," "in my experience."
 - When referencing weaker dimensions, use RELATIVE language ("lower," "not as strong") not ABSOLUTE labels ("low," "weak," "bad").
 - Never make a claim without the payoff.
-- The FIRST SENTENCE of each section must work as a standalone insight for skimmers.`
+- The FIRST SENTENCE of each section must work as a standalone insight for skimmers.
+- CONTEXT ANCHORING: Each dimension section must re-establish what the quiz asked and what the reader chose before interpreting it. The reader took this quiz days ago — they don't remember which question mapped to which dimension. A brief anchor like "On the question about [topic], you chose [their answer]..." before the interpretation. Never jump straight into analysis of an answer without reminding the reader what the question was about.`
 
   const response = await fetch("https://api.anthropic.com/v1/messages", {
     method: "POST",
@@ -282,14 +313,83 @@ ${waitlistStatus === "on_waitlist" ? "P.S. — You're on the early access list f
 }
 
 /**
+ * 3-layer self-eval audit. Reads the draft action plan as the recipient would,
+ * flags issues, and returns a revised version.
+ *
+ * Layer 1: Recipient Simulation — flags sentences that feel fabricated or overreaching
+ * Layer 2: Course Flow Audit — checks introduction/callback/frequency
+ * Layer 3: Parity Check — ensures every dimension has an action item, parallel structures match
+ */
+async function auditActionPlan({ anthropicKey, actionPlan, quizAnswers, displayScores }) {
+  const auditPrompt = `You are an editor reviewing a personalized action plan email before it gets sent. Your job is to read this email AS THE RECIPIENT would read it, flag problems, and return a revised version.
+
+The recipient is a startup founder who took an 8-question scenario-based quiz. Here are their answers:
+${quizAnswers}
+
+Their scores: ${JSON.stringify(displayScores || {})}
+
+Here is the draft action plan email:
+---
+${actionPlan}
+---
+
+Run these three audit layers and revise the email:
+
+## Layer 1: Recipient Simulation
+Read every sentence as the founder who answered those specific questions. Flag and fix any sentence where:
+- You'd think "that's not what I said" or "how would you know that?" — the writer is fabricating a scenario about your meetings that you never described
+- You'd think "that doesn't apply to me" — the writer is being too specifically diagnostic based on limited information
+- A claim is stated as definitive fact rather than a pattern ("investors can't..." → "investors often struggle to...")
+- Something references a quiz answer without reminding you what the question was about
+
+## Layer 2: Course Flow Audit
+Read the full email top to bottom and check:
+- Where does the reader FIRST learn a course exists? It should be in the WEAKEST section, not before.
+- The HOLISTIC section should only hint that a framework/system exists — NOT name or describe the course.
+- Is there exactly ONE callback in the SECOND section that references the course as already-introduced?
+- Are there any course mentions in STRENGTH, FOURTH, or CLOSING? There should be ZERO.
+- Total course mentions in the body (excluding PS): exactly 2. Fix if more or fewer.
+- Does any mention feel like it interrupts the coaching value or reads as a sales pitch?
+
+## Layer 3: Parity Check
+- Does EVERY dimension section (including FOURTH/STRENGTH) end with something actionable or a concrete direction forward? Mid-range scores (2-3/5) need MORE care, not less — fix any section that just labels a score without a prescription.
+- Are the "Founders who struggle / Founders who get funded" contrast pairs formatted identically? Both lines must be wrapped in single *asterisks* with identical markup. Fix any asymmetry.
+- Do all section markers ([HOLISTIC], [WEAKEST], etc.) appear exactly once and in the correct order?
+
+## Output
+Return ONLY the revised action plan text. Keep ALL section markers ([HOLISTIC], [WEAKEST], [SECOND], [STRENGTH], [FOURTH], [CLOSING], [PS]) in place — the rendering engine needs them. Do not add commentary, explanations, or notes about what you changed. Just output the clean revised email text, ready to send.
+
+If the draft is already good and passes all three layers, return it unchanged.`
+
+  const response = await fetch("https://api.anthropic.com/v1/messages", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "x-api-key": anthropicKey,
+      "anthropic-version": "2023-06-01",
+    },
+    body: JSON.stringify({
+      model: "claude-sonnet-4-20250514",
+      max_tokens: 2048,
+      messages: [{ role: "user", content: auditPrompt }],
+    }),
+  })
+
+  if (!response.ok) {
+    // If audit fails, fall back to the original — don't block the email
+    console.error("Audit API error, falling back to original:", await response.text().catch(() => ""))
+    return actionPlan
+  }
+
+  const data = await response.json()
+  return data.content?.[0]?.text || actionPlan
+}
+
+/**
  * Wrap the action plan text in HC-branded HTML email.
- * Design spec from ACTION-PLAN-PROMPT.md:
- * - White bg, max-width 600px, Inter font, 15px body, 1.7 line-height
- * - Brian header with name + "Humble Conviction"
- * - Hardcoded [INTRO] in italic muted
- * - Section headers bold with divider above
- * - Contrast closers: italic with coral left border
- * - Footer: HC branding + unsubscribe
+ * White bg, max-width 600px, Inter font, 15px body, 1.7 line-height.
+ * Brian header, hardcoded intro, section headers with dividers,
+ * contrast closers with coral left border, HC footer + unsubscribe.
  */
 function buildEmailHtml({ tierName, actionPlan }) {
   // Parse section markers and format accordingly
@@ -377,7 +477,7 @@ function formatActionPlan(text) {
   html = html.replace(/^#{0,3}\s*\[WEAKEST\]\s*[-—]?\s*(.*)/gm, (_, title) => sectionHeader(title.trim()))
   html = html.replace(/^#{0,3}\s*\[SECOND\]\s*[-—]?\s*(.*)/gm, (_, title) => sectionHeader(title.trim()))
   html = html.replace(/^#{0,3}\s*\[STRENGTH\]\s*[-—]?\s*(.*)/gm, (_, title) => sectionHeader(title.trim()))
-  html = html.replace(/^#{0,3}\s*\[FOURTH\][^\n]*/gm, sectionDivider)
+  html = html.replace(/^#{0,3}\s*\[FOURTH\]\s*[-—]?\s*(.*)/gm, (_, title) => title.trim() ? sectionHeader(title.trim()) : sectionDivider)
   html = html.replace(/^#{0,3}\s*\[CLOSING\][^\n]*/gm, sectionDivider)
   html = html.replace(/^#{0,3}\s*\[PS\][^\n]*/gm, sectionDivider)
   // Also catch "Output this EXACT text as the PS" instruction if Claude echoes it
@@ -398,8 +498,9 @@ function formatActionPlan(text) {
   // Bold text: **text**
   html = html.replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>")
 
-  // Contrast closers: lines wrapped in single *italics* — give them coral left border
-  html = html.replace(/^\*([^*]+)\*$/gm, '<p style="margin:8px 0;font-size:14px;font-style:italic;color:#5A6578;border-left:3px solid #E8845A;padding-left:16px;">$1</p>')
+  // Contrast closers: lines wrapped in single *italics* — both lines get identical styling
+  // Both "struggle" and "get funded" lines should be same size, weight, color — visual parity
+  html = html.replace(/^\*([^*]+)\*$/gm, '<p style="margin:4px 0;font-size:15px;font-style:italic;color:#1A2332;border-left:3px solid #E8845A;padding-left:16px;line-height:1.6;">$1</p>')
 
   // Convert remaining paragraphs (double newline separated)
   const blocks = html.split(/\n\n+/).filter(Boolean)
