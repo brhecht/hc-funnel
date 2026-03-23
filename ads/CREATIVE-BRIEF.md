@@ -1,3 +1,5 @@
+> **DEPRECATED — DO NOT USE.** This brief has been superseded by `AD-CREATIVE-BRIEF-V3-FINAL.md` (March 23, 2026). Kept for historical reference only.
+
 # HC Funnel — Ad Creatives Brief for Nico
 **4 Instagram Feed Ad Concepts: Image Text + Ad Copy**
 *Each concept = reference image + text overlay on image + ad copy beneath*

@@ -1,3 +1,5 @@
+> **DEPRECATED — DO NOT USE.** This brief has been superseded by `AD-CREATIVE-BRIEF-V3-FINAL.md` (March 23, 2026). Kept for historical reference only.
+
 # Revised Ad Creative Brief — March 18, 2026
 *Supersedes: `CREATIVE-BRIEF.md` (March 16, 2026)*
 *Status: In progress — images pending for Concept 2, copy updates pending for all*
