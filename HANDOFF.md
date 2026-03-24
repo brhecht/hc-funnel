@@ -136,10 +136,8 @@ User completes quiz → enters email → Results.jsx fires:
 
 Full prompt template in `ACTION-PLAN-PROMPT.md`. Nico's implementation spec in `NICO-SPEC-ACTION-PLAN-LAUNCH.md`.
 
-## Meta Pixel Strategy
-Two-phase approach:
-1. **Phase 1:** Optimize for quiz completion (ViewContent/QuizComplete event). Higher volume, exits learning phase faster (~50 events/week needed).
-2. **Phase 2 (after 2-3 weeks):** Shift to email capture (Lead event) optimization once stable delivery.
+## Meta Ads Launch Plan
+Full launch plan with budget, timeline, decision framework, and pre-launch checklist in **`ads/META-LAUNCH-PLAN.md`**. Key points: $150/day across 3 creatives, 7-day learning phase lockdown, day 14 pulse check (go/no-go on product based on email capture signal).
 
 ## Design Decisions & Constraints
 - **Config-driven:** All quiz content, scoring, copy, and design tokens in `src/config/funnel.js`. Components have zero hardcoded copy.
