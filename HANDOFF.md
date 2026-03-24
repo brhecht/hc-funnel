@@ -1,5 +1,5 @@
 # HANDOFF — HC Funnel
-*Last updated: March 23, 2026 ~3:30pm ET*
+*Last updated: March 24, 2026 ~afternoon ET*
 
 ## Project Overview
 Quiz-based lead magnet funnel for Humble Conviction's upcoming pitching/fundraising course. 8 scenario-based questions score founders across 4 dimensions, deliver a tier result with scorecard, and gate a personalized action plan behind email capture. Config-driven architecture — all content lives in `src/config/funnel.js`. Part of B-Suite, positioned as a sub-tool under B Marketing.
@@ -56,53 +56,66 @@ hc-funnel/
 ```
 
 ## Current Status
-**Ad creatives need a rebuild pass; pipeline and app code are launch-ready.** Launch target slipped from March 24 — ads are the blocker.
+**Round 2 creative review complete. Three refinement-level changes sent to Nico. Pipeline and app code are launch-ready.**
 
 **The full pipeline is built and deployed:** Ad → quiz.humbleconviction.com → quiz → email capture → Firestore + Kit + Claude action plan email via Resend.
 
-**Ad creative status:** Nico built V1 creatives from the March 18 revised brief, but that brief was stale — a compliance review on March 19 changed headlines, overlay text, and CTA but the changes were written into a research memo instead of patched back into the brief. Additionally, AdCreative.ai's template engine produced weak typography and cramped layouts. Brian reviewed the V1 batch on March 23, identified the gaps, and a V3 FINAL brief was created with exact specs, corrected copy, and 6 visual reference comps. Nico needs to rebuild all 6 creatives in Canva (not AdCreative.ai) matching the reference comps.
+**Ad creative status:** Nico rebuilt all 6 creatives in Canva from the V3 FINAL brief (March 23). Brian reviewed the Round 2 builds on March 24 and identified 3 refinement issues: C1 line 2 styling (em-dash too heavy, weight/size/color wrong), C2 overlay line 2 kerning compression (42 chars too long for bold weight), and C4 CTA redundancy (overlay and CTA said the same thing). All three fixes are documented in the updated V3 brief and in a detailed email to Nico.
 
-**Email to Nico:** Gmail draft created (March 23) explaining the process error, what changed, and pointing to V3 brief + comps. Brian sending a heads-up Slack DM first.
+**Emails to Nico (March 24):** Two Gmail drafts created:
+1. **Tracking/infrastructure checklist** — LAUNCH_STATUS env var, GA4 measurement ID (not set yet), Meta Pixel domain verification, Pixel test confirmation
+2. **Creative changes (Round 2)** — C1 line 2 restyle, C2 overlay line 2 replacement, C4 CTA change, with detailed kerning/typography specs
 
-## Recent Changes (March 23, 2026 — Ad Creative Audit Session)
+## Recent Changes (March 24, 2026 — Round 2 Creative Review)
 
-### Ad Creative Brief V3 FINAL
-- **Root cause identified:** March 19 compliance review changes (shortened headlines, C2 overlay update, C1 truncation fix, CTA alignment) were written as a research memo but never patched back into the execution brief. Nico built from a stale brief — not his fault.
-- **`ads/AD-CREATIVE-BRIEF-V3-FINAL.md` created** — single canonical execution doc. Supersedes all previous briefs. Includes:
-  - Exact typography specs: Inter Semi-Bold/Bold, specific pixel sizes per element, hex colors
-  - Corrected overlay text (C2 gets both lines back, C4 gets "+" and "analyzed")
-  - In-image CTA changed from "Take the Assessment" → "See What Investors See" (matches LP)
-  - Headline removed from image — goes in Meta Ads Manager headline field only
-  - All 3 headlines shortened to under 40 chars for Instagram compliance
-  - Build tool: Canva (not AdCreative.ai)
-  - "Analyzed" as universal credibility language across all ads + LP
+### Round 2 Overlay/CTA Refinements
+Brian reviewed Nico's Canva rebuilds (Round 2). Three changes identified and locked:
 
-### Visual Reference Comps
-- **`ads/reference-comps/`** — 6 PNGs created (C1/C2/C4 × Feed/Story) showing exact text positioning, sizing, hierarchy, gradient wash, and CTA button placement. These are the "make it look like this" targets for Nico.
-- C2 comps use the old reference image for layout purposes — Nico uses the new image Brian sent (founder facing VC in Patagonia vest).
+| # | Change | Before | After | Why |
+|---|--------|--------|-------|-----|
+| 1 | C1 line 2 styling | "— Sound familiar?" (same weight/size as line 1, heavy em-dash) | "Sound familiar?" — Inter Regular 400, 32px, muted white #DCDCDC | Line 2 must read as quiet follow-up, not competing headline. Drop em-dash. |
+| 2 | C2 overlay line 2 | "The investor tuned out five minutes ago." (42 chars — kerning compressed) | "The investor is already out." (28 chars) | 42 chars at bold weight forced Canva to compress letter-spacing. 28 chars fits clean with normal kerning. Echoes Shark Tank's "I'm out." |
+| 3 | C4 CTA | "See What Investors See" (same as overlay) | "How Do You Score?" | Overlay already says "See what investors see." — repeating in CTA is redundant. New CTA creates curiosity + personal challenge. |
 
-### Brief Cleanup
-- Old briefs (`CREATIVE-BRIEF.md`, `REVISED-CREATIVE-BRIEF-2026-03-18.md`) moved to `ads/archive/` with deprecation headers. Preserves decision history without ambiguity about which doc is current.
+### Brief Updated
+- `ads/AD-CREATIVE-BRIEF-V3-FINAL.md` updated with all three changes (pushed to GitHub as commit `443b241`)
+- C2 kerning note added: "do NOT compress tracking to fit text"
+- C4 CTA note added: "C4's CTA is intentionally different from C1/C2"
 
-### Key Ad Creative Changes (V2 → V3 Summary)
+### Reference Comps Regenerated
+- All 6 PNGs in `ads/reference-comps/` regenerated with final locked text
+- **Need to push to GitHub** — VM git lock files prevent commit from Cowork. Brian should run `cd ~/Developer/B-Suite/hc-funnel && git add ads/reference-comps/ && git commit -m "Update reference comps with final locked text" && git push` from Terminal.
+
+### Tracking Audit (March 24)
+- **Meta Pixel:** Wired and firing 4 events (PageView, ViewContent, CompleteRegistration, Lead). Pixel ID: `1407883507304464`.
+- **GA4:** `src/utils/analytics.js` is wired with event helpers, but `VITE_GA_MEASUREMENT_ID` is **not set** in .env or Vercel. GA4 is effectively dead code until the measurement ID is configured. Asked Nico about this in infrastructure email.
+- **LP social proof:** Already says "pitches analyzed" in `funnel.js`. Done.
+
+## Previous Changes (March 23, 2026 — Ad Creative Audit Session)
+
+### Ad Creative Brief V3 FINAL Created
+- **Root cause identified:** March 19 compliance review changes were written as a research memo but never patched back into the execution brief. Nico built from a stale brief — not his fault.
+- **`ads/AD-CREATIVE-BRIEF-V3-FINAL.md` created** — single canonical execution doc. Supersedes all previous briefs.
+- Old briefs moved to `ads/archive/` with deprecation headers.
+
+### Key V2 → V3 Changes (Historical)
 
 | Element | V2 Brief | V3 Final |
 |---------|----------|----------|
 | In-image CTA (all) | "Take the Assessment" | "See What Investors See" |
 | Headline on image | Baked in by AdCreative.ai | Removed — Meta field only |
-| C2 overlay line 2 | Missing in execution | "The investor tuned out five minutes ago." |
-| C1 headline | 54 chars (truncates) | "What Investors See (But Won't Say)" (34) |
-| C2 headline | 47 chars (truncates) | "Do You Misread Investor Signals?" (32) |
-| C4 headline | Stale | "See What Investors Really See" (28) |
+| C2 overlay line 2 | Missing in execution | Both lines restored |
+| All headlines | Over 40 chars (truncated on IG) | Shortened to under 40 chars |
 | C4 overlay | "2,500 founder pitches reviewed." | "2,500+ founder pitches analyzed." |
 | Credibility language | Mixed | "analyzed" everywhere |
 | Build tool | AdCreative.ai | Canva |
 
 ## Known Bugs / Issues
-- **`LAUNCH_STATUS=pre_launch` env var not yet set in Vercel** — controls PS text in action plan email. Nico needs to add this.
-- **Meta Pixel domain verification pending** — `humbleconviction.com` added, `quiz.humbleconviction.com` subdomain still needs verification. Nico handling.
-- **LP social proof says "pitches coached"** — needs code change in `Landing.jsx` to "pitches analyzed" for consistency with all ad copy. Minor.
-- **VM git lock files** — Cowork VM cannot remove `.git/HEAD.lock` on mounted volumes (EPERM). Workaround: clone to `/tmp/` for pushes.
+- **`LAUNCH_STATUS=pre_launch` env var not yet set in Vercel** — controls PS text in action plan email. Asked Nico in infrastructure email.
+- **GA4 `VITE_GA_MEASUREMENT_ID` not configured** — analytics.js utility exists but env var is not set in .env or Vercel. GA4 tracking is dead until this is added. Asked Nico in infrastructure email.
+- **Meta Pixel domain verification status unknown** — `quiz.humbleconviction.com` subdomain. Asked Nico for status.
+- ~~**LP social proof says "pitches coached"**~~ — **DONE.** Already says "pitches analyzed" in `funnel.js`.
+- **VM git lock files** — Cowork VM cannot remove `.git/HEAD.lock` on mounted volumes (EPERM). Workaround: commit/push from Mac Terminal.
 
 ## Planned Features / Backlog
 - Kit nurture drip (Emails 2-5 after action plan) — **OUT OF SCOPE for launch**. No course to sell yet.
@@ -156,25 +169,34 @@ Two-phase approach:
 
 | # | Task | Details | Status |
 |---|------|---------|--------|
-| N1 | Rebuild all 6 ad creatives in Canva | Match `ads/reference-comps/` visual targets. Use V3 FINAL brief for exact specs. | **Waiting on Brian's email** |
-| N2 | Set `LAUNCH_STATUS=pre_launch` env var in Vercel | Controls PS text in action plan email | Ready to do |
-| N3 | Meta Pixel domain verification | `quiz.humbleconviction.com` subdomain | In progress |
-| N4 | End-to-end testing (all 3 tiers) | Screenshots to Brian | After N2 |
-| N5 | Update LP social proof | "pitches coached" → "pitches analyzed" in `Landing.jsx` | Ready to do |
-| N6 | Meta Ads Manager setup instructions for Brian | What Brian needs to do in FB | Ready to do |
-| N7 | Final Meta Ads Manager setup + launch | After Brian approves rebuilt creatives | Blocked on N1 |
+| N1 | Round 2 creative refinements (3 changes) | C1 line 2 restyle, C2 line 2 replacement, C4 CTA change. Detailed specs in creative email + V3 brief. | **Waiting on Brian's emails** |
+| N2 | Set `LAUNCH_STATUS=pre_launch` env var in Vercel | Controls PS text in action plan email | Asked in infrastructure email |
+| N3 | Configure GA4 `VITE_GA_MEASUREMENT_ID` in Vercel | analytics.js is wired but env var not set — GA4 is dead until this is added | Asked in infrastructure email |
+| N4 | Meta Pixel domain verification | `quiz.humbleconviction.com` subdomain | Asked for status |
+| N5 | Meta Pixel test (Chrome extension) | Confirm all 4 events fire: PageView, ViewContent, CompleteRegistration, Lead | Asked in infrastructure email |
+| N6 | End-to-end testing (all 3 tiers) | Screenshots to Brian | After N2 |
+| N7 | Meta Ads Manager setup instructions for Brian | What Brian needs to do in FB | Ready to do |
+| N8 | Final Meta Ads Manager setup + launch | After Brian approves Round 2 creatives | Blocked on N1 |
 
 ### BRIAN — Active Tasks
 
 | # | Task | Details | Status |
 |---|------|---------|--------|
-| B1 | Send Nico heads-up Slack DM | Before the email lands | Ready now |
-| B2 | Send Nico the email (Gmail draft ready) | V3 brief context, change summary, repo pointers | Ready now |
-| B3 | Review + approve rebuilt ad creatives | After Nico rebuilds in Canva | Blocked on N1 |
-| B4 | Review action plan email screenshots | After Nico deploys + tests all 3 tiers | Blocked on N4 |
-| B5 | Follow Nico's Meta Ads Manager setup instructions | After Nico writes them | Blocked on N6 |
+| B1 | Push updated reference comps to GitHub | `cd ~/Developer/B-Suite/hc-funnel && git add ads/reference-comps/ && git commit -m "Update reference comps with final locked text" && git push` | **Ready now** |
+| B2 | Send both Nico emails (Gmail drafts ready) | 1) Tracking/infrastructure checklist 2) Creative changes with specs | **Ready now** |
+| B3 | Review + approve Round 2 creatives | After Nico makes the 3 refinements | Blocked on N1 |
+| B4 | Review action plan email screenshots | After Nico deploys + tests all 3 tiers | Blocked on N6 |
+| B5 | Follow Nico's Meta Ads Manager setup instructions | After Nico writes them | Blocked on N7 |
+
+## Final Locked Ad Copy (March 24)
+
+```
+C1: "We're going to pass." / Sound familiar? / [See What Investors See]
+C2: He thinks the pitch is going well. / The investor is already out. / [See What Investors See]
+C4: 2,500+ founder pitches analyzed. / See what investors see. / [How Do You Score?]
+```
 
 ## Open Questions / Decisions Pending
 - **Meta campaign structure:** Single campaign with 3 ad sets? Or separate for cold (C1+C2) vs retargeting (C4)?
 - **Kit `weakestDimension` custom field:** Add to subscriber data for personalization? (~15 min change)
-- **Launch date:** Was March 24, now depends on Nico's Canva rebuild turnaround.
+- **Launch date:** Was March 24, now depends on Nico's Round 2 turnaround (3 refinement changes — should be fast).
