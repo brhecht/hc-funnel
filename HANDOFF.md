@@ -1,5 +1,5 @@
 # HANDOFF — HC Funnel
-*Last updated: March 24, 2026 ~afternoon ET*
+*Last updated: March 24, 2026 ~2:30pm ET*
 
 ## Project Overview
 Quiz-based lead magnet funnel for Humble Conviction's upcoming pitching/fundraising course. 8 scenario-based questions score founders across 4 dimensions, deliver a tier result with scorecard, and gate a personalized action plan behind email capture. Config-driven architecture — all content lives in `src/config/funnel.js`. Part of B-Suite, positioned as a sub-tool under B Marketing.
@@ -62,9 +62,10 @@ hc-funnel/
 
 **Ad creative status:** Nico rebuilt all 6 creatives in Canva from the V3 FINAL brief (March 23). Brian reviewed the Round 2 builds on March 24 and identified 3 refinement issues: C1 line 2 styling (em-dash too heavy, weight/size/color wrong), C2 overlay line 2 kerning compression (42 chars too long for bold weight), and C4 CTA redundancy (overlay and CTA said the same thing). All three fixes are documented in the updated V3 brief and in a detailed email to Nico.
 
-**Emails to Nico (March 24):** Two Gmail drafts created:
+**Emails to Nico (March 24):** Three Gmail drafts created — Brian reviewing and sending:
 1. **Tracking/infrastructure checklist** — LAUNCH_STATUS env var, GA4 measurement ID (not set yet), Meta Pixel domain verification, Pixel test confirmation
 2. **Creative changes (Round 2)** — C1 line 2 restyle, C2 overlay line 2 replacement, C4 CTA change, with detailed kerning/typography specs
+3. **What to Expect After Meta Launch** — $150/day budget, learning phase behavior, lockdown rule, day 14 pulse check protocol
 
 ## Recent Changes (March 24, 2026 — Round 2 Creative Review)
 
@@ -83,8 +84,10 @@ Brian reviewed Nico's Canva rebuilds (Round 2). Three changes identified and loc
 - C4 CTA note added: "C4's CTA is intentionally different from C1/C2"
 
 ### Reference Comps Regenerated
-- All 6 PNGs in `ads/reference-comps/` regenerated with final locked text
-- **Need to push to GitHub** — VM git lock files prevent commit from Cowork. Brian should run `cd ~/Developer/B-Suite/hc-funnel && git add ads/reference-comps/ && git commit -m "Update reference comps with final locked text" && git push` from Terminal.
+- All 6 PNGs in `ads/reference-comps/` regenerated with final locked text (pushed as commit `8360243`)
+
+### Meta Launch Plan Created
+- **`ads/META-LAUNCH-PLAN.md`** — $150/day budget across 3 creatives, 14-day pulse check protocol, pre-launch checklist, phase 2 strategy. Go/no-go decision framework based on email capture signal after 75+ quiz completions. (pushed as commit `62d1e4a`)
 
 ### Tracking Audit (March 24)
 - **Meta Pixel:** Wired and firing 4 events (PageView, ViewContent, CompleteRegistration, Lead). Pixel ID: `1407883507304464`.
@@ -167,7 +170,7 @@ Full launch plan with budget, timeline, decision framework, and pre-launch check
 
 | # | Task | Details | Status |
 |---|------|---------|--------|
-| N1 | Round 2 creative refinements (3 changes) | C1 line 2 restyle, C2 line 2 replacement, C4 CTA change. Detailed specs in creative email + V3 brief. | **Waiting on Brian's emails** |
+| N1 | Round 2 creative refinements (3 changes) | C1 line 2 restyle, C2 line 2 replacement, C4 CTA change. Detailed specs in creative email + V3 brief. | **Waiting on Brian's emails (drafts ready)** |
 | N2 | Set `LAUNCH_STATUS=pre_launch` env var in Vercel | Controls PS text in action plan email | Asked in infrastructure email |
 | N3 | Configure GA4 `VITE_GA_MEASUREMENT_ID` in Vercel | analytics.js is wired but env var not set — GA4 is dead until this is added | Asked in infrastructure email |
 | N4 | Meta Pixel domain verification | `quiz.humbleconviction.com` subdomain | Asked for status |
@@ -180,11 +183,12 @@ Full launch plan with budget, timeline, decision framework, and pre-launch check
 
 | # | Task | Details | Status |
 |---|------|---------|--------|
-| B1 | Push updated reference comps to GitHub | `cd ~/Developer/B-Suite/hc-funnel && git add ads/reference-comps/ && git commit -m "Update reference comps with final locked text" && git push` | **Ready now** |
-| B2 | Send both Nico emails (Gmail drafts ready) | 1) Tracking/infrastructure checklist 2) Creative changes with specs | **Ready now** |
+| B1 | Send 3 Nico emails (Gmail drafts ready) | 1) Tracking/infrastructure 2) Creative changes 3) What to expect after launch | **Ready now** |
+| B2 | Sync local repo | `cd ~/Developer/B-Suite/hc-funnel && rm -f .git/index.lock .git/HEAD.lock && git fetch origin && git reset --hard origin/main` | **Ready now** |
 | B3 | Review + approve Round 2 creatives | After Nico makes the 3 refinements | Blocked on N1 |
 | B4 | Review action plan email screenshots | After Nico deploys + tests all 3 tiers | Blocked on N6 |
 | B5 | Follow Nico's Meta Ads Manager setup instructions | After Nico writes them | Blocked on N7 |
+| B6 | Add credit card to Meta Ads Manager | Before launch | Ready when N8 is ready |
 
 ## Final Locked Ad Copy (March 24)
 
