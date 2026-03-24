@@ -1,5 +1,5 @@
 # Ad Creative Brief — V3 FINAL
-*March 23, 2026*
+*March 23, 2026 — Updated March 24 with overlay/CTA refinements from Brian's review of Nico's Canva builds*
 
 > **THIS IS THE CANONICAL BRIEF.** All previous versions are superseded. Do not reference `CREATIVE-BRIEF.md` or `REVISED-CREATIVE-BRIEF-2026-03-18.md` — they contain stale copy and specs. If anything conflicts with this document, this document wins.
 
@@ -92,10 +92,10 @@ Reference comps are in `ads/reference-comps/`. These show the exact positioning,
 **Text Overlay (on image):**
 ```
 "We're going to pass."
-— every investor
+Sound familiar?
 ```
-- Line 1: Inter Semi-Bold 42px, white
-- Line 2: Inter Bold 54px, white
+- Line 1: Inter Semi-Bold 48px, white — this is the hero line
+- Line 2: Inter Regular 32px, slightly muted white (#DCDCDC) — this is the attribution/hook, intentionally understated. Do NOT make it bold or large. It should read as a quiet follow-up to the quote, not a competing headline.
 
 **CTA Button (on image):** `See What Investors See` — coral fill, white text
 
@@ -124,11 +124,12 @@ This free 3-minute assessment shows you what investors actually see when you pit
 **Text Overlay (on image):**
 ```
 He thinks the pitch is going well.
-The investor tuned out five minutes ago.
+The investor is already out.
 ```
 - Line 1: Inter Semi-Bold 38px, white
-- Line 2: Inter Bold 46px, white
+- Line 2: Inter Bold 48px, white — "already out" echoes Shark Tank's "I'm out" which is culturally loaded for this audience. 28 characters — fits cleanly on one line with proper tracking/letter-spacing.
 - **BOTH LINES ARE REQUIRED.** The two-line contrast IS the concept. Line 1 = founder's reality. Line 2 = investor's reality. Without both, the Dunning-Kruger dissonance doesn't land.
+- **KERNING NOTE:** Previous version ("The investor tuned out five minutes ago." — 42 chars) was too long for one line at bold weight, causing letters to compress. "The investor is already out." (28 chars) solves this. Ensure letter-spacing is normal/default in Canva — do NOT compress tracking to fit text.
 
 **CTA Button (on image):** `See What Investors See` — coral fill, white text
 
@@ -162,7 +163,7 @@ See what investors see.
 - Line 1: Inter Semi-Bold 36px, white
 - Line 2: Inter Bold 52px, white
 
-**CTA Button (on image):** `See What Investors See` — coral fill, white text
+**CTA Button (on image):** `How Do You Score?` — coral fill, white text. NOTE: C4's CTA is intentionally different from C1/C2. The overlay says "See what investors see" so repeating it in the CTA would be redundant. "How Do You Score?" creates curiosity and a personal challenge that drives action.
 
 **Meta Ads Manager Fields:**
 - **Headline:** See What Investors Really See
@@ -205,7 +206,7 @@ All ads point to: **https://quiz.humbleconviction.com**
 - **3 concepts.** Concept 3 (The Shift) is killed for launch.
 - **Copy angles** for all 3 concepts — strategic framing, awareness levels, emotional hooks are validated.
 - **Text overlay wording** — as specified above for all 3 concepts. Both lines for C2.
-- **In-image CTA** — "See What Investors See" (all 3 concepts)
+- **In-image CTA** — "See What Investors See" (C1, C2) and "How Do You Score?" (C4)
 - **Primary text** — as specified above, with truncation compliance confirmed
 - **Meta headlines** — shortened versions as specified above (all under 40 chars)
 - **Build tool** — Canva. Not AdCreative.ai.
