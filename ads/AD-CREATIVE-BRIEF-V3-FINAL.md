@@ -1,5 +1,5 @@
 # Ad Creative Brief — V3 FINAL
-*March 23, 2026 — Updated March 24 with overlay/CTA refinements from Brian's review of Nico's Canva builds*
+*March 23, 2026 — Updated March 25 with final locked primary text from Brian's line-by-line editorial review*
 
 > **THIS IS THE CANONICAL BRIEF.** All previous versions are superseded. Do not reference `CREATIVE-BRIEF.md` or `REVISED-CREATIVE-BRIEF-2026-03-18.md` — they contain stale copy and specs. If anything conflicts with this document, this document wins.
 
@@ -105,15 +105,15 @@ Sound familiar?
 
 **Primary Text:**
 ```
-"We're going to pass for now, but please keep us updated."
+"We're going to pass on your startup, but please keep us updated."
 
-You've gotten this email from an investor.
+You've probably gotten this email from an investor.
 
-Probably more than once. Here's what they don't tell you: it's rarely the idea. It's the 2-3 things in how you pitch that make investors hesitate — patterns they see in the first 5 minutes but will never point out.
+Investors listen for just a few things in your pitch, and if you miss them, they say no. But they'll never tell you why.
 
-This free 3-minute assessment shows you what investors actually see when you pitch. 4 scores across the dimensions that matter. Built from 2,500+ pitches analyzed.
+This free 3-minute assessment shows you what investors actually see when you pitch. 4 scores across the dimensions that matter. Built from analyzing 2,500+ real pitches.
 ```
-*Note: First visible line (before "...more") is 99 characters — within Instagram's 125-char gate.*
+*Note: First visible line (before "...more") is 66 characters — within Instagram's 125-char gate.*
 
 ---
 
@@ -139,15 +139,15 @@ The investor is already out.
 
 **Primary Text:**
 ```
-You're in a pitch meeting. The investor says "This is really interesting."
+You're in a pitch meeting. The investor nods, asks questions, and says "let me talk to my partners."
 
-You're thinking: great sign. You're wrong.
+You're thinking: great sign. Don't be so sure.
 
-"Interesting" means they're figuring out if they need to act now — or can wait and watch from the sideline. It's not a yes. It's not a no. It's a test most founders don't know they're taking.
+It could mean they're interested. Or that they're being polite before they pass. It's almost impossible to tell. And by the time you find out, it's too late.
 
-The signals investors send are almost never what they seem. This free 3-minute assessment scores you on the 4 dimensions investors actually evaluate — including the ones they'll never mention.
+This free 3-minute assessment scores you on the 4 dimensions investors actually evaluate — including the ones they'll never reveal.
 ```
-*First visible line: 117 characters — within gate.*
+*First visible line: 100 characters — within gate.*
 
 ---
 
@@ -171,17 +171,13 @@ See what investors see.
 
 **Primary Text:**
 ```
-After 2,500+ founder pitches analyzed, the pattern is always the same:
+Some startups get funded, but most don't. We analyzed 2,500+ pitches and figured out what works...and what doesn't.
 
-The best founders don't have better ideas. They understand how investors think.
+The best founders don't just need killer ideas. They need to understand how investors think. And it's not obvious.
 
-They know that "interesting" doesn't mean interested. They know when to stop talking. They know the difference between pushing information at an investor and creating pull.
-
-This assessment was built by someone who's raised capital and invested it — to show founders the gaps nobody in their world will point out.
+So we built this 3-minute assessment to identify your blind spots and help you get funded.
 ```
 *First visible line: 113 characters — within gate.*
-
-**Targeting:** Retargeting audience (people who saw Concepts 1 or 2 but didn't click).
 
 ---
 
@@ -207,11 +203,10 @@ All ads point to: **https://quiz.humbleconviction.com**
 - **Copy angles** for all 3 concepts — strategic framing, awareness levels, emotional hooks are validated.
 - **Text overlay wording** — as specified above for all 3 concepts. Both lines for C2.
 - **In-image CTA** — "See What Investors See" (C1, C2) and "How Do You Score?" (C4)
-- **Primary text** — as specified above, with truncation compliance confirmed
+- **Primary text** — as specified above. Rewritten March 25 from Brian's line-by-line editorial review. Truncation compliance confirmed for all 3.
 - **Meta headlines** — shortened versions as specified above (all under 40 chars)
 - **Build tool** — Canva. Not AdCreative.ai.
 - **Testing strategy** — all 3 concepts run simultaneously, identical targeting/budget. Pre-commit to image replacement for any concept below 25% hook rate after 1,000 impressions.
-- **Concept 4 is for retargeting.**
 
 ---
 
