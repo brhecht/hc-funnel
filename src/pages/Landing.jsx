@@ -1,7 +1,7 @@
 import { useEffect } from "react"
 import { Link } from "react-router-dom"
 import { useFunnel } from "../context/FunnelContext"
-import { trackPixel } from "../hooks/useMetaPixel"
+import { trackPixelEvent as trackPixel } from "../hooks/useMetaPixel"
 import { trackGA } from "../utils/analytics"
 
 export default function Landing() {
