@@ -1,13 +1,13 @@
-import { useEffect } from "react"
+import { useEffect, useRef } from "react"
 import { useNavigate } from "react-router-dom"
 import { useFunnel } from "../context/FunnelContext"
-import { trackPixel } from "../hooks/useMetaPixel"
-import { trackGA } from "../utils/analytics"
+import { trackPixelEvent } from "../hooks/useMetaPixel"
 
 const LETTERS = ["A", "B", "C", "D"]
 
 export default function Quiz() {
   const navigate = useNavigate()
+  const pixelFired = useRef(false)
   const {
     config,
     questions,
@@ -20,11 +20,11 @@ export default function Quiz() {
   } = useFunnel()
   const { theme } = config
 
+  // Fire ViewContent once when quiz page mounts (quiz_start)
   useEffect(() => {
-    if (currentQuestion === 0) {
-      trackPixel("ViewContent", { content_name: "Quiz Start" })
-      trackGA("quiz_start")
-    }
+    if (pixelFired.current) return
+    pixelFired.current = true
+    trackPixelEvent('ViewContent', { content_name: 'quiz_start' })
   }, [])
 
   const q = questions[currentQuestion]
@@ -35,13 +35,11 @@ export default function Quiz() {
 
   function handleSelect(optionId) {
     answerQuestion(q.id, optionId)
-    trackGA("quiz_progress", { question_number: currentQuestion + 1, question_id: q.id })
   }
 
   function handleNext() {
     if (isLast) {
-      trackPixel("CompleteRegistration", { content_name: "Quiz Complete" })
-      trackGA("quiz_complete")
+      trackPixelEvent('QuizComplete', { content_name: 'quiz_complete', value: questions.length })
       setCalculating(true)
       navigate("/results")
     } else {

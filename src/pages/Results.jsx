@@ -2,8 +2,7 @@ import { useState, useEffect, useRef } from "react"
 import { Link } from "react-router-dom"
 import { useFunnel } from "../context/FunnelContext"
 import { saveLead, subscribeToKit, requestActionPlan, updateLead } from "../firebase"
-import { trackPixel } from "../hooks/useMetaPixel"
-import { trackGA } from "../utils/analytics"
+import { trackPixelEvent } from "../hooks/useMetaPixel"
 
 // ─── Score Dots Component ─────────────────────────────────
 function ScoreDots({ score, maxScore = 5, theme }) {
@@ -132,7 +131,6 @@ export default function Results() {
   const {
     config,
     answers,
-    questions,
     calculating,
     setCalculating,
     calculateResults,
@@ -146,26 +144,18 @@ export default function Results() {
   // Preview mode: ?preview=captured or ?preview=waitlist to skip quiz
   const previewMode = new URLSearchParams(window.location.search).get("preview")
 
+  const pixelFired = useRef(false)
+
   // Track whether user checked waitlist (for confirmation variant)
   const [didJoinWaitlist, setDidJoinWaitlist] = useState(previewMode === "waitlist")
   const [waitlistJoinedLate, setWaitlistJoinedLate] = useState(false)
   const [leadDocId, setLeadDocId] = useState(null)
   const [capturedEmail, setCapturedEmail] = useState(null)
 
-  // Ref for scroll-to-top after capture
-  const topRef = useRef(null)
-
   // Force emailCaptured in preview mode
   useEffect(() => {
     if (previewMode) setEmailCaptured(true)
   }, [previewMode, setEmailCaptured])
-
-  // Scroll to top when email is captured (skip for preview mode)
-  useEffect(() => {
-    if (emailCaptured && !previewMode) {
-      window.scrollTo({ top: 0, behavior: "instant" })
-    }
-  }, [emailCaptured, previewMode])
 
   // Calculating pause — 2.5 seconds
   const [showResults, setShowResults] = useState(!calculating || !!previewMode)
@@ -180,15 +170,15 @@ export default function Results() {
     }
   }, [calculating, setCalculating])
 
-  const { rawDimensions, rawTotal, displayScores, tier } = calculateResults()
+  const { rawTotal, displayScores, tier } = calculateResults()
   const tierColor = theme[tier.themeColor]
 
-  // Track results page view + email capture form shown
+  // Fire ViewContent once when results page renders
   useEffect(() => {
-    if (showResults && !emailCaptured) {
-      trackGA("email_capture_view", { tier: tier.name })
-    }
-  }, [showResults, emailCaptured])
+    if (pixelFired.current || !showResults) return
+    pixelFired.current = true
+    trackPixelEvent('ViewContent', { content_name: 'results_page' })
+  }, [showResults])
 
   // ─── Email capture handler ──────────────────────────────
   async function handleEmailCaptured(email, joinWaitlist) {
@@ -205,32 +195,13 @@ export default function Results() {
       })
       setLeadDocId(docId)
       setCapturedEmail(email)
-      trackPixel("Lead", { content_name: tier.name })
-      trackGA("email_capture_submit", { tier: tier.name })
 
-      // Sort dimensions by score for action plan targeting
+      // Meta Pixel: Lead event
+      trackPixelEvent('Lead', { content_name: tier.name, value: rawTotal })
+
+      // Find weakest dimension for action plan
       const dimEntries = Object.entries(displayScores)
-      const sorted = [...dimEntries].sort((a, b) => a[1] - b[1])
-      const weakest = sorted[0]
-      const secondWeakest = sorted[1]
-      const strongest = sorted[sorted.length - 1]
-
-      // Build scorecard copy so Claude can avoid repeating it
-      const scorecardCopy = Object.entries(displayScores).map(([dim, score]) => {
-        const dimConfig = config.dimensions[dim]
-        const level = dimConfig?.levels?.[score]
-        return `${dimConfig?.label} (${score}/5): "${level?.explanation || ""}" / "${level?.crackedDoor || ""}"`
-      }).join("\n")
-
-      // Build answer labels map: { q1_clarity: "Walk them through..." }
-      const answerLabels = {}
-      for (const q of questions) {
-        const chosen = answers[q.id]
-        if (chosen) {
-          const opt = q.options.find((o) => o.id === chosen)
-          if (opt) answerLabels[q.id] = opt.label
-        }
-      }
+      const weakest = dimEntries.reduce((min, curr) => curr[1] < min[1] ? curr : min, dimEntries[0])
 
       // Subscribe to Kit + request action plan (non-blocking, parallel)
       subscribeToKit(email, {
@@ -243,17 +214,7 @@ export default function Results() {
         tier: tier.id,
         tierName: tier.name,
         displayScores: { ...displayScores },
-        rawDimensions: { ...rawDimensions },
         weakestDimension: weakest?.[0] || "",
-        weakestScore: weakest?.[1] || "",
-        secondWeakest: secondWeakest?.[0] || "",
-        secondWeakestScore: secondWeakest?.[1] || "",
-        strongestDimension: strongest?.[0] || "",
-        strongestScore: strongest?.[1] || "",
-        answers: { ...answers },
-        answerLabels,
-        waitlistStatus: joinWaitlist ? "on_waitlist" : "not_on_waitlist",
-        scorecardCopy,
       })
     } catch (err) {
       console.error("Failed to save lead:", err)
@@ -295,87 +256,84 @@ export default function Results() {
       className="max-w-2xl mx-auto pt-6 md:pt-12 space-y-8 transition-opacity duration-500"
       style={{ opacity: showResults ? 1 : 0 }}
     >
-      {/* Tier Badge + Scorecard + Email Gate — hidden after capture */}
-      {!emailCaptured && (
-        <>
-          {/* Tier Badge */}
-          <div className="text-center space-y-4">
-            <div
-              className="inline-block px-6 py-2 rounded-full text-sm font-bold uppercase tracking-wide text-white"
-              style={{ background: tierColor }}
-            >
-              {tier.name}
-            </div>
-            <p
-              className="text-base md:text-lg leading-relaxed max-w-lg mx-auto"
-              style={{ color: theme.muted }}
-            >
-              {tier.description}
-            </p>
-          </div>
+      {/* Tier Badge */}
+      <div className="text-center space-y-4">
+        <div
+          className="inline-block px-6 py-2 rounded-full text-sm font-bold uppercase tracking-wide text-white"
+          style={{ background: tierColor }}
+        >
+          {tier.name}
+        </div>
+        <p
+          className="text-base md:text-lg leading-relaxed max-w-lg mx-auto"
+          style={{ color: theme.muted }}
+        >
+          {tier.description}
+        </p>
+      </div>
 
-          {/* Scorecard */}
-          <div
-            className="p-6 md:p-8 rounded-2xl space-y-6"
-            style={{ background: theme.card, border: `1px solid ${theme.border}` }}
-          >
-            <h3
-              className="text-lg font-bold"
-              style={{ fontFamily: theme.headingFont, color: theme.text, letterSpacing: "-0.3px" }}
-            >
-              Your Scorecard
-            </h3>
+      {/* Scorecard */}
+      <div
+        className="p-6 md:p-8 rounded-2xl space-y-6"
+        style={{ background: theme.card, border: `1px solid ${theme.border}` }}
+      >
+        <h3
+          className="text-lg font-bold"
+          style={{ fontFamily: theme.headingFont, color: theme.text, letterSpacing: "-0.3px" }}
+        >
+          Your Scorecard
+        </h3>
 
-            <div className="space-y-6">
-              {dimensionKeys.map((dimKey) => {
-                const dimConfig = config.dimensions[dimKey]
-                const score = displayScores[dimKey]
-                const level = dimConfig.levels[score]
+        <div className="space-y-6">
+          {dimensionKeys.map((dimKey) => {
+            const dimConfig = config.dimensions[dimKey]
+            const score = displayScores[dimKey]
+            const level = dimConfig.levels[score]
 
-                return (
-                  <div key={dimKey} className="space-y-2">
-                    {/* Dimension name + dots */}
-                    <div className="flex items-center justify-between">
-                      <span className="text-sm font-semibold" style={{ color: theme.text }}>
-                        {dimConfig.label}
-                      </span>
-                      <div className="flex items-center gap-2">
-                        <ScoreDots score={score} theme={theme} />
-                        <span className="text-xs font-medium" style={{ color: theme.faint }}>
-                          {score}/5
-                        </span>
-                      </div>
-                    </div>
-
-                    {/* Explanation */}
-                    {level && (
-                      <p className="text-sm leading-relaxed" style={{ color: theme.muted }}>
-                        {level.explanation}
-                      </p>
-                    )}
-
-                    {/* Cracked door */}
-                    {level && (
-                      <p
-                        className="text-sm leading-relaxed italic"
-                        style={{ color: theme.faint }}
-                      >
-                        {level.crackedDoor}
-                      </p>
-                    )}
+            return (
+              <div key={dimKey} className="space-y-2">
+                {/* Dimension name + dots */}
+                <div className="flex items-center justify-between">
+                  <span className="text-sm font-semibold" style={{ color: theme.text }}>
+                    {dimConfig.label}
+                  </span>
+                  <div className="flex items-center gap-2">
+                    <ScoreDots score={score} theme={theme} />
+                    <span className="text-xs font-medium" style={{ color: theme.faint }}>
+                      {score}/5
+                    </span>
                   </div>
-                )
-              })}
-            </div>
-          </div>
+                </div>
 
-          {/* Email Gate CTA */}
-          <EmailCapture
-            theme={theme}
-            config={config}
-            onCaptured={handleEmailCaptured}
-          />
-        </>
+                {/* Explanation */}
+                {level && (
+                  <p className="text-sm leading-relaxed" style={{ color: theme.muted }}>
+                    {level.explanation}
+                  </p>
+                )}
+
+                {/* Cracked door */}
+                {level && (
+                  <p
+                    className="text-sm leading-relaxed italic"
+                    style={{ color: theme.faint }}
+                  >
+                    {level.crackedDoor}
+                  </p>
+                )}
+              </div>
+            )
+          })}
+        </div>
+      </div>
+
+      {/* Email Gate CTA */}
+      {!emailCaptured && (
+        <EmailCapture
+          theme={theme}
+          config={config}
+          onCaptured={handleEmailCaptured}
+        />
       )}
 
       {/* Post-capture: confirmation + authority + waitlist */}
@@ -490,7 +448,7 @@ export default function Results() {
             {/* YouTube channel link */}
             <div className="pt-2">
               <a
-                href="https://www.youtube.com/@humbleconvictionstartups"
+                href="https://www.youtube.com/@HumbleConviction"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-sm font-medium transition-opacity hover:opacity-80"
