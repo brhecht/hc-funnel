@@ -177,7 +177,7 @@ Get My Scores
 Head-and-shoulders portrait. Older man, silver temples, navy crewneck, reading glasses on head. Bookshelves, natural light, leather chair. Warm, direct expression. "The guy who's seen your pitch before." (Locked)
 
 ### Text Overlay on Image
-**Option A (Recommended):** `2,500 founder pitches reviewed.`
+**Option A (Recommended):** `2,500+ founder pitches analyzed.`
 *Why it works:* "Founder pitches" signals the world explicitly. The specific number does the credibility work — no bio needed. Combined with the mentor portrait, the viewer immediately understands: this person has seen thousands of founders pitch investors and knows exactly what goes wrong. 5 words. Pure specificity principle.*
 
 **Option B:** `I've watched your pitch before.`
@@ -225,7 +225,7 @@ Take the Assessment
 - **Hold rate target:** 25%+ (15-second views ÷ 3-second views). Below 20% = swap copy angle.
 - For each concept, test the **Recommended** text overlay first. If CTR is below benchmark after 500 impressions, swap to Option B.
 - **Predicted strongest for cold traffic:** Concept 2 ("He thinks the pitch is going well") — Dunning-Kruger visual dissonance is a genuine pattern interrupt in a feed full of aspirational content.
-- **Best for retargeting:** Concept 4 ("2,500 founder pitches reviewed") — credibility follow-up for people who saw a pain ad but didn't click.
+- **Best for retargeting:** Concept 4 ("2,500+ founder pitches analyzed") — credibility follow-up for people who saw a pain ad but didn't click.
 - **Creative fatigue plan:** Expect ~2-3 weeks per concept before CTR degradation (Meta data). After the first rotation, add at least one new concept from learnings. Our 4 concepts give the minimum viable rotation.
 
 ### CTA Destination

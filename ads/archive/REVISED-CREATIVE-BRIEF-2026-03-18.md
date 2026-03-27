@@ -40,7 +40,7 @@ A full expert audit of the ad → landing page system (see `research/ad-system-a
 ### Concept 4: "Built From the Other Side" — Authority Angle
 **Status: SHIP with copy updates**
 - **Image:** KEEP. Mentor portrait. Simple composition, minimal AI artifacts, authority reads immediately.
-- **Text overlay:** KEEP. `2,500 founder pitches reviewed. See what investors see.`
+- **Text overlay:** KEEP. `2,500+ founder pitches analyzed. See what investors see.`
 - **Copy:** UPDATE (see Copy Updates section below)
 - **Formats:** Story (9:16) + Feed (4:5) done.
 - **Targeting:** Retargeting audience (people who saw Concept 1 or 2 but didn't click).

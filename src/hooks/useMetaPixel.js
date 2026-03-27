@@ -39,11 +39,21 @@ export function usePixelPageView() {
   }, [location.pathname])
 }
 
+// Standard Meta pixel events — everything else is custom
+const STANDARD_EVENTS = new Set([
+  'PageView', 'ViewContent', 'Lead', 'CompleteRegistration',
+  'AddToCart', 'Purchase', 'Search', 'InitiateCheckout',
+  'AddPaymentInfo', 'AddToWishlist', 'Contact', 'CustomizeProduct',
+  'Donate', 'FindLocation', 'Schedule', 'StartTrial',
+  'SubmitApplication', 'Subscribe'
+])
+
 // Fire a standard or custom pixel event
 export function trackPixelEvent(eventName, params = {}) {
   try {
     if (window.fbq) {
-      window.fbq('track', eventName, params)
+      const method = STANDARD_EVENTS.has(eventName) ? 'track' : 'trackCustom'
+      window.fbq(method, eventName, params)
     }
   } catch {
     // Pixel failures must never break the quiz flow
