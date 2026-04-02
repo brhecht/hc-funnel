@@ -3,6 +3,7 @@ import { Link } from "react-router-dom"
 import { useFunnel } from "../context/FunnelContext"
 import { saveLead, subscribeToKit, requestActionPlan, updateLead } from "../firebase"
 import { trackPixelEvent } from "../hooks/useMetaPixel"
+import { trackGA } from "../utils/analytics"
 
 // ─── Score Dots Component ─────────────────────────────────
 function ScoreDots({ score, maxScore = 5, theme }) {
@@ -178,6 +179,7 @@ export default function Results() {
     if (pixelFired.current || !showResults) return
     pixelFired.current = true
     trackPixelEvent('ViewContent', { content_name: 'results_page' })
+    trackGA('results_view', { content_name: 'results_page', tier: tier.name })
   }, [showResults])
 
   // ─── Email capture handler ──────────────────────────────
@@ -198,6 +200,8 @@ export default function Results() {
 
       // Meta Pixel: Lead event
       trackPixelEvent('Lead', { content_name: tier.name, value: rawTotal })
+      // GA4: Lead event
+      trackGA('generate_lead', { content_name: tier.name, value: rawTotal })
 
       // Find weakest dimension for action plan
       const dimEntries = Object.entries(displayScores)

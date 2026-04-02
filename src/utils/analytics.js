@@ -9,7 +9,19 @@ if (GA_ID && typeof window !== "undefined") {
   window.dataLayer = window.dataLayer || []
   window.gtag = function () { window.dataLayer.push(arguments) }
   window.gtag("js", new Date())
-  window.gtag("config", GA_ID)
+
+  // Pass UTMs from the landing URL so GA4 attributes the session correctly
+  const params = new URLSearchParams(window.location.search)
+  const campaignParams = {}
+  ;["utm_source", "utm_medium", "utm_campaign", "utm_term", "utm_content"].forEach((k) => {
+    const v = params.get(k)
+    if (v) campaignParams[k.replace("utm_", "campaign_")] = v
+  })
+
+  window.gtag("config", GA_ID, {
+    ...campaignParams,
+    send_page_view: true,
+  })
 
   const script = document.createElement("script")
   script.async = true

@@ -2,6 +2,7 @@ import { useEffect, useRef } from "react"
 import { useNavigate } from "react-router-dom"
 import { useFunnel } from "../context/FunnelContext"
 import { trackPixelEvent } from "../hooks/useMetaPixel"
+import { trackGA } from "../utils/analytics"
 
 const LETTERS = ["A", "B", "C", "D"]
 
@@ -25,6 +26,7 @@ export default function Quiz() {
     if (pixelFired.current) return
     pixelFired.current = true
     trackPixelEvent('ViewContent', { content_name: 'quiz_start' })
+    trackGA('quiz_start')
   }, [])
 
   const q = questions[currentQuestion]
@@ -40,6 +42,7 @@ export default function Quiz() {
   function handleNext() {
     if (isLast) {
       trackPixelEvent('QuizComplete', { content_name: 'quiz_complete', value: questions.length })
+      trackGA('quiz_complete', { value: questions.length })
       setCalculating(true)
       navigate("/results")
     } else {
