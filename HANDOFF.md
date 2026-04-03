@@ -64,7 +64,15 @@ All 3 ad sets now configured with **QuizComplete** as conversion event. Custom c
 
 **Previous status still applies:** Action plan pipeline live. Still pending: Brian's prompt template (B8), quizAnswers wiring, [INTRO] copy, autoresponder emails in Kit (B7).
 
-## Recent Changes (March 27, 2026 — Meta Ads Campaign Fix + Pixel Deploy)
+## Recent Changes (April 3, 2026 — Granular Funnel Tracking)
+
+### Step-by-Step Question Tracking
+- **Added granular pixel event tracking** for every question step in `Quiz.jsx`.
+- Meta Pixel now fires a standard `ViewContent` event with parameter `content_name: Quiz_Q<number>_Completed` upon clicking "Next".
+- This allows creating Custom Conversions in Meta for each individual question to pinpoint UI drop-offs without waiting for Meta to index custom events.
+- Ads Manager Dashboard updated with a saved preset (`HC Funnel Overview`) exposing the full tracking funnel: Impressions -> Link Clicks -> Page Views -> Q1 -> Q4 -> QuizComplete -> Leads.
+
+## Previous Changes (March 27, 2026 — Meta Ads Campaign + Pixel Deploy)
 
 ### Campaign Review & Corrections
 - Reviewed all 3 ad sets in Meta Ads Manager against handoff specs
