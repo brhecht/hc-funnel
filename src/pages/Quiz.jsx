@@ -46,6 +46,8 @@ export default function Quiz() {
       setCalculating(true)
       navigate("/results")
     } else {
+      trackPixelEvent(`Quiz_Q${currentQuestion + 1}_Completed`, { question_id: q.id })
+      trackGA(`quiz_q${currentQuestion + 1}_completed`, { question_id: q.id })
       nextQuestion()
     }
   }

@@ -1,5 +1,5 @@
 # HANDOFF — HC Funnel
-*Last updated: March 27, 2026 ~evening ET*
+*Last updated: March 30, 2026 ~afternoon ET*
 
 ## Project Overview
 Quiz-based lead magnet funnel for Humble Conviction's upcoming pitching/fundraising course. 8 scenario-based questions score founders across 4 dimensions, deliver a tier result with scorecard, and gate a personalized action plan behind email capture. Config-driven architecture — all content lives in `src/config/funnel.js`. Part of B-Suite, positioned as a sub-tool under B Marketing.
@@ -43,23 +43,26 @@ hc-funnel/
 ```
 
 ## Current Status
-**META ADS CAMPAIGN IN DRAFT — WAITING FOR QuizComplete EVENT TO REGISTER IN META (March 27, 2026).**
+**META ADS CAMPAIGN IN DRAFT — AWAITING BRIAN'S APPROVAL ON ADVANTAGE+ OPTIONS (March 30, 2026).**
 
-Campaign `META_Conv_EddyQuiz_Mar26` duplicated and saved as draft. Original campaign was configured with CompleteRegistration — Brian corrected this: Phase 1 should optimize for quiz completion, not email capture.
+All 3 ad sets now configured with **QuizComplete** as conversion event. Custom conversion created in Events Manager and confirmed working in Ads Manager dropdown.
 
-**Pixel is now live and firing all events** — confirmed via Meta Pixel Helper: PageView, ViewContent, Lead, CompleteRegistration, and **QuizComplete** (custom event, now using `trackCustom`).
-
-**Blocker:** QuizComplete needs time to register in Meta's system (hours to ~1 day) before it appears as a conversion event option in Ads Manager. Once it does, Nico switches the 3 ad sets from ViewContent → QuizComplete, then schedules the campaign.
+**Bug fixed (March 30):** Pixel ID in `index.html` was truncated — `1407883507304` (13 digits) instead of full `1407883507304464` (16 digits). This prevented QuizComplete from registering. Fixed, committed (`ea11058`), and deployed.
 
 **Campaign structure in Meta Ads Manager:**
-- **Campaign:** META_Conv_EddyQuiz_Mar26 (Sales objective, CBO OFF)
-- **Ad Set 1:** C1-Polite-Pass_Founders_Mar26 — $50/day, US, 25-45, founder/VC interests
-- **Ad Set 2:** C2-Room-Cant-Read_Founders_Mar26 — same targeting/budget
-- **Ad Set 3:** C4-Authority_Founders_Mar26 — same targeting/budget
+- **Campaign:** META_Conv_EddyQuiz_Mar26 (Sales objective, CBO OFF — pending Brian's decision)
+- **Ad Set 1:** C1-Polite-Pass_Founders_Mar26 — $50/day, QuizComplete, US, 25-45, founder/VC interests
+- **Ad Set 2:** C2-Room-Cant-Read_Founders_Mar26 — same targeting/budget, QuizComplete
+- **Ad Set 3:** C4-Authority_Founders_Mar26 — same targeting/budget, QuizComplete
 - **Total daily budget:** $150/day ($50 × 3)
-- **Current optimization event:** ViewContent (temporary — switch to QuizComplete when available)
+- **Conversion event:** QuizComplete (all 3 ad sets)
+- **Interest keywords:** Venture capital, Startups, Entrepreneurship, Business incubator, Angel investor
 
-**Previous status still applies:** Action plan pipeline live. Still pending: Brian's prompt template, quizAnswers wiring, [INTRO] copy, autoresponder emails in Kit.
+**Pending Brian's decisions (email sent March 30):**
+1. Advantage+ Audience — use age/interests as suggestions (recommended) vs hard controls
+2. Campaign Budget Optimization (CBO) — $150/day auto-distributed (recommended) vs manual $50/day per ad set
+
+**Previous status still applies:** Action plan pipeline live. Still pending: Brian's prompt template (B8), quizAnswers wiring, [INTRO] copy, autoresponder emails in Kit (B7).
 
 ## Recent Changes (March 27, 2026 — Meta Ads Campaign Fix + Pixel Deploy)
 
