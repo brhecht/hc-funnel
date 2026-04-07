@@ -203,6 +203,12 @@ export default function Results() {
       // GA4: Lead event
       trackGA('generate_lead', { content_name: tier.name, value: rawTotal })
 
+      // Waitlist tracking (only when user checked the box)
+      if (joinWaitlist) {
+        trackPixelEvent('ViewContent', { content_name: 'waitlist_signup', content_category: 'conversion' })
+        trackGA('waitlist_signup', { method: 'email_form_checkbox' })
+      }
+
       // Find weakest dimension for action plan
       const dimEntries = Object.entries(displayScores)
       const weakest = dimEntries.reduce((min, curr) => curr[1] < min[1] ? curr : min, dimEntries[0])
@@ -230,6 +236,8 @@ export default function Results() {
   // ─── Late waitlist join (from confirmation page) ──────
   async function handleLateWaitlistJoin() {
     setWaitlistJoinedLate(true)
+    trackPixelEvent('ViewContent', { content_name: 'waitlist_signup', content_category: 'conversion' })
+    trackGA('waitlist_signup', { method: 'late_join_button' })
     try {
       if (leadDocId) {
         await updateLead(leadDocId, { waitlist: true })
