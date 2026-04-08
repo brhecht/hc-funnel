@@ -1,5 +1,5 @@
 # HANDOFF — HC Funnel
-*Last updated: March 30, 2026 ~afternoon ET*
+*Last updated: April 8, 2026 ~afternoon ET*
 
 ## Project Overview
 Quiz-based lead magnet funnel for Humble Conviction's upcoming pitching/fundraising course. 8 scenario-based questions score founders across 4 dimensions, deliver a tier result with scorecard, and gate a personalized action plan behind email capture. Config-driven architecture — all content lives in `src/config/funnel.js`. Part of B-Suite, positioned as a sub-tool under B Marketing.
@@ -136,6 +136,41 @@ Do NOT skip Phase 1 — optimizing directly for email capture on a test budget w
 - **YouTube videos (post-capture):** Short: `iqw1IgRA2sw` (0:52). Long: `_3601d3OpYY` (8:16).
 
 ## Open Questions / Decisions Pending
-- When QuizComplete registers in Meta → switch ad sets and schedule campaign for launch
 - Brian still needs to write autoresponder email copy (B7), action plan prompt (B8)
 - Add `quiz.humbleconviction.com` domain in Events Manager → Settings → Domains (Brian)
+
+## Meta Ads Campaign — Week 1 Audit (April 8, 2026)
+
+### Key Insight: Optimization Event Mismatch
+Campaign optimizes for QuizComplete, but quiz-to-lead conversion varies wildly by creative (C1=60%, C4=21%). Meta is allocating budget correctly for QC — C4 gets 58% of spend because it produces QC efficiently ($26.08/QC vs C1's $23.20). The budget split is NOT broken. C2 ($16/day avg) is starved because it's worst on the optimization metric.
+
+### Statistical Results (Week 1: Apr 1–7, $1,083 total spend)
+- **C1 vs C4 quiz-to-lead:** p=0.019 (Fisher's Exact) — significant at 95%, but fragile (9 leads). C1 CI: 36%–80%, C4 CI: 9%–40%.
+- **C1 vs C2:** p=0.303 — NOT significant. C2 has 1 lead, CI is 5%–70%.
+- **CTR differences:** Highly significant (p<0.001). C2=6.6%, C1=4.2%, C4=2.0%.
+- **CPL:** Unreliable. C1 daily CPL ranges $10–$101 (std dev $32). C4 ranges $50–$188.
+
+### Decisions (April 8)
+1. **Keep running as-is.** No budget changes, no creative changes, no page changes.
+2. **One more week at $150/day** (~$1,050 additional, ~$2,100 cumulative).
+3. **Retargeting audience:** Set up passively now (QuizComplete + no Lead, 30-day window). Do NOT activate spend until pool hits 200+ (currently 28).
+4. **Daily reports:** Anomaly alerts only. Full analysis weekly.
+5. **Week 2 checkpoint: April 14.** Key question: ready to switch optimization from QuizComplete → Lead?
+
+### Week 2 Watchlist (April 14)
+- Has C1 quiz-to-lead held at ~60% with ~30 QC? Drop to 40–45% weakens the "clear winner" thesis.
+- Has C4 stabilized at ~21% with ~48 QC?
+- Is C2 actually getting $50/day? If still starved, not a real test.
+- Total leads approaching 50/week threshold for Lead optimization switch?
+- Retargeting pool size (~55–60 expected, need 200+ to activate).
+- CPL daily variance converging?
+
+### Data Error in Nico's Report
+Dashboard says "53 quiz completers who didn't convert" — correct number is 28. Nico flagged to fix.
+
+## Session Log
+
+### April 8, 2026 — Week 1 Meta Ads audit
+- **What shipped:** Full statistical audit of Nico's tracking report. Identified optimization event mismatch as root cause. Sent Nico brief via Brain Inbox.
+- **Known issues:** None new.
+- **Next:** Week 2 checkpoint April 14. Watch for C1 rate stability and Lead optimization readiness.
