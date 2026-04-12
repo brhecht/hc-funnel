@@ -135,6 +135,34 @@ Additionally, founders as a demographic may convert at higher rates than the 1-5
 - If choosing Path C, define upfront what "acceptable list-building cost" means (e.g., $50/lead for founders who match ICP) so you have a kill switch.
 - Track downstream engagement metrics (email open rates, action plan engagement, reply rates) as leading indicators of eventual purchase intent.
 
+## Final Conclusion (Updated April 11, 2026)
+
+### Step-by-Step Funnel Model (Corrected)
+
+The original analysis above was extended into a full step-by-step unit economics model, correcting for several errors in the initial approach: starting from Landing Page View (not impressions) since Meta charges CPM incidentally but LPV is the first meaningful funnel event; using aggregate lead-to-purchase lifecycle conversion (1–5% industry benchmark over 3–6 months of nurture) instead of modeling single-email micro-steps; and clearly separating actual Week 1 data from $10K projection modeling.
+
+**The corrected model at $10K spend (realistic scenario):**
+- 2,217 LPVs at $4.51/LPV (actual) → 399 quiz completes (18%) → 140 leads (35%) → CPL of $71
+- Lead-to-purchase lifecycle conversion at 2% → 2.8 sales → $322 gross → ~$276 net after refunds/fees
+- **12-month full lifecycle (drip + newsletter + retargeting + long tail): $276–$552 returned on $10,000 spent. A 94–97% loss with every touchpoint working.**
+- To break even: 52% of leads must purchase (realistic) or 29% (optimistic). Industry best-in-class: 5–10%.
+
+### What About Lookalike Audiences / Retargeting / Other Channels?
+
+These levers primarily improve top-of-funnel metrics (CPL, lead volume). They don't change what happens after someone is on the list. Even if lookalikes cut CPL in half ($35), at 2% lifecycle conversion that yields 5.7 sales × $115 net = $655 on $10K spend — still a 93% loss. The structural problem is lead-to-purchase conversion vs. price point, not traffic quality.
+
+### Brand Coherence Problem
+
+Eddy is a pre-recorded pitching course built under HC positioning: expert-led, top-down instruction on a narrow skill. The New Builder is built on the opposite premise: peer-driven, co-learning, AI-native, broad scope. A founder who buys a $149 pitching course has no natural next step into the War Room, podcast, or TNB community. There is no upsell path. Every dollar and hour spent on Eddy is diverted from the new direction of the company.
+
+### Recommendation
+
+Eddy unit economics evaluated and deemed that profitability is highly unrealistic. Finish the Week 2 checkpoint on April 14 to close the data loop. Then shut down paid ads. Keep the quiz live as a free organic tool. Do not record the course. Redirect hours and budget into TNB priorities.
+
+Full step-by-step document: `Eddy Funnel - Step by Step Unit Economics.docx` (generated April 11, 2026).
+
+---
+
 ## Sources
 
 - [Quiz Conversion Rate Report 2026 — Interact](https://www.tryinteract.com/blog/quiz-conversion-rate-report/)

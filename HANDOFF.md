@@ -1,5 +1,5 @@
 # HANDOFF — HC Funnel
-*Last updated: April 8, 2026 ~afternoon ET*
+*Last updated: April 11, 2026*
 
 ## Project Overview
 Quiz-based lead magnet funnel for Humble Conviction's upcoming pitching/fundraising course. 8 scenario-based questions score founders across 4 dimensions, deliver a tier result with scorecard, and gate a personalized action plan behind email capture. Config-driven architecture — all content lives in `src/config/funnel.js`. Part of B-Suite, positioned as a sub-tool under B Marketing.
@@ -12,7 +12,7 @@ Quiz-based lead magnet funnel for Humble Conviction's upcoming pitching/fundrais
 - **AI:** Anthropic Claude API (Sonnet) — API key configured in Vercel, generates personalized action plans
 - **Hosting:** Vercel at quiz.humbleconviction.com (auto-deploy from git push). Also accessible at hc-funnel.vercel.app.
 - **Repo:** github.com/brhecht/hc-funnel
-- **Local path:** `~/Developer/clients/hc/hc-funnel`
+- **Local path:** `~/Developer/B-Suite/hc-funnel`
 
 ## Folder Structure
 ```
@@ -26,151 +26,236 @@ hc-funnel/
 │   │   └── Layout.jsx       — Branded shell (header, footer, cool-white bg, Inter font)
 │   ├── config/
 │   │   └── funnel.js        — ALL content: questions, scoring, results copy, email gate copy, design tokens
-│   ├── hooks/
-│   │   └── useMetaPixel.js  — Meta Pixel init, SPA PageView tracking, trackPixelEvent() helper. Uses trackCustom for custom events (QuizComplete), track for standard events.
 │   ├── context/
 │   │   └── FunnelContext.jsx — Quiz state, scoring engine (raw → display → tier), UTM capture
 │   └── pages/
-│       ├── Landing.jsx      — Hero + social proof + CTA
+│       ├── Landing.jsx      — Hero + social proof + CTA. Mobile-first.
 │       ├── Quiz.jsx         — 8 scenario cards, A/B/C/D badges, progress bar, no back button
-│       └── Results.jsx      — Calculating pause → tier → scorecard → email gate → post-capture confirmation
-├── ads/                     — Ad creative briefs, copy sheets, campaign setup docs, final ad images
-├── research/                — Expert audit memos from March 18 session
-├── api/
-│   └── action-plan.js       — Vercel serverless: quiz data → Claude API → Resend email
-├── index.html               — Inter font, Meta Pixel base code (ID 1407883507304464)
+│       └── Results.jsx      — Calculating pause → tier → scorecard → email gate → post-capture confirmation with authority section + videos + waitlist re-ask
+├── ads/
+│   ├── AD-CREATIVE-BRIEF-V3-FINAL.md  — ⭐ CANONICAL execution doc for ads. Updated March 25 with final locked primary text.
+│   ├── META-LAUNCH-PLAN.md            — $150/day budget, 14-day pulse check protocol, pre-launch checklist
+│   ├── reference-comps/               — 6 visual reference PNGs (3 concepts × Feed + Story)
+│   ├── NANO-BANANA-PROMPTS.md         — Image generation prompts for reference images
+│   ├── phase1-references/             — Source Nano Banana images (Polite Pass, Room You Can't Read, Built From the Other Side)
+│   └── archive/                       — Deprecated briefs (CREATIVE-BRIEF.md, REVISED-CREATIVE-BRIEF-2026-03-18.md)
+├── research/                          — Expert audit memos from March 18–19 sessions
+│   ├── quiz-design-audit-march-2026.md
+│   ├── quiz-substance-audit-march-2026.md
+│   ├── landing-page-audit-march-2026.md
+│   ├── results-page-audit-march-2026.md
+│   ├── autoresponder-email-audit-march-2026.md
+│   ├── ad-system-audit-march-2026.md
+│   ├── ad-copy-final-review-march-2026.md
+│   ├── action-plan-expert-review-march-2026.md
+│   └── waitlist-email-drip-strategy.md
+├── ACTION-PLAN-PROMPT.md    — Claude prompt template for personalized action plan email
+├── NICO-SPEC-ACTION-PLAN-LAUNCH.md — Comprehensive spec for Nico's action plan pipeline build
+├── QA-PROTOCOL.md           — 7 test scenarios for end-to-end QA
+├── index.html               — Inter font loaded via Google Fonts
 └── package.json
 ```
 
+## Meta Ads Campaign — Eddy Unit Economics (April 2026)
+
+**Status: Recommendation to kill paid marketing. Awaiting Week 2 checkpoint (April 14) to close data loop.**
+
+Eddy unit economics evaluated and deemed that profitability is highly unrealistic: recommendation to end paid marketing, keep the quiz as a free organic resource. Full step-by-step analysis in `research/eddy-unit-economics-april-2026.md`.
+
+**Key findings:**
+- Week 1 data (Apr 1–7): $1,083 spent → 240 LPVs → 43 quiz completes → 15 leads → 0 sales (course not recorded)
+- CPL: $72.17 blended ($39 optimistic from C1)
+- At $10K projected spend, realistic scenario: 140 leads → 2.8 sales → $276 net over 12-month lifecycle
+- **ROAS: 3 cents per dollar spent (realistic). 6 cents (optimistic). 94–97% loss over a full year.**
+- To break even: need 5x industry-best conversion rates. Unrealistic under any circumstance.
+- Brand coherence problem: Eddy (HC-era, top-down pitching instruction) has no upsell path into TNB (peer-driven, co-learning, AI-native)
+- Lookalike audiences / retargeting / other channels would not materially change the structural economics
+
+**Decisions made:**
+- Finish Week 2 checkpoint April 14 (close the data loop cleanly)
+- Then shut down paid ads on the quiz funnel
+- Keep the quiz live as a free organic tool
+- Do not record the course
+- Redirect hours and budget into TNB priorities
+
+**Week 2 watchlist (April 14):**
+- C1 lead conversion rate stability (60% in Week 1 — confirm or regress)
+- Overall CPL trend (improving or worsening as Meta learns)
+- Any organic quiz completions (signal for keeping quiz as free tool)
+
+---
+
 ## Current Status
-**META ADS CAMPAIGN IN DRAFT — AWAITING BRIAN'S APPROVAL ON ADVANTAGE+ OPTIONS (March 30, 2026).**
+**Primary text locked and ready for launch. All ad creative is final. Waiting on Nico to swap primary text in Meta Ads Manager, then Brian adds credit card and hits go.**
 
-All 3 ad sets now configured with **QuizComplete** as conversion event. Custom conversion created in Events Manager and confirmed working in Ads Manager dropdown.
+**The full pipeline is built and deployed:** Ad → quiz.humbleconviction.com → quiz → email capture → Firestore + Kit + Claude action plan email via Resend.
 
-**Bug fixed (March 30):** Pixel ID in `index.html` was truncated — `1407883507304` (13 digits) instead of full `1407883507304464` (16 digits). This prevented QuizComplete from registering. Fixed, committed (`ea11058`), and deployed.
+**Ad creative status:** All 3 concepts × 2 formats built in Canva. Round 2 overlay/CTA refinements made (March 24). Primary text completely rewritten March 25-26 in a line-by-line editorial session with Brian. Email sent to Nico with exact copy-paste replacement text.
 
-**Campaign structure in Meta Ads Manager:**
-- **Campaign:** META_Conv_EddyQuiz_Mar26 (Sales objective, CBO OFF — pending Brian's decision)
-- **Ad Set 1:** C1-Polite-Pass_Founders_Mar26 — $50/day, QuizComplete, US, 25-45, founder/VC interests
-- **Ad Set 2:** C2-Room-Cant-Read_Founders_Mar26 — same targeting/budget, QuizComplete
-- **Ad Set 3:** C4-Authority_Founders_Mar26 — same targeting/budget, QuizComplete
-- **Total daily budget:** $150/day ($50 × 3)
-- **Conversion event:** QuizComplete (all 3 ad sets)
-- **Interest keywords:** Venture capital, Startups, Entrepreneurship, Business incubator, Angel investor
+## Recent Changes (March 25-26, 2026 — Primary Text Editorial Rewrite)
 
-**Pending Brian's decisions (email sent March 30):**
-1. Advantage+ Audience — use age/interests as suggestions (recommended) vs hard controls
-2. Campaign Budget Optimization (CBO) — $150/day auto-distributed (recommended) vs manual $50/day per ad set
+### What Happened
+Brian did the first full creative review of all ads as finished pieces (image + overlay + primary text together). Found multiple copy issues that every prior review round missed — expert audits, compliance checks, and strategic reviews all had different lenses but nobody did a basic editorial read as the target reader.
 
-**Previous status still applies:** Action plan pipeline live. Still pending: Brian's prompt template (B8), quizAnswers wiring, [INTRO] copy, autoresponder emails in Kit (B7).
+### Root Cause
+Copy was written once early, then every subsequent review had a specialized lens (compliance checked character counts, expert audit checked strategy, overlay reviews checked typography). No review round ever did a cold read as a founder scanning their Instagram feed.
 
-## Recent Changes (April 3, 2026 — Granular Funnel Tracking)
+### Process Used
+1. Brian flagged specific issues (false claims, missing self-selection, passive voice, jargon, vague authority)
+2. Attempted persona-based AI rewrite — failed (walls of text, too long for Meta, structural problems)
+3. Pivoted to surgical line-by-line editing on original copy (right structure/length already)
+4. Brian and Claude collaborated ad-by-ad, line-by-line until all three were locked
+5. Full continuity check across all 3 concepts + LP + overlays
 
-### Step-by-Step Question Tracking
-- **Added granular pixel event tracking** for every question step in `Quiz.jsx`.
-- Meta Pixel now fires a standard `ViewContent` event with parameter `content_name: Quiz_Q<number>_Completed` upon clicking "Next".
-- This allows creating Custom Conversions in Meta for each individual question to pinpoint UI drop-offs without waiting for Meta to index custom events.
-- Ads Manager Dashboard updated with a saved preset (`HC Funnel Overview`) exposing the full tracking funnel: Impressions -> Link Clicks -> Page Views -> Q1 -> Q4 -> QuizComplete -> Leads.
+### Final Locked Primary Text
 
-## Previous Changes (March 27, 2026 — Meta Ads Campaign + Pixel Deploy)
+**C1 — The Polite Pass:**
+```
+"We're going to pass on your startup, but please keep us updated."
 
-### Campaign Review & Corrections
-- Reviewed all 3 ad sets in Meta Ads Manager against handoff specs
-- **Fixed:** C1 had minimum age 18 instead of 25 — corrected to match C4
-- **Fixed:** C2 was using saved audience "Eddy Test 01" instead of manual interest targeting — corrected
-- Brian flagged: optimization event should be QuizComplete, NOT CompleteRegistration
-- Campaign duplicated to change conversion event (can't edit scheduled campaigns)
+You've probably gotten this email from an investor.
 
-### Meta Pixel Finally Deployed to Production
-- Discovered pixel code was **never committed or pushed** — changes from March 19 were sitting in local files only. Production site had no pixel.
-- Committed and pushed: `index.html` (base pixel code with ID 1407883507304464) + `useMetaPixel.js` hook
-- **Bug fix:** `trackPixelEvent()` was using `fbq('track', 'QuizComplete')` — Meta silently ignores custom events via `track`. Changed to auto-detect: standard events use `track`, custom events (like QuizComplete) use `trackCustom`.
-- **Build fix:** `Landing.jsx`, `Quiz.jsx`, `Results.jsx` had stale imports (`trackPixel` instead of `trackPixelEvent`) — fixed across all three files over 3 commits.
-- All events confirmed firing via Meta Pixel Helper after deploy.
+Investors listen for just a few things in your pitch, and if you miss them, they say no. But they'll never tell you why.
 
-### Commits Pushed This Session
-1. `5650fcf` — Deploy Meta Pixel base code + event hooks
-2. `32b5ce7` — Fix QuizComplete: use trackCustom for non-standard events
-3. `d1edc1e` — Fix Landing.jsx import (trackPixel → trackPixelEvent)
-4. `3742dd5` — Fix Quiz.jsx + Results.jsx imports (same issue)
+This free 3-minute assessment shows you what investors actually see when you pitch. 4 scores across the dimensions that matter. Built from analyzing 2,500+ real pitches.
+```
+
+**C2 — The Room You Can't Read:**
+```
+You're in a pitch meeting. The investor nods, asks questions, and says "let me talk to my partners."
+
+You're thinking: great sign. Don't be so sure.
+
+It could mean they're interested. Or that they're being polite before they pass. It's almost impossible to tell. And by the time you find out, it's too late.
+
+This free 3-minute assessment scores you on the 4 dimensions investors actually evaluate — including the ones they'll never reveal.
+```
+
+**C4 — Built From the Other Side:**
+```
+Some startups get funded, but most don't. We analyzed 2,500+ pitches and figured out what works...and what doesn't.
+
+The best founders don't just need killer ideas. They need to understand how investors think. And it's not obvious.
+
+So we built this 3-minute assessment to identify your blind spots and help you get funded.
+```
+
+### Key Copy Changes From Previous Version
+| Concept | What Changed | Why |
+|---------|-------------|-----|
+| C1 | Added "startup" to opening quote | Self-selection — tells the reader this is for them |
+| C1 | Added "probably" to "You've probably gotten" | Softer, not presumptuous |
+| C1 | Rewrote middle paragraph entirely | Old version had false claims, too many words |
+| C2 | Replaced "This is really interesting" scenario | Old version made a false claim about what "interesting" means |
+| C2 | New scenario: "let me talk to my partners" | More universal founder experience, better emotional hook |
+| C4 | Flipped to active voice ("We analyzed...") | Was passive ("After 2,500+ pitches analyzed...") |
+| C4 | New opener: "Some startups get funded, but most don't" | Avoids repeating overlay stat; leads with tension |
+| C4 | Removed jargon ("creating pull") and vague authority ("built by someone") | Brian's editorial flags |
+| All | Removed C4 retargeting designation | At $150/day budget, retargeting pool too small. All 3 run as cold. |
+
+### Brief Updated
+- `ads/AD-CREATIVE-BRIEF-V3-FINAL.md` updated with all final primary text (pushed as commit `968ad66`)
+
+### Emails to Nico
+- **Primary Text Copy Changes email** — Gmail draft created, sent by Brian. Contains exact copy-paste text for all 3 concepts with clear before/after context.
+- **Three earlier emails from March 24** (tracking/infrastructure, creative changes, what to expect after launch) — status unknown, Brian was supposed to send these.
+
+## Previous Changes (March 24, 2026)
+Round 2 overlay/CTA refinements, reference comps regenerated, META-LAUNCH-PLAN.md created, tracking audit completed. See git history for details.
 
 ## Known Bugs / Issues
-- **Action plan prompt is placeholder** — endpoint works but uses a generic prompt. Brian needs to define final content/tone/structure (Task B8).
-- **quizAnswers not passed to action plan endpoint** — currently only sends aggregated scores + tier. Brian wants individual answer choices + labels sent. See Brian's Priority 1.
-- **No [INTRO] section in email template** — Brian wants a static intro paragraph before the AI-generated action plan. Needs his copy.
+- **`LAUNCH_STATUS=pre_launch` env var not yet set in Vercel** — controls PS text in action plan email. Asked Nico in infrastructure email.
+- **GA4 `VITE_GA_MEASUREMENT_ID` not configured** — analytics.js utility exists but env var is not set in .env or Vercel. GA4 tracking is dead until this is added. Asked Nico in infrastructure email.
+- **Meta Pixel domain verification status unknown** — `quiz.humbleconviction.com` subdomain. Asked Nico for status.
+- **VM git lock files** — Cowork VM cannot remove `.git/HEAD.lock` on mounted volumes (EPERM). Workaround: clone to /tmp, commit/push from there.
 
 ## Planned Features / Backlog
-- Switch ad set optimization from ViewContent → QuizComplete (as soon as Meta registers the event)
-- Wire quizAnswers into action plan endpoint (Brian's Priority 1)
-- Drop Brian's final prompt into api/action-plan.js (blocked on Brian — B8)
-- Hardcode [INTRO] section in email template (blocked on Brian)
-- Set up tier-based Kit automations (blocked on Brian's autoresponder copy — B7)
+- Kit nurture drip (Emails 2-5 after action plan) — **OUT OF SCOPE for launch**. No course to sell yet.
+- Kit tier-based automations — **cancelled for launch**. Leads go to newsletter manually.
+- Autoresponder email copy — **postponed**. Drafts exist in `research/autoresponder-email-audit-march-2026.md`.
+- Brian's headshot for email header — placeholder "B" circle is fine for launch.
+- Firebase console access for Brian — nice-to-have, not a launch blocker.
 
-## Meta Pixel Strategy
-Expert research recommends a **two-phase approach:**
-1. **Phase 1:** Optimize for QuizComplete. Higher volume, exits learning phase faster (need ~50 events/week).
-2. **Phase 2 (after 2-3 weeks):** Shift to Lead (email capture) optimization once stable delivery and enough conversion history.
+## Action Plan Email Pipeline
+**Architecture:** Two-tier email system. Resend handles the instant transactional email (personalized results). Kit handles marketing/nurture (out of scope for launch).
 
-Do NOT skip Phase 1 — optimizing directly for email capture on a test budget will likely keep Meta stuck in learning phase.
+```
+User completes quiz → enters email → Results.jsx fires:
+  1. saveLead() → Firestore (working)
+  2. subscribeToKit() → Kit with quiz-lead tag + custom fields (working)
+  3. requestActionPlan() → /api/action-plan → Claude Sonnet → Resend email (working)
+```
+
+Full prompt template in `ACTION-PLAN-PROMPT.md`. Nico's implementation spec in `NICO-SPEC-ACTION-PLAN-LAUNCH.md`.
+
+## Meta Ads Launch Plan
+Full launch plan with budget, timeline, decision framework, and pre-launch checklist in **`ads/META-LAUNCH-PLAN.md`**. Key points: $150/day across 3 creatives, 7-day learning phase lockdown, day 14 pulse check (go/no-go on product based on email capture signal).
 
 ## Design Decisions & Constraints
-- **Config-driven:** All quiz content, scoring, copy, and design tokens in `src/config/funnel.js`.
-- **Scenario-based questions:** Not self-assessment. Validated by SJT research.
-- **Scoring:** Per-question: Best=2, Next-best=1, Weak=0. Two questions per dimension. Raw 0-4 per dimension → display 2/5, 3/5, or 4/5.
-- **Tier thresholds:** ~25% Lost in the Noise / ~64% Pieces Are There / ~11% So Close It Hurts.
-- **Email gate: partial reveal (trust-first).** Show tier + scorecard on web, gate action plan behind email.
+- **Config-driven:** All quiz content, scoring, copy, and design tokens in `src/config/funnel.js`. Components have zero hardcoded copy.
+- **Scenario-based questions:** Not self-assessment. SJT research validated (less prone to Dunning-Kruger faking).
+- **Scoring:** Per-question: Best=2, Next-best=1, Weak=0. Two questions per dimension. Raw 0-4 → display 2/5, 3/5, or 4/5. Self-Awareness floors at 3. Raw total (0-16) determines tier.
+- **Tier thresholds:** Monte Carlo validated. ~25% Lost in the Noise / ~64% Pieces Are There / ~11% So Close It Hurts.
+- **Email gate: partial reveal (trust-first).** Show tier + scorecard, gate action plan behind email. Monitor: below 20% capture → tighten gate.
 - **No back button:** Research-backed for scenario-based quiz on mobile.
-- **Mobile-first:** 80%+ traffic from Meta ads on mobile.
-- **Design system:** Navy text (#1A2332) + coral accent (#E8845A) on cool-white (#F8F9FC). Inter font.
-- **trackCustom for custom events:** Meta ignores custom events via `fbq('track')`. Must use `fbq('trackCustom')`. The `trackPixelEvent()` helper auto-detects which to use.
-- **Ad strategy:** 3 concepts (Concept 3 killed). Concept 2 predicted strongest for cold traffic. Concept 4 for retargeting.
+- **Mobile-first:** 80%+ traffic from Meta ads on mobile. All elements sized for 375px viewport.
+- **Design system:** Navy (#1A2332) + coral (#E8845A) on cool-white (#F8F9FC). Inter font throughout.
+- **Ad strategy:** 3 concepts running simultaneously with identical targeting/budget. C1 (pain/rejection), C2 (Dunning-Kruger/signal misread), C4 (data authority). All cold — no retargeting at this budget level.
+- **Ad creatives built in Canva** — AdCreative.ai's template engine was producing weak typography. Canva gives full control.
+- **Copy editing lesson:** AI review rounds need a dedicated editorial pass reading as the target audience. Specialized lenses (compliance, strategy, typography) miss basic copy quality issues.
 
 ## Environment & Config
 - **Production URL:** https://quiz.humbleconviction.com (also https://hc-funnel.vercel.app)
 - **GitHub:** github.com/brhecht/hc-funnel (auto-deploy on push to main)
 - **Firebase project:** `eddy-tracker-82486` (shared with eddy and b-marketing)
 - **Firestore collection:** `leads`
-- **Kit account:** Humble Conviction (brhnyc1970@gmail.com). Tag: `quiz-lead` (ID 17618088).
-- **Sending email:** results@humbleconviction.com (Resend + Kit verified)
-- **Meta Pixel ID:** 1407883507304464 (HC Eddy Pixel)
-- **YouTube videos (post-capture):** Short: `iqw1IgRA2sw` (0:52). Long: `_3601d3OpYY` (8:16).
+- **Kit integration:** Via `/api/subscribe` Vercel serverless proxy. Tag: `quiz-lead` (ID 17618088). Custom fields: tier, friction_area, waitlist, UTMs.
+- **Kit account:** Humble Conviction (brhnyc1970@gmail.com). Auto-confirm ON.
+- **Sending email:** results@humbleconviction.com (Resend verified, Kit verified)
+- **YouTube videos (post-capture):** Short: `iqw1IgRA2sw` (0:52). Long: `_3601d3OpYY` (8:16). Channel: @humbleconvictionstartups.
+
+## Next Steps
+
+### NICO — Active Tasks
+
+| # | Task | Details | Status |
+|---|------|---------|--------|
+| N1 | Swap primary text in Meta Ads Manager | Copy-paste from the "Primary Text Copy Changes" email. All 3 concepts. 5-minute job. | **Ready — email sent** |
+| N2 | Set `LAUNCH_STATUS=pre_launch` env var in Vercel | Controls PS text in action plan email | Asked in infrastructure email |
+| N3 | Configure GA4 `VITE_GA_MEASUREMENT_ID` in Vercel | analytics.js is wired but env var not set — GA4 is dead until this is added | Asked in infrastructure email |
+| N4 | Meta Pixel domain verification | `quiz.humbleconviction.com` subdomain | Asked for status |
+| N5 | Meta Pixel test (Chrome extension) | Confirm all 4 events fire: PageView, ViewContent, CompleteRegistration, Lead | Asked in infrastructure email |
+| N6 | End-to-end testing (all 3 tiers) | Screenshots to Brian | After N2 |
+| N7 | Meta Ads Manager final setup + launch | After Brian confirms everything is ready | Blocked on N1-N5 |
+
+### BRIAN — Active Tasks
+
+| # | Task | Details | Status |
+|---|------|---------|--------|
+| B1 | Send 3 earlier Nico emails if not already sent | 1) Tracking/infrastructure 2) Creative changes (Round 2) 3) What to expect after launch | **Check Gmail drafts** |
+| B2 | Sync local repo | `cd ~/Developer/B-Suite/hc-funnel && rm -f .git/index.lock .git/HEAD.lock && git fetch origin && git reset --hard origin/main` | **Ready now** |
+| B3 | Add credit card to Meta Ads Manager | Before launch | Ready when Nico confirms setup |
+| B4 | Launch ads | Hit go after all pre-launch items confirmed | Blocked on Nico tasks |
+
+## Final Locked Ad Copy (March 26 — Overlays)
+
+```
+C1: "We're going to pass." / Sound familiar? / [See What Investors See]
+C2: He thinks the pitch is going well. / The investor is already out. / [See What Investors See]
+C4: 2,500+ founder pitches analyzed. / See what investors see. / [How Do You Score?]
+```
 
 ## Open Questions / Decisions Pending
-- Brian still needs to write autoresponder email copy (B7), action plan prompt (B8)
-- Add `quiz.humbleconviction.com` domain in Events Manager → Settings → Domains (Brian)
-
-## Meta Ads Campaign — Week 1 Audit (April 8, 2026)
-
-### Key Insight: Optimization Event Mismatch
-Campaign optimizes for QuizComplete, but quiz-to-lead conversion varies wildly by creative (C1=60%, C4=21%). Meta is allocating budget correctly for QC — C4 gets 58% of spend because it produces QC efficiently ($26.08/QC vs C1's $23.20). The budget split is NOT broken. C2 ($16/day avg) is starved because it's worst on the optimization metric.
-
-### Statistical Results (Week 1: Apr 1–7, $1,083 total spend)
-- **C1 vs C4 quiz-to-lead:** p=0.019 (Fisher's Exact) — significant at 95%, but fragile (9 leads). C1 CI: 36%–80%, C4 CI: 9%–40%.
-- **C1 vs C2:** p=0.303 — NOT significant. C2 has 1 lead, CI is 5%–70%.
-- **CTR differences:** Highly significant (p<0.001). C2=6.6%, C1=4.2%, C4=2.0%.
-- **CPL:** Unreliable. C1 daily CPL ranges $10–$101 (std dev $32). C4 ranges $50–$188.
-
-### Decisions (April 8)
-1. **Keep running as-is.** No budget changes, no creative changes, no page changes.
-2. **One more week at $150/day** (~$1,050 additional, ~$2,100 cumulative).
-3. **Retargeting audience:** Set up passively now (QuizComplete + no Lead, 30-day window). Do NOT activate spend until pool hits 200+ (currently 28).
-4. **Daily reports:** Anomaly alerts only. Full analysis weekly.
-5. **Week 2 checkpoint: April 14.** Key question: ready to switch optimization from QuizComplete → Lead?
-
-### Week 2 Watchlist (April 14)
-- Has C1 quiz-to-lead held at ~60% with ~30 QC? Drop to 40–45% weakens the "clear winner" thesis.
-- Has C4 stabilized at ~21% with ~48 QC?
-- Is C2 actually getting $50/day? If still starved, not a real test.
-- Total leads approaching 50/week threshold for Lead optimization switch?
-- Retargeting pool size (~55–60 expected, need 200+ to activate).
-- CPL daily variance converging?
-
-### Data Error in Nico's Report
-Dashboard says "53 quiz completers who didn't convert" — correct number is 28. Nico flagged to fix.
+- **Meta campaign structure:** Single campaign with 3 ad sets? Or 3 separate campaigns? Nico to advise.
+- **Kit `weakestDimension` custom field:** Add to subscriber data for personalization? (~15 min change)
+- **Status of 3 earlier emails from March 24:** Brian — did you send these? If not, they're still in Gmail drafts.
+- **Eddy course:** Recommendation is to not record. See "Meta Ads Campaign — Eddy Unit Economics" section above.
 
 ## Session Log
 
-### April 8, 2026 — Week 1 Meta Ads audit
-- **What shipped:** Full statistical audit of Nico's tracking report. Identified optimization event mismatch as root cause. Sent Nico brief via Brain Inbox.
-- **Known issues:** None new.
-- **Next:** Week 2 checkpoint April 14. Watch for C1 rate stability and Lead optimization readiness.
+### April 8–11, 2026 — Week 1 Meta Ads Audit + Eddy Unit Economics
+- **What happened:** Stress-tested Nico's agent-generated Meta tracking report. Found conclusions were wrong — Nico's report didn't account for optimization event (QuizComplete) driving Meta's budget allocation. C4 wasn't "burning budget" — Meta was correctly allocating to the best QC producer. Statistical analysis (Fisher's Exact, Wilson Score CIs, power analysis) confirmed C1 vs C4 quiz-to-lead difference is significant (p=0.019). Retargeting premature (28 people, need 200+ for Meta).
+- **Pivoted to Eddy demand pulse:** Full expert panel research on unit economics. Conclusion: structurally broken at any $99–$199 price point. 3 cents per marketing dollar in realistic scenario. Not fixable with optimization — structural to price point. Brand coherence problem with TNB pivot compounds the economics.
+- **Artifacts produced:** `research/eddy-unit-economics-april-2026.md` (research memo), `Eddy Funnel - Step by Step Unit Economics.docx` (visual funnel doc with TL;DR, proven/unproven sections, 12-month lifecycle scorecard, synthesis).
+- **Nico briefed** via Slack DM with summary + pointer to research memo.
+- **Next:** Week 2 checkpoint April 14. Then ads off.
